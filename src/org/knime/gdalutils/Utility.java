@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,18 +18,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-
 import org.apache.commons.lang.StringUtils;
-import org.knime.core.data.RowIterator;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
 
 public class Utility {
 	
@@ -38,6 +27,8 @@ public class Utility {
 	private final static String metaDataFormat = "metadata.xml";
 	public static String LOC_COLUMN = "Location";
 	public static String RANK = "Rank";
+	public static String outputFormat = ".tif";
+	public static String shapeFormat = ".shp";
 	
 	/***
 	 * return a list of zip files in directory
@@ -60,7 +51,7 @@ public class Utility {
 	/***
 	 * return all hdr.adf files inside a zip file
 	 * @param zipFileName
-	 * @return
+	 * @return List of .hdr files with full path
 	 */
 	public static List<String> readHdrInZipFile(String zipFileName)
 	{
@@ -74,7 +65,7 @@ public class Utility {
 		if (isZip) {
 			try{
 				 ZipFile zipFile = new ZipFile(zipFileName);
-				 Enumeration zipEntries = zipFile.entries();
+				 Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
 				 while (zipEntries.hasMoreElements()) {
 						String name = ((ZipEntry) zipEntries.nextElement()).getName();
 						if (name.endsWith(hdrFormat)) {
@@ -92,17 +83,21 @@ public class Utility {
 		}
 		else{
 			try{
-				File folder = new File(zipFileName);
-				File[] listOfFiles = folder.listFiles();
+				File folder = new File(zipFileName);				
+				File[] listOfFiles = folder.listFiles();				
 				for (int i = 0; i < listOfFiles.length; i++) {
-				      if (listOfFiles[i].isFile()) {
-				    	  String name = listOfFiles[i].getName();
-				    	  if (name.endsWith(hdrFormat)) {
+					File subFolder = listOfFiles[i];
+					if( subFolder.isDirectory() ) {
+						for (File f : subFolder.listFiles()) {
+							String name = f.getName();
+							if (name.endsWith(hdrFormat)) {
 								name.replace("\\", "/");
-								String hdrFile = zipFileName + "/" + name;
+								String hdrFile = zipFileName + "/" + subFolder.getName() + "/"  + name;
 								hdrFiles.add(hdrFile);
-				    	  }
-				      } 
+								break;
+							}						      
+						}
+					}
 				 }
 				
 			}
@@ -118,62 +113,135 @@ public class Utility {
 	
 	/***
 	 * return a rankedList of surveys
-	 * @param zipFileList
-	 * @return
+	 * @param zipFileList or folderList
+	 * @return return the rank and corresponding zip file/folder location
 	 */
 	public static Map<Integer,String> RankZipFilesByTime(List<String> zipFileList)
 	{
 		Map<Date,String> myMap = new HashMap<Date,String>();
-		for (int i=0; i< zipFileList.size(); i++ ){
-			String zipFileName = zipFileList.get(i);
+		List<String> metadataFiles = new ArrayList<String>();
+		
+		String  pathName = zipFileList.get(0);
+		boolean isZip = false;
+		if (pathName.toLowerCase().contains(".zip"))
+    		isZip = true;
+		
+		if(isZip) {
+		
+			for (int i=0; i< zipFileList.size(); i++ ){
+				String zipFileName = zipFileList.get(i);
+				
+				try{
+					 ZipFile zipFile = new ZipFile(zipFileName);
+					 Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+					 while (zipEntries.hasMoreElements()) {
+						 	ZipEntry ze = (ZipEntry) zipEntries.nextElement();
+							String name = ze.getName();
+							if (name.endsWith(metaDataFormat)) {
+								name.replace("\\", "/");
+								//String metaDataXML = zipFileName + "/" + name;
+								//metaDataList.add(metaDataXML);
+								InputStreamReader zin =  new InputStreamReader(zipFile.getInputStream(ze));
+								BufferedReader br = new BufferedReader(zin);
+								String line;
+								
+					            while ((line = br.readLine()) != null) {
+					            	if (line.startsWith("<metadata")){
+					            		String dateStr = line.substring(
+					            				line.indexOf("<CreaDate>")+("<CreaDate>").length(), 
+					            				line.indexOf("</CreaDate>"));
+					            		String timeStr = line.substring(
+					            				line.indexOf("<CreaTime>")+("<CreaTime>").length(), 
+					            				line.indexOf("</CreaTime>")-2);
+					            		String dateTimeStr = dateStr + timeStr;
+					            		
+					            		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+					            		try
+					                    {
+					                        Date date = simpleDateFormat.parse(dateTimeStr);
+					                        myMap.put(date, zipFileName);
+					                    }
+					                    catch (ParseException ex)
+					                    {
+					                        System.out.println("Exception "+ex);
+					                    }
+					            			
+					            	}
+					            }
+					            br.close();
+								
+								break;
+							}
+					 }
+					 zipFile.close();
+				}
+				catch (Exception e){
+					System.out.println("Error reading " + zipFileName );
+					e.printStackTrace();
+				}
+				
+			}		
+		}
+		
+		else{ // the files are inside a folder
 			
-			try{
-				 ZipFile zipFile = new ZipFile(zipFileName);
-				 Enumeration zipEntries = zipFile.entries();
-				 while (zipEntries.hasMoreElements()) {
-					 	ZipEntry ze = (ZipEntry) zipEntries.nextElement();
-						String name = ze.getName();
-						if (name.endsWith(metaDataFormat)) {
-							name.replace("\\", "/");
-							//String metaDataXML = zipFileName + "/" + name;
-							//metaDataList.add(metaDataXML);
-							InputStreamReader zin =  new InputStreamReader(zipFile.getInputStream(ze));
-							BufferedReader br = new BufferedReader(zin);
-							String line;
-							
-				            while ((line = br.readLine()) != null) {
-				            	if (line.startsWith("<metadata")){
-				            		String dateStr = line.substring(
-				            				line.indexOf("<CreaDate>")+("<CreaDate>").length(), 
-				            				line.indexOf("</CreaDate>"));
-				            		String timeStr = line.substring(
-				            				line.indexOf("<CreaTime>")+("<CreaTime>").length(), 
-				            				line.indexOf("</CreaTime>")-2);
-				            		String dateTimeStr = dateStr + timeStr;
-				            		
-				            		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-				            		try
-				                    {
-				                        Date date = simpleDateFormat.parse(dateTimeStr);
-				                        myMap.put(date, zipFileName);
-				                    }
-				                    catch (ParseException ex)
-				                    {
-				                        System.out.println("Exception "+ex);
-				                    }
-				            			
-				            	}
-				            }
-				            br.close();
-							
-							break;
-						}
-				 }
-				 zipFile.close();
-			}
-			catch (Exception e){
-				System.out.println("Error reading " + zipFileName );
-				e.printStackTrace();
+			for (int i=0; i< zipFileList.size(); i++ ){				
+				String zipFileName = zipFileList.get(i);
+				
+				try{
+					File folder = new File(zipFileName);
+					File[] listOfFiles = folder.listFiles();
+					for (int j = 0; j < listOfFiles.length; j++) {
+						  File subFolder = listOfFiles[i];
+					      if ( subFolder.isDirectory() ) {
+					    	  
+					    	  for (File f : subFolder.listFiles()) {
+						    	  String name = f.getName();
+						    	  if (name.endsWith(metaDataFormat)) {
+										name.replace("\\", "/");
+										String metaDataFileName = zipFileName + "/" + subFolder.getName() + "/" + name;
+										BufferedReader br = new BufferedReader( new FileReader(metaDataFileName));
+										
+										String line;
+										
+							            while ((line = br.readLine()) != null) {
+							            	if (line.startsWith("<metadata")){
+							            		String dateStr = line.substring(
+							            				line.indexOf("<CreaDate>")+("<CreaDate>").length(), 
+							            				line.indexOf("</CreaDate>"));
+							            		String timeStr = line.substring(
+							            				line.indexOf("<CreaTime>")+("<CreaTime>").length(), 
+							            				line.indexOf("</CreaTime>")-2);
+							            		String dateTimeStr = dateStr + timeStr;
+							            		
+							            		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+							            		try
+							                    {
+							                        Date date = simpleDateFormat.parse(dateTimeStr);
+							                        myMap.put(date, zipFileName);
+							                    }
+							                    catch (ParseException ex)
+							                    {
+							                        System.out.println("Exception "+ex);
+							                    }
+							            			
+							            	}
+							            }
+							            br.close();
+							            break;
+						    	  }
+									
+					    	  }
+					      } 
+					 }
+					
+				}
+				catch (Exception e){
+					System.out.println("Error reading hdr files in folder");
+					e.printStackTrace();
+				}
+				
+				
 			}
 			
 		}
@@ -190,6 +258,7 @@ public class Utility {
 		
 		return rankedList;
 	}
+		
 	
 	/*
 	public static void ReadXML(String xmlFilePath)
@@ -237,17 +306,18 @@ public class Utility {
 		
 		String[] inPaths = inPath.split("/");
 		String folderName = inPaths[inPaths.length-2];
-		String outFileName = folderName + ".tif";
+		String outFileName = folderName + outputFormat;
 		String createdFile = outDir+"/"+outFileName;
 		commandList.add(pathBuilder(outDir+"/"+outFileName));
-		//String command = toCommand(commandList);
-		
+				
 		String outputStr = executeCommand(commandList);
 		
-    	String outputStringFile = outDir +"/output.txt";
+		String outputStringFile = outDir +"/resample_log.txt";
+    	String outputCommandFile = outDir +"/commands.txt";
     	
-    	writeOutput(outputStringFile,toCommand(commandList),outputStr);
-    	
+    	String command = toCommand(commandList); 
+    	writeOutputCommand(outputCommandFile, command);
+    	writeOutputLog(outputStringFile, command, outputStr);
     	
 		return createdFile;	
 	}
@@ -285,13 +355,17 @@ public class Utility {
 			commandList.add(pathBuilder(inFile));
 		}
 		
-		//String command = toCommand(commandList);
+		
 		String outputStr = executeCommand(commandList);
 		
 		String folderLoc = mergedFile.substring(0, mergedFile.lastIndexOf("/"));
-		String outputStringFile = folderLoc +"/merge.txt";
 		
-		writeOutput(outputStringFile,toCommand(commandList),outputStr);
+		String outputCommandFile = folderLoc +"/merge.txt";
+		String outputStringFile = folderLoc +"/merge_log.txt";
+				
+		String command = toCommand(commandList);
+		writeOutputCommand(outputCommandFile,command);
+		writeOutputLog(outputStringFile, command, outputStr);
 		
 		return mergedFile;		
 	}
@@ -316,8 +390,8 @@ public class Utility {
 			commandList.add(pathBuilder(sourceFile));
 		}
 		
-		if(!destFile.endsWith(".tif"))
-			destFile = destFile + ".tif";
+		if(!destFile.endsWith(outputFormat))
+			destFile = destFile + outputFormat;
 		
 		commandList.add("--outfile="+pathBuilder(destFile));
 		//commandList.add("--type=Byte");
@@ -329,12 +403,16 @@ public class Utility {
 		commandList.add("--overwrite");	
 		
 		
-		//String command = toCommand(commandList);
+	
 		String outputStr = executeCommand(commandList);
 				
-		String outputStringFile = destFile +"/calc.txt";
+		String outputCommandFile = destFile +"/calc.txt";
+		String outputLogFile = destFile +"/calc_log.txt";
 		
-		writeOutput(outputStringFile,toCommand(commandList),outputStr);
+		
+		String command = toCommand(commandList);
+		writeOutputCommand(outputCommandFile,command);
+		writeOutputLog(outputLogFile, command, outputStr);
 		
 		return destFile;				
 	}
@@ -367,16 +445,21 @@ public class Utility {
 		commandList.add("--NoDataValue="+noDataVlue);
 		commandList.add("--overwrite");	
 		
-		//String command = toCommand(commandList);
-		String outputStr = executeCommand(commandList);				
-		String outputStringFile = outPath +"/mask.txt";	
-		String destFile = outPath + "/" + rank + ".shp";
 		
-		writeOutput(outputStringFile,toCommand(commandList),outputStr);
+		String outputStr = executeCommand(commandList);				
+		String outputCommandFile = outPath +"/mask.txt";
+		String outputLogFile = outPath +"/mask_log.txt";
+		
+		String destFile = outPath + "/" + rank + shapeFormat;
+		
+		
+		String command = toCommand(commandList);
+		writeOutputCommand(outputCommandFile,command);
+		writeOutputLog(outputLogFile, command, outputStr);
 		
 		GetGdalPolygonize(outFile,destFile,"ESRI Shapefile");
 		//outputStr = executeCommand(command);	
-		//writeOutput(outputStringFile,command,outputStr);
+		//writeOutputCommand(outputStringFile,command,outputStr);
 		
 		return destFile;				
 	}
@@ -401,13 +484,17 @@ public class Utility {
 		
 		commandList.add(pathBuilder(destFile));
 		
-		//String command = toCommand(commandList);
+
 		String outputStr = executeCommand(commandList);
 		
 		String folderLoc = destFile.substring(0, destFile.lastIndexOf("/"));
-		String outputStringFile = folderLoc +"/polygolize.txt";
+		String outputCommandFile = folderLoc +"/polygolize.txt";
+		String outputLogFile = folderLoc +"/polygolize_log.txt";
 		
-		writeOutput(outputStringFile,toCommand(commandList),outputStr);
+
+		String command = toCommand(commandList);
+		writeOutputCommand(outputCommandFile,command);
+		writeOutputLog(outputLogFile, command, outputStr);
 		
 		return destFile;						
 	}
@@ -434,15 +521,15 @@ public class Utility {
 		
 		System.out.println(toCommand(commandList));
 			
-		//String command = toCommand(commandList);
-		
+		String command = toCommand(commandList);		
 		String outputStr = executeCommand(commandList);
-		    	
-    	
+		    	    	
     	String folderLoc = overlapShapeFile.substring(0, overlapShapeFile.lastIndexOf("/"));
-    	String outputStringFile = folderLoc +"/ClipPolygonToRaster.txt";
-    	
-    	writeOutput(outputStringFile,toCommand(commandList),outputStr);
+    	String outputCommandFile = folderLoc +"/ClipPolygonToRaster.txt";
+    	String outputLogFile = folderLoc +"/ClipPolygonToRaster_log.txt";
+    	    	
+    	writeOutputCommand(outputCommandFile,toCommand(commandList));
+    	writeOutputLog(outputLogFile, command, outputStr);
     	    	
 		return destTifFile;	
 		
@@ -587,7 +674,7 @@ public class Utility {
 		return output.toString();
 	}
 	
-	private static void writeOutput(String fileName, String command, String outputStr)
+	private static void writeOutputCommand(String fileName, String command)
 	{
 		BufferedWriter bw = null;
 		
@@ -599,6 +686,7 @@ public class Utility {
            if ( !os.startsWith("Windows") ){
         	   BufferedReader br = new BufferedReader(new FileReader(fileName));
         	   String text = br.readLine();
+        	   br.close();
         	   if ( text == null ) {        	   
         		   bw.write(importPath);
         	   	   bw.newLine();
@@ -616,9 +704,42 @@ public class Utility {
 	        	bw.close();
 	        } 
 	        catch (IOException ioe2) {}
-	    } 
+	    } 		
+	}
+	
+	private static void writeOutputLog(String fileName, String command, String outputStr)
+	{
+		BufferedWriter bw = null;
+		 		
+        try {          	
+           bw = new BufferedWriter(new FileWriter(fileName, true));               
+           bw.write("Command: " + command);
+           bw.newLine();           
+           bw.write(outputStr);
+           bw.newLine();                      
+           bw.flush();
+        }
+        catch (IOException ioe) {
+        	ioe.printStackTrace();
+        } 
+        finally {
+	        if (bw != null) try {
+	        	bw.close();
+	        } 
+	        catch (IOException ioe2) {}
+	    } 		
 		
 	}
+	
+	public static void main (String args[])
+	{
+		List<String> files = readHdrInZipFile("C:\\Scratch\\gadata\\LoganeCityCouncil");
+		for (int i = 0; i < files.size(); i++ ){
+			System.out.println(files.get(i));
+		}
+		
+	}
+		
 			
 	/*
 	public static void main (String args[])
