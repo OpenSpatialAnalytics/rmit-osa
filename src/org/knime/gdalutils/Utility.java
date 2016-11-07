@@ -119,7 +119,6 @@ public class Utility {
 	public static Map<Integer,String> RankZipFilesByTime(List<String> zipFileList)
 	{
 		Map<Date,String> myMap = new HashMap<Date,String>();
-		List<String> metadataFiles = new ArrayList<String>();
 		
 		String  pathName = zipFileList.get(0);
 		boolean isZip = false;
