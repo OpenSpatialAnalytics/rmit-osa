@@ -41,14 +41,14 @@ public class MosaicNodeModel extends NodeModel {
 	static final String OF = "output_format";
 	static final String RANK = Utility.RANK;
 	static final String LOC_COLUMN = Utility.LOC_COLUMN;
-	static final String SPILT = "split";
+	//static final String SPILT = "split";
 	static String NODATA = Utility.getNoDataValue();
 	
 	public final SettingsModelString outputType = new SettingsModelString(OT,"Float32");
     public final SettingsModelString outPath = new SettingsModelString(OUTPATH,"");
     public final SettingsModelString outputFormat = new SettingsModelString(OF,"GTiff");
     public final SettingsModelString location = new SettingsModelString(LOC_COLUMN,"Location");
-    public final SettingsModelString split =  new SettingsModelString(SPILT,"0");
+   // public final SettingsModelString split =  new SettingsModelString(SPILT,"0");
     
     public int Rank;
     
@@ -72,6 +72,7 @@ public class MosaicNodeModel extends NodeModel {
     	DataTableSpec outSpec = createSpec(inTable.getSpec());
 		BufferedDataContainer container = exec.createDataContainer(outSpec);
 		
+		/*
 		int totalFiles = (int) inTable.size();
 		int splitSize = 0;
 		int numberOfSplit = 1;
@@ -91,15 +92,16 @@ public class MosaicNodeModel extends NodeModel {
 			if ( m != 0 )
 				numberOfSplit = numberOfSplit + 1;
 		}
+		*/
 		
 		List<String> inPathList = new ArrayList<String>();
-		List<String> splitSet = null;
+		//List<String> splitSet = null;
 		
 		DataRow r1 = inTable.iterator().next();
 		IntCell rankCell = (IntCell)r1.getCell(inTable.getSpec().findColumnIndex(RANK));
     	int rank = rankCell.getIntValue();
     	Rank = rank;
-    	String mergedFile  = outPath.getStringValue() + "/" + rank + ".tif";
+    	String mergedFile  = outPath.getStringValue() + "/" + rank + Utility.outputFormat;
     	String outFile = "";
     	
 		for (DataRow r : inTable) {
@@ -108,6 +110,9 @@ public class MosaicNodeModel extends NodeModel {
 	    	inPathList.add(inPath);
 		}
 		
+		outFile = Utility.MergeRasters(inPathList, mergedFile, outputType.getStringValue(), NODATA, outputFormat.getStringValue());
+		
+		/*
 		if ( numberOfSplit != 1){
 			List<String> splitList = new ArrayList<String>();
 			for (int i=0; i < numberOfSplit; i++ ){
@@ -133,6 +138,7 @@ public class MosaicNodeModel extends NodeModel {
 		else{
 			outFile = Utility.MergeRasters(inPathList, mergedFile, outputType.getStringValue(), NODATA, outputFormat.getStringValue());
 		}
+		*/
 		
 		DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 		cells[0] = new StringCell(outFile);
@@ -169,7 +175,7 @@ public class MosaicNodeModel extends NodeModel {
         this.outputType.saveSettingsTo(settings);
         this.outPath.saveSettingsTo(settings);
         this.outputFormat.saveSettingsTo(settings);
-        this.split.saveSettingsTo(settings);
+        //this.split.saveSettingsTo(settings);
     }
 
     /**
@@ -181,7 +187,7 @@ public class MosaicNodeModel extends NodeModel {
     	this.outputType.loadSettingsFrom(settings);
         this.outPath.loadSettingsFrom(settings);
         this.outputFormat.loadSettingsFrom(settings);
-        this.split.loadSettingsFrom(settings);
+        //this.split.loadSettingsFrom(settings);
     }
 
     /**
@@ -193,7 +199,7 @@ public class MosaicNodeModel extends NodeModel {
     	this.outputType.validateSettings(settings);
         this.outPath.validateSettings(settings);
         this.outputFormat.validateSettings(settings);
-        this.split.validateSettings(settings);
+        //this.split.validateSettings(settings);
     }
     
     /**
@@ -225,7 +231,7 @@ public class MosaicNodeModel extends NodeModel {
     
     protected String getMergedFileName()
     {
-    	String mergedFile  = outPath.getStringValue() + "/" + Rank + ".tif";
+    	String mergedFile  = outPath.getStringValue() + "/" + Rank + Utility.outputFormat;
     	return mergedFile;
     }
 

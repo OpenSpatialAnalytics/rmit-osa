@@ -40,13 +40,15 @@ public class MosaicNodeDialog extends DefaultNodeSettingsPane {
     			new DialogComponentFileChooser(new SettingsModelString(MosaicNodeModel.OUTPATH,""), 
     					MosaicNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
     	
+    	/*
     	DialogComponentString splitDialog = new DialogComponentString(
     			new SettingsModelString(MosaicNodeModel.SPILT,"0"), "Split size");
+    	*/
     	
     	addDialogComponent(outputTypeSelectDialog);
     	addDialogComponent(outputFormatSelectDialog);
     	addDialogComponent(outputPath);
-    	addDialogComponent(splitDialog);
+    	//addDialogComponent(splitDialog);
     }
     
     private String[] OutputTypes()

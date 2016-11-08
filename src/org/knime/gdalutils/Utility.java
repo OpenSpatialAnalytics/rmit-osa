@@ -356,13 +356,42 @@ public class Utility {
 		commandList.add("-co");
 		commandList.add("SPARSE_OK=TRUE");
 		
-		for (int i = 0; i < inList.size(); i++ ){
-			String inFile = inList.get(i).replace("\\", "/");
-			commandList.add(pathBuilder(inFile));
+		
+		String inSourcePath = inList.get(0);
+		inSourcePath = inSourcePath.replace("\\", "/");
+		String inPath = inSourcePath.substring(0,inSourcePath.lastIndexOf("/"));
+		
+		boolean isLargeResamples = false;
+		
+		if ( inList.size() > 1500 )
+			isLargeResamples = true;
+		
+		if(!isLargeResamples){
+			for (int i = 0; i < inList.size(); i++ ){
+				String inFile = inList.get(i).replace("\\", "/");
+				String[] inPaths = inFile.split("/");
+				String inSourceFile = inPaths[inPaths.length-1];
+				commandList.add(inSourceFile);
+			}
+		}
+		else{
+			File folder = new File(inPath+"temp");
+			for (int i = 0; i < inList.size(); i++ ){
+				String inFile = inList.get(i).replace("\\", "/");
+				File oldFile = new File(inFile);
+				File newfile =new File(folder+"/"+i);
+				try{
+					oldFile.renameTo(newfile);
+					commandList.add(Integer.toString(i));
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 		
-		
-		String outputStr = executeCommand(commandList);
+		String outputStr = executeMergeCommand(commandList,inPath);
 		
 		String folderLoc = mergedFile.substring(0, mergedFile.lastIndexOf("/"));
 		
@@ -680,6 +709,51 @@ public class Utility {
 		return output.toString();
 	}
 	
+	private static String executeMergeCommand(List<String> commandList, String location) {
+		
+		String os = System.getProperty("os.name");
+		String importPath = "export PATH=/Library/Frameworks/GDAL.framework/Programs:$PATH";
+		
+		if ( !os.startsWith("Windows") ){
+			try {				
+				Process p1 = null;
+				p1 = Runtime.getRuntime().exec(importPath);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		File f = new File(location);
+		String[] commands = new String[commandList.size()];
+		commands = commandList.toArray(commands);
+
+		StringBuffer output = new StringBuffer();
+
+		Process p = null;
+		try {
+			ProcessBuilder pb = new ProcessBuilder(commands);
+			pb.directory(f);
+			p = pb.start();
+			//p = Runtime.getRuntime().exec(command,null,f);		
+			int code = p.waitFor();
+			if (code == 0){
+				BufferedReader reader =
+	                            new BufferedReader(new InputStreamReader(p.getInputStream()));
+	
+	                        String line = "";
+				while ((line = reader.readLine())!= null) {
+					output.append(line + "\n");
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return output.toString();
+	}
+	
 	private static void writeOutputCommand(String fileName, String command)
 	{
 		BufferedWriter bw = null;
@@ -737,32 +811,6 @@ public class Utility {
 		
 	}
 	
-	public static void main (String args[])
-	{
-		
-		List<String> files = zipFiles("C:\\Scratch\\gadata");
-		
-		//List<String> files = new ArrayList<String>();
-		//files.add("C:\\Scratch\\gadata\\LoganeCityCouncil\\LoganeCityCouncil");
-		//files.add("C:\\Scratch\\gadata\\RedlandCityCouncil2009\\RedlandCityCouncil2009");
-		//files.add("C:\\Scratch\\gadata\\SouthernDownsCouncil2010\\SouthernDownsCouncil2010");
-		
-		Map<Integer,String> m = RankZipFilesByTime(files);
-		
-		Iterator<Integer> keySet = m.keySet().iterator();
-		
-		for (String value : m.values()){
-			
-			System.out.println(keySet.next().intValue());
-			System.out.println(value);
-			
-		}
-		
-		
-		//C:\Scratch\gadata\LoganeCityCouncil\LoganeCityCouncil
-		//List<String> s = readHdrInZipFile("C:\\Scratch\\gadata\\LoganCityCouncil.zip");		
-	}
-		
 			
 	/*
 	public static void main (String args[])

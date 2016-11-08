@@ -58,20 +58,32 @@ public class ListHdrNodeModel extends NodeModel {
     	RowIterator ri = inTable.iterator();
     	int lastSize = 0;
     	
+    	int numColumns = inTable.getSpec().getNumColumns();
+    	
     	while(ri.hasNext()) {
 	    	DataRow r = ri.next();
-	    	IntCell rankCell = (IntCell)r.getCell(inTable.getSpec().findColumnIndex(Utility.RANK));
-	    	int rank = rankCell.getIntValue();
-	    	StringCell inPathCell = (StringCell)r.getCell(inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN));
+	    	
+	    	int locIndex = inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN);
+	    	StringCell inPathCell = (StringCell)r.getCell(locIndex);
 	    	String inPath = inPathCell.getStringValue();
+	    	
+	    	int rank = 0;
+	    	int rankIndex = -1;
+	    	if(numColumns > 1) {
+	    		rankIndex = inTable.getSpec().findColumnIndex(Utility.RANK);
+	    		IntCell rankCell = (IntCell)r.getCell(rankIndex);
+	    		rank = rankCell.getIntValue();
+	    	}
+	    	
 	    	
 	    	List<String> hdrFiles = Utility.readHdrFiles(inPath);
 	    	int numFiles = hdrFiles.size();
 	    	
 			for (int i = 0; i < numFiles; i++ ){
 				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
-				cells[0] = new IntCell(rank);
-				cells[1] = new StringCell(hdrFiles.get(i));
+				if(rankIndex > -1)
+					cells[rankIndex] = new IntCell(rank);
+				cells[locIndex] = new StringCell(hdrFiles.get(i));
 				
 				exec.checkCanceled();
 				container.addRowToTable(new DefaultRow("Row"+(lastSize + i), cells));
