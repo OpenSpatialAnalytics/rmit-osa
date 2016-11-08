@@ -53,20 +53,21 @@ public class RankFilesNodeModel extends NodeModel {
             final ExecutionContext exec) throws Exception {
 
     	BufferedDataTable inTable = inData[0];
-    	List<String> zipFileList = new ArrayList<String>();
+    	List<String> locationList = new ArrayList<String>();
     	DataTableSpec outSpec = createSpec();
-		BufferedDataContainer container = exec.createDataContainer(outSpec);
+		BufferedDataContainer container = exec.createDataContainer(outSpec);		
+		int locIndex = inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN);
 		
 		RowIterator ri = inTable.iterator();
     	
     	while(ri.hasNext()) {
     		DataRow r = ri.next();
-	    	StringCell fileCell = (StringCell)r.getCell(0);
-	    	zipFileList.add(fileCell.toString());
+	    	StringCell fileCell = (StringCell)r.getCell(locIndex);
+	    	locationList.add(fileCell.toString());
     	}
     	
-    	int numFiles = zipFileList.size();
-    	Map<Integer,String> myMap = Utility.RankZipFilesByTime(zipFileList);
+    	int numFiles = locationList.size();
+    	Map<Integer,String> myMap = Utility.RankZipFilesByTime(locationList);
     	Iterator<Integer> keySet = myMap.keySet().iterator();
     	int i = 0;
       	

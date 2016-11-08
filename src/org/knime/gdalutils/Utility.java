@@ -3,6 +3,7 @@ package org.knime.gdalutils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,11 +11,14 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -44,33 +48,33 @@ public class Utility {
 		    if (file.getName().toLowerCase().endsWith((".zip"))) {
 		    	zipFiles.add(dirPath + "/" + file.getName());
 		    }
-		  }
+		  }		  		  
 		  return zipFiles;
 	}
 	
 	/***
-	 * return all hdr.adf files inside a zip file
+	 * return all hdr.adf files inside a zip file or a folder
 	 * @param zipFileName
 	 * @return List of .hdr files with full path
 	 */
-	public static List<String> readHdrInZipFile(String zipFileName)
+	public static List<String> readHdrFiles(String location)
 	{
-		zipFileName = zipFileName.replace("\\", "/");
+		location = location.replace("\\", "/");
 		List<String> hdrFiles = new ArrayList<String>();
 		
 		boolean isZip = false;
-		if (zipFileName.toLowerCase().contains(".zip"))
+		if (location.toLowerCase().contains(".zip"))
     		isZip = true;
 		
 		if (isZip) {
 			try{
-				 ZipFile zipFile = new ZipFile(zipFileName);
+				 ZipFile zipFile = new ZipFile(location);
 				 Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
 				 while (zipEntries.hasMoreElements()) {
 						String name = ((ZipEntry) zipEntries.nextElement()).getName();
 						if (name.endsWith(hdrFormat)) {
-							name.replace("\\", "/");
-							String hdrFile = zipFileName + "/" + name;
+							name = name.replace("\\", "/");
+							String hdrFile = location + "/" + name;
 							hdrFiles.add(hdrFile);
 						}
 				 }
@@ -83,23 +87,29 @@ public class Utility {
 		}
 		else{
 			try{
-				File folder = new File(zipFileName);				
-				File[] listOfFiles = folder.listFiles();				
+				File folder = new File(location);				
+				File[] listOfFiles = folder.listFiles(new FileFilter() {
+				    @Override
+				    public boolean accept(File f) {
+				        return f.isDirectory();
+				    }
+				});											
+				
 				for (int i = 0; i < listOfFiles.length; i++) {
 					File subFolder = listOfFiles[i];
-					if( subFolder.isDirectory() ) {
-						for (File f : subFolder.listFiles()) {
-							String name = f.getName();
-							if (name.endsWith(hdrFormat)) {
-								name.replace("\\", "/");
-								String hdrFile = zipFileName + "/" + subFolder.getName() + "/"  + name;
-								hdrFiles.add(hdrFile);
-								break;
-							}						      
-						}
+					File[] adfFiles = subFolder.listFiles(new FileFilter() {
+					    @Override
+					    public boolean accept(File f) {
+					        return f.getName().endsWith(hdrFormat);
+					    }
+					});		
+					
+					if( adfFiles.length > 0 ) {					
+						String hdrFile = adfFiles[0].getAbsolutePath();																						
+						hdrFile = hdrFile.replace("\\", "/");							
+						hdrFiles.add(hdrFile);
 					}
-				 }
-				
+				 }				
 			}
 			catch (Exception e){
 				System.out.println("Error reading hdr files in folder");
@@ -137,7 +147,7 @@ public class Utility {
 						 	ZipEntry ze = (ZipEntry) zipEntries.nextElement();
 							String name = ze.getName();
 							if (name.endsWith(metaDataFormat)) {
-								name.replace("\\", "/");
+								name = name.replace("\\", "/");
 								//String metaDataXML = zipFileName + "/" + name;
 								//metaDataList.add(metaDataXML);
 								InputStreamReader zin =  new InputStreamReader(zipFile.getInputStream(ze));
@@ -183,64 +193,61 @@ public class Utility {
 		}
 		
 		else{ // the files are inside a folder
-			
+						
 			for (int i=0; i< zipFileList.size(); i++ ){				
 				String zipFileName = zipFileList.get(i);
 				
 				try{
 					File folder = new File(zipFileName);
-					File[] listOfFiles = folder.listFiles();
-					for (int j = 0; j < listOfFiles.length; j++) {
-						  File subFolder = listOfFiles[i];
-					      if ( subFolder.isDirectory() ) {
-					    	  
-					    	  for (File f : subFolder.listFiles()) {
-						    	  String name = f.getName();
-						    	  if (name.endsWith(metaDataFormat)) {
-										name.replace("\\", "/");
-										String metaDataFileName = zipFileName + "/" + subFolder.getName() + "/" + name;
-										BufferedReader br = new BufferedReader( new FileReader(metaDataFileName));
-										
-										String line;
-										
-							            while ((line = br.readLine()) != null) {
-							            	if (line.startsWith("<metadata")){
-							            		String dateStr = line.substring(
-							            				line.indexOf("<CreaDate>")+("<CreaDate>").length(), 
-							            				line.indexOf("</CreaDate>"));
-							            		String timeStr = line.substring(
-							            				line.indexOf("<CreaTime>")+("<CreaTime>").length(), 
-							            				line.indexOf("</CreaTime>")-2);
-							            		String dateTimeStr = dateStr + timeStr;
-							            		
-							            		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-							            		try
-							                    {
-							                        Date date = simpleDateFormat.parse(dateTimeStr);
-							                        myMap.put(date, zipFileName);
-							                    }
-							                    catch (ParseException ex)
-							                    {
-							                        System.out.println("Exception "+ex);
-							                    }
-							            			
-							            	}
-							            }
-							            br.close();
-							            break;
-						    	  }
-									
-					    	  }
-					      } 
-					 }
-					
+					File[] listOfFiles = folder.listFiles(new FileFilter() {
+					    @Override
+					    public boolean accept(File f) {
+					        return f.isDirectory();
+					    }
+					});									
+						  
+					File[] metaDataFiles = listOfFiles[0].listFiles(new FileFilter() {
+					    public boolean accept(File f) {
+					        return  f.getName().endsWith(metaDataFormat);
+					    }
+					});	
+													
+					String metaDataFileName = metaDataFiles[0].getAbsolutePath();
+					metaDataFileName.replace("\\", "/");
+					BufferedReader br = new BufferedReader( new FileReader(metaDataFileName));
+								
+					String line;								
+		            while ((line = br.readLine()) != null) {
+		            	if (line.startsWith("<metadata")){
+		            		String dateStr = line.substring(
+		            				line.indexOf("<CreaDate>")+("<CreaDate>").length(), 
+		            				line.indexOf("</CreaDate>"));
+		            		String timeStr = line.substring(
+		            				line.indexOf("<CreaTime>")+("<CreaTime>").length(), 
+		            				line.indexOf("</CreaTime>")-2);
+		            		String dateTimeStr = dateStr + timeStr;
+		            		
+		            		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		            		try
+		                    {
+		                        Date date = simpleDateFormat.parse(dateTimeStr);
+		                        myMap.put(date, zipFileName);
+		                    }
+		                    catch (ParseException ex)
+		                    {
+		                        System.out.println("Exception "+ex);
+		                    }
+		            			
+		            	}
+		            }
+		            br.close();
+					           				    	  
 				}
 				catch (Exception e){
 					System.out.println("Error reading hdr files in folder");
 					e.printStackTrace();
 				}
-				
-				
+								
 			}
 			
 		}
@@ -732,11 +739,28 @@ public class Utility {
 	
 	public static void main (String args[])
 	{
-		List<String> files = readHdrInZipFile("C:\\Scratch\\gadata\\LoganeCityCouncil");
-		for (int i = 0; i < files.size(); i++ ){
-			System.out.println(files.get(i));
-		}
+		/*
+		//List<String> files = zipFiles("C:\\Scratch\\gadata");
 		
+		//List<String> files = new ArrayList<String>();
+		//files.add("C:\\Scratch\\gadata\\LoganeCityCouncil\\LoganeCityCouncil");
+		//files.add("C:\\Scratch\\gadata\\RedlandCityCouncil2009\\RedlandCityCouncil2009");
+		//files.add("C:\\Scratch\\gadata\\SouthernDownsCouncil2010\\SouthernDownsCouncil2010");
+		
+		Map<Integer,String> m = RankZipFilesByTime(files);
+		
+		Iterator<Integer> keySet = m.keySet().iterator();
+		
+		for (String value : m.values()){
+			
+			System.out.println(keySet.next().intValue());
+			System.out.println(value);
+			
+		}
+		*/
+		
+		//C:\Scratch\gadata\LoganeCityCouncil\LoganeCityCouncil
+		//List<String> s = readHdrInZipFile("C:\\Scratch\\gadata\\LoganCityCouncil.zip");		
 	}
 		
 			

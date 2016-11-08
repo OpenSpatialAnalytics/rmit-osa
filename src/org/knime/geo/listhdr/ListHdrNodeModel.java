@@ -65,7 +65,7 @@ public class ListHdrNodeModel extends NodeModel {
 	    	StringCell inPathCell = (StringCell)r.getCell(inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN));
 	    	String inPath = inPathCell.getStringValue();
 	    	
-	    	List<String> hdrFiles = Utility.readHdrInZipFile(inPath);
+	    	List<String> hdrFiles = Utility.readHdrFiles(inPath);
 	    	int numFiles = hdrFiles.size();
 	    	
 			for (int i = 0; i < numFiles; i++ ){
