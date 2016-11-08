@@ -739,8 +739,8 @@ public class Utility {
 	
 	public static void main (String args[])
 	{
-		/*
-		//List<String> files = zipFiles("C:\\Scratch\\gadata");
+		
+		List<String> files = zipFiles("C:\\Scratch\\gadata");
 		
 		//List<String> files = new ArrayList<String>();
 		//files.add("C:\\Scratch\\gadata\\LoganeCityCouncil\\LoganeCityCouncil");
@@ -757,7 +757,7 @@ public class Utility {
 			System.out.println(value);
 			
 		}
-		*/
+		
 		
 		//C:\Scratch\gadata\LoganeCityCouncil\LoganeCityCouncil
 		//List<String> s = readHdrInZipFile("C:\\Scratch\\gadata\\LoganCityCouncil.zip");		
