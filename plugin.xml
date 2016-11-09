@@ -28,6 +28,7 @@
 	<node category-path="/community/geo/raster" factory-class="org.knime.geo.mask.MaskRasterNodeFactory" id="org.knime.geo.mask.MaskRasterNodeFactory"/>
 	<node category-path="/community/geo/raster" factory-class="org.knime.geo.calc.GdalCalcNodeFactory" id="org.knime.geo.calc.GdalCalcNodeFactory"/>
 	<node category-path="/community/geo/raster" factory-class="org.knime.geo.clip.ClipPolygonToRasterNodeFactory" id="org.knime.geo.clip.ClipPolygonToRasterNodeFactory"/>
+	<node category-path="/community/geo/raster" factory-class="org.knime.geo.shapemerge.ShapeFileMergerNodeFactory" id="org.knime.geo.shapemerge.ShapeFileMergerNodeFactory"/>
 </extension>
    
 </plugin>

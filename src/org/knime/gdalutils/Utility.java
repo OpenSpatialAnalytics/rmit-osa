@@ -290,7 +290,7 @@ public class Utility {
 	*/
 	
 	public static String ReSampleRaster(String inPath, String outDir, boolean overWrite, String resample, 
-			String workingMemory, String outputFormat, String xRes, String yRes, boolean isZip)
+			String workingMemory, String oFormat, String xRes, String yRes, boolean isZip)
 	{
 		inPath = inPath.replace("\\", "/");
 		outDir = outDir.replace("\\", "/");
@@ -304,7 +304,7 @@ public class Utility {
 		commandList.add("-wm");
 		commandList.add(workingMemory);
 		commandList.add("-of");
-		commandList.add(outputFormat);
+		commandList.add(oFormat);
 		commandList.add("-tr");
 		commandList.add(xRes);
 		commandList.add(yRes);		
@@ -330,7 +330,7 @@ public class Utility {
 	
 	
 	public static String MergeRasters(List<String> inList, String mergedFile, String outputType,
-			String noDataValue, String outputFormat)
+			String noDataValue, String oFormat)
 	{
 		mergedFile = mergedFile.replace("\\", "/");
 		String gdalPath = getGdalPath();
@@ -352,7 +352,7 @@ public class Utility {
 		
 		commandList.add(pathBuilder(mergedFile));
 		commandList.add("-of");
-		commandList.add(outputFormat);
+		commandList.add(oFormat);
 		commandList.add("-co");
 		commandList.add("SPARSE_OK=TRUE");
 		
@@ -810,6 +810,63 @@ public class Utility {
 	    } 		
 		
 	}
+	
+	
+	public static String MergeShapeFiles(List<String> shapeFiles)
+	{
+		String inSourcePath = shapeFiles.get(0);
+		inSourcePath = inSourcePath.replace("\\", "/");
+		String inPath = inSourcePath.substring(0,inSourcePath.lastIndexOf("/"));	
+		String os = System.getProperty("os.name");
+		String mergedFileName = "merged.shp";
+					
+		if ( os.startsWith("Windows") ){						 						
+			for (int i = 0; i < shapeFiles.size(); i++ ) {
+				String inFile = shapeFiles.get(i).replace("\\", "/");
+				String[] inPaths = inFile.split("/");
+				String inSourceFile = inPaths[inPaths.length-1];
+				String command = "ogr2ogr -f \"ESRI Shapefile\" ";
+						
+				if ( i == 0 )
+					 command = command + mergedFileName + " " + inSourceFile;
+				else
+					command = command + "-update -append " + mergedFileName + " " + inSourceFile + " -nln Merged";
+								
+				Process p;
+				try {
+					p = Runtime.getRuntime().exec(command,null,new File(inPath));
+					p.waitFor();
+					//output += "Merged file " + inSourceFile + " \n";					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}												
+			}								 
+		}
+		else{
+			String importPath = "export PATH=/Library/Frameworks/GDAL.framework/Programs:$PATH";
+			try {				
+				Process p1 = null;
+				p1 = Runtime.getRuntime().exec(importPath);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			String command = "for f in *.shp; do ogr2ogr -update -append " + mergedFileName + " $f -f \"ESRI Shapefile\"; done;";
+			try {
+				Process p = Runtime.getRuntime().exec(command,null,new File(inPath));
+				p.waitFor();
+				//output += "Merged file\n";					
+			} catch (Exception e) {
+				e.printStackTrace();
+			}					
+		}
+		
+		return inPath+"/"+mergedFileName;
+					
+	}
+	
+	
 	
 			
 	/*
