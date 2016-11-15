@@ -518,6 +518,8 @@ public class Utility {
 			destFile = destFile + ".shp";
 		
 		commandList.add(pathBuilder(destFile));
+		commandList.add("fieldname");
+		commandList.add(RANK);
 		
 
 		String outputStr = executeCommand(commandList);
@@ -866,8 +868,7 @@ public class Utility {
 					
 	}
 	
-	
-	
+		
 			
 	/*
 	public static void main (String args[])

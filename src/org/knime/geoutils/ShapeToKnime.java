@@ -101,6 +101,7 @@ public class ShapeToKnime {
 		return cellList;
 	}
 	
+	/*
 	public static void main (String args[])
 	{
 		String elevband = "E:\\GA Project\\Simple Case Study\\Source Data\\reserves.shp";
@@ -111,5 +112,6 @@ public class ShapeToKnime {
 		System.out.println(spec.getColumnSpec(1).getType().toString());
 		
 	}
+	*/
 
 }
