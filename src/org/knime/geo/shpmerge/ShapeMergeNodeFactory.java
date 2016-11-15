@@ -1,24 +1,24 @@
-package org.knime.geo.shapemerge;
+package org.knime.geo.shpmerge;
 
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 
 /**
- * <code>NodeFactory</code> for the "ShapeFileMerger" Node.
+ * <code>NodeFactory</code> for the "ShapeMerge" Node.
  * 
  *
- * @author Forkan
+ * @author 
  */
-public class ShapeFileMergerNodeFactory 
-        extends NodeFactory<ShapeFileMergerNodeModel> {
+public class ShapeMergeNodeFactory 
+        extends NodeFactory<ShapeMergeNodeModel> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ShapeFileMergerNodeModel createNodeModel() {
-        return new ShapeFileMergerNodeModel();
+    public ShapeMergeNodeModel createNodeModel() {
+        return new ShapeMergeNodeModel();
     }
 
     /**
@@ -33,9 +33,9 @@ public class ShapeFileMergerNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<ShapeFileMergerNodeModel> createNodeView(final int viewIndex,
-            final ShapeFileMergerNodeModel nodeModel) {
-        return new ShapeFileMergerNodeView(nodeModel);
+    public NodeView<ShapeMergeNodeModel> createNodeView(final int viewIndex,
+            final ShapeMergeNodeModel nodeModel) {
+        return new ShapeMergeNodeView(nodeModel);
     }
 
     /**
@@ -51,7 +51,7 @@ public class ShapeFileMergerNodeFactory
      */
     @Override
     public NodeDialogPane createNodeDialogPane() {
-        return new ShapeFileMergerNodeDialog();
+        return new ShapeMergeNodeDialog();
     }
 
 }

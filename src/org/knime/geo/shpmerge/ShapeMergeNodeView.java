@@ -1,21 +1,21 @@
-package org.knime.geo.shapemerge;
+package org.knime.geo.shpmerge;
 
 import org.knime.core.node.NodeView;
 
 /**
- * <code>NodeView</code> for the "ShapeFileMerger" Node.
+ * <code>NodeView</code> for the "ShapeMerge" Node.
  * 
  *
- * @author Forkan
+ * @author 
  */
-public class ShapeFileMergerNodeView extends NodeView<ShapeFileMergerNodeModel> {
+public class ShapeMergeNodeView extends NodeView<ShapeMergeNodeModel> {
 
     /**
      * Creates a new view.
      * 
-     * @param nodeModel The model (class: {@link ShapeFileMergerNodeModel})
+     * @param nodeModel The model (class: {@link ShapeMergeNodeModel})
      */
-    protected ShapeFileMergerNodeView(final ShapeFileMergerNodeModel nodeModel) {
+    protected ShapeMergeNodeView(final ShapeMergeNodeModel nodeModel) {
         super(nodeModel);
         // TODO: generated method stub
     }

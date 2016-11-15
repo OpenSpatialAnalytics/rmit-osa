@@ -1,9 +1,9 @@
-package org.knime.geo.shapemerge;
+package org.knime.geo.shpmerge;
 
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 
 /**
- * <code>NodeDialog</code> for the "ShapeFileMerger" Node.
+ * <code>NodeDialog</code> for the "ShapeMerge" Node.
  * 
  *
  * This node dialog derives from {@link DefaultNodeSettingsPane} which allows
@@ -11,14 +11,14 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
  * complex dialog please derive directly from 
  * {@link org.knime.core.node.NodeDialogPane}.
  * 
- * @author Forkan
+ * @author 
  */
-public class ShapeFileMergerNodeDialog extends DefaultNodeSettingsPane {
+public class ShapeMergeNodeDialog extends DefaultNodeSettingsPane {
 
     /**
-     * New pane for configuring the ShapeFileMerger node.
+     * New pane for configuring the ShapeMerge node.
      */
-    protected ShapeFileMergerNodeDialog() {
+    protected ShapeMergeNodeDialog() {
 
     }
 }

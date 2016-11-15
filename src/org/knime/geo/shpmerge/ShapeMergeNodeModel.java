@@ -1,4 +1,4 @@
-package org.knime.geo.shapemerge;
+package org.knime.geo.shpmerge;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,18 +23,19 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.gdalutils.Utility;
 
 /**
- * This is the model implementation of ShapeFileMerger.
+ * This is the model implementation of ShapeMerge.
  * 
  *
- * @author Forkan
+ * @author 
  */
-public class ShapeFileMergerNodeModel extends NodeModel {
+public class ShapeMergeNodeModel extends NodeModel {
     
     /**
      * Constructor for the node model.
      */
-    protected ShapeFileMergerNodeModel() {
-           
+    protected ShapeMergeNodeModel() {
+    
+        // TODO: Specify the amount of input and output ports needed.
         super(1, 1);
     }
 
@@ -142,6 +143,7 @@ public class ShapeFileMergerNodeModel extends NodeModel {
 		}
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}
+
 
 }
 

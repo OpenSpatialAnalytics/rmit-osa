@@ -9,12 +9,11 @@
         </category>
          <category description="Geo Map Visualization" icon="icons/multi_to_single.png" level-id="view" name="Geo Map Viewer" path="/community/geo">
         </category>
-         <category description="Raster Operations" icon="icons/default.png" level-id="raster" name="Raster Operations" path="/community/geo">
-        </category>
-        
+         <category description="Raster Operations" icon="icons/default.png" level-id="raster" name="Raster Operations" path="/community/geo">         
+        </category>               
    	</extension>
    
-   <extension point="org.knime.workbench.repository.nodes">
+ <extension point="org.knime.workbench.repository.nodes">
     <node category-path="/community/geo/io" factory-class="org.knime.geo.reader.ShapeFileReaderNodeFactory" id="org.knime.geo.spatial.ShapeFileReaderNodeFactory"/>
    	<node category-path="/community/geo/view" factory-class="org.knime.geo.visualizer.GeoMapViewerNodeFactory" id="org.knime.geo.visualizer.GeoMapViewerNodeFactory"/>
 	<node category-path="/community/geo/operations" factory-class="org.knime.geo.buffer.BufferNodeFactory" id="org.knime.geo.buffer.BufferNodeFactory"/>
@@ -27,8 +26,8 @@
 	<node category-path="/community/geo/raster" factory-class="org.knime.geo.mosaic.MosaicNodeFactory" id="org.knime.geo.mosaic.MosaicNodeFactory"/>	
 	<node category-path="/community/geo/raster" factory-class="org.knime.geo.mask.MaskRasterNodeFactory" id="org.knime.geo.mask.MaskRasterNodeFactory"/>
 	<node category-path="/community/geo/raster" factory-class="org.knime.geo.calc.GdalCalcNodeFactory" id="org.knime.geo.calc.GdalCalcNodeFactory"/>
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.clip.ClipPolygonToRasterNodeFactory" id="org.knime.geo.clip.ClipPolygonToRasterNodeFactory"/>
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.shapemerge.ShapeFileMergerNodeFactory" id="org.knime.geo.shapemerge.ShapeFileMergerNodeFactory"/>
+	<node category-path="/community/geo/raster" factory-class="org.knime.geo.clip.ClipPolygonToRasterNodeFactory" id="org.knime.geo.clip.ClipPolygonToRasterNodeFactory"/>			
+	<node category-path="/community/geo/raster" factory-class="org.knime.geo.shpmerge.ShapeMergeNodeFactory" id="org.knime.geo.shpmerge.ShapeMergeNodeFactory"/>  
 </extension>
    
 </plugin>
