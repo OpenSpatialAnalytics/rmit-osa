@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse version="3.0"?><plugin>
       <extension point="org.knime.workbench.repository.categories">
-      <category description="Geo-Spatial operations of GeoTools" icon="icons/geom.png" level-id="geo" name="Geo-Spatial operation nodes" path="/community">
+      <category description="Geo-Spatial operations of GeoTools" icon="icons/geom.png" level-id="geo" name="Geo-Spatial operation nodes" path="/">
+	  </category>
+      <category description="Reading and writing shape files." icon="icons/unique.png" level-id="io" name="IO" path="/geo">
       </category>
-       <category description="Reading and writing shape files." icon="icons/unique.png" level-id="io" name="IO" path="/community/geo">
-        </category>
-         <category description="Basic Geo-Spatial operations." icon="icons/export_projection.png" level-id="operations" name="Geo Process" path="/community/geo">
-        </category>
-         <category description="Geo Map Visualization" icon="icons/multi_to_single.png" level-id="view" name="Geo Map Viewer" path="/community/geo">
-        </category>
-         <category description="Raster Operations" icon="icons/default.png" level-id="raster" name="Raster Operations" path="/community/geo">         
-        </category>               
+      <category description="Basic Geo-Spatial operations." icon="icons/export_projection.png" level-id="operations" name="Geo Process" path="/geo">
+      </category>
+      <category description="Basic Geo-Spatial operations." icon="icons/default.png" level-id="conv" name="Conversion" path="/geo">
+      </category>
+      <category description="Geo Map Visualization" icon="icons/multi_to_single.png" level-id="view" name="Geo Map Viewer" path="/geo">
+      </category>
+      <category description="GDAL Operations" icon="icons/default.png" level-id="gdal" name="GDAL Operations" path="/geo">         
+      </category>    
+       <category description="Raster File Operations" icon="icons/default.png" level-id="raster" name="Raster File Operations" path="/geo">         
+      </category>            
    	</extension>
    
  <extension point="org.knime.workbench.repository.nodes">
-    <node category-path="/community/geo/io" factory-class="org.knime.geo.reader.ShapeFileReaderNodeFactory" id="org.knime.geo.spatial.ShapeFileReaderNodeFactory"/>
-   	<node category-path="/community/geo/view" factory-class="org.knime.geo.visualizer.GeoMapViewerNodeFactory" id="org.knime.geo.visualizer.GeoMapViewerNodeFactory"/>
-	<node category-path="/community/geo/operations" factory-class="org.knime.geo.buffer.BufferNodeFactory" id="org.knime.geo.buffer.BufferNodeFactory"/>
-	<node category-path="/community/geo/operations" factory-class="org.knime.geo.operators.GeometryOperationNodeFactory" id="org.knime.geo.operators.GeometryOperationNodeFactory"/>
-	<node category-path="/community/geo/operations" factory-class="org.knime.geo.overlay.OverlayNodeFactory" id="org.knime.geo.overlay.OverlayNodeFactory"/>
-	<node category-path="/community/geo/io" factory-class="org.knime.geo.writer.ShapeFileWriterNodeFactory" id="org.knime.geo.writer.ShapeFileWriterNodeFactory"/>
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.resample.ResampleNodeFactory" id="org.knime.geo.resample.ResampleNodeFactory"/>
-   	<node category-path="/community/geo/raster" factory-class="org.knime.geo.listhdr.ListHdrNodeFactory" id="org.knime.geo.listhdr.ListHdrNodeFactory"/>
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.rank.RankFilesNodeFactory" id="org.knime.geo.rank.RankFilesNodeFactory"/>
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.mosaic.MosaicNodeFactory" id="org.knime.geo.mosaic.MosaicNodeFactory"/>	
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.mask.MaskRasterNodeFactory" id="org.knime.geo.mask.MaskRasterNodeFactory"/>
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.calc.GdalCalcNodeFactory" id="org.knime.geo.calc.GdalCalcNodeFactory"/>
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.clip.ClipPolygonToRasterNodeFactory" id="org.knime.geo.clip.ClipPolygonToRasterNodeFactory"/>			
-	<node category-path="/community/geo/raster" factory-class="org.knime.geo.shpmerge.ShapeMergeNodeFactory" id="org.knime.geo.shpmerge.ShapeMergeNodeFactory"/>  
+    <node category-path="/geo/io" factory-class="org.knime.geo.reader.ShapeFileReaderNodeFactory" id="org.knime.geo.spatial.ShapeFileReaderNodeFactory"/>
+   	<node category-path="/geo/view" factory-class="org.knime.geo.visualizer.GeoMapViewerNodeFactory" id="org.knime.geo.visualizer.GeoMapViewerNodeFactory"/>
+	<node category-path="/geo/operations" factory-class="org.knime.geo.buffer.BufferNodeFactory" id="org.knime.geo.buffer.BufferNodeFactory"/>
+	<node category-path="/geo/operations" factory-class="org.knime.geo.operators.GeometryOperationNodeFactory" id="org.knime.geo.operators.GeometryOperationNodeFactory"/>
+	<node category-path="/geo/operations" factory-class="org.knime.geo.overlay.OverlayNodeFactory" id="org.knime.geo.overlay.OverlayNodeFactory"/>
+	<node category-path="/geo/io" factory-class="org.knime.geo.writer.ShapeFileWriterNodeFactory" id="org.knime.geo.writer.ShapeFileWriterNodeFactory"/>
+	<node category-path="/geo/gdal" factory-class="org.knime.geo.resample.ResampleNodeFactory" id="org.knime.geo.resample.ResampleNodeFactory"/>
+   	<node category-path="/geo/raster" factory-class="org.knime.geo.listhdr.ListHdrNodeFactory" id="org.knime.geo.listhdr.ListHdrNodeFactory"/>
+	<node category-path="/geo/raster" factory-class="org.knime.geo.rank.RankFilesNodeFactory" id="org.knime.geo.rank.RankFilesNodeFactory"/>
+	<node category-path="/geo/gdal" factory-class="org.knime.geo.mosaic.MosaicNodeFactory" id="org.knime.geo.mosaic.MosaicNodeFactory"/>	
+	<node category-path="/geo/gdal" factory-class="org.knime.geo.mask.MaskRasterNodeFactory" id="org.knime.geo.mask.MaskRasterNodeFactory"/>
+	<node category-path="/geo/gdal" factory-class="org.knime.geo.calc.GdalCalcNodeFactory" id="org.knime.geo.calc.GdalCalcNodeFactory"/>
+	<node category-path="/geo/gdal" factory-class="org.knime.geo.clip.ClipPolygonToRasterNodeFactory" id="org.knime.geo.clip.ClipPolygonToRasterNodeFactory"/>			
+	<node category-path="/geo/raster" factory-class="org.knime.geo.shpmerge.ShapeMergeNodeFactory" id="org.knime.geo.shpmerge.ShapeMergeNodeFactory"/>  
+	<node category-path="/geo/conv" factory-class="org.knime.geo.polygontoline.PolygonToLineNodeFactory" id="org.knime.geo.polygontoline.PolygonToLineNodeFactory"/>
+ <node category-path="geo/conv" factory-class="org.knime.geo.multtoply.MultiPolygonToPolygonNodeFactory" id="org.knime.geo.multtoply.MultiPolygonToPolygonNodeFactory"/>
+<node category-path="geo/operations" factory-class="org.knime.geo.intersection.IntersectionNodeFactory" id="org.knime.geo.intersection.IntersectionNodeFactory"/>
 </extension>
    
 </plugin>
