@@ -85,7 +85,7 @@ public class IntersectionNodeModel extends NodeModel {
 	    		DataRow r2 = ri2.next();	    		
 	    			    			    		
 	    		DataCell geometryCell1 = r1.getCell(geomIndex);
-	    		DataCell geometryCell2 = r1.getCell(geomIndex);
+	    		DataCell geometryCell2 = r2.getCell(geomIndex);
 	    		
 	    		
 	    		if ( (geometryCell1 instanceof StringValue) && (geometryCell2 instanceof StringValue) ){
@@ -113,7 +113,7 @@ public class IntersectionNodeModel extends NodeModel {
     		    				cells[inTable1.getSpec().getNumColumns()-1+col] = r2.getCell(col);
     						}
     		    		}
-    					cells[outSpec.getNumColumns()-1] = new IntCell(i);
+    					cells[outSpec.getNumColumns()-1] = new IntCell(index+1);
     					
     					container.addRowToTable(new DefaultRow("Row"+index, cells));
     		    		exec.checkCanceled();
@@ -222,7 +222,7 @@ public class IntersectionNodeModel extends NodeModel {
 		for (DataColumnSpec column : inSpec2) {
 			if ( k != geomIndex ) {				
 				String name = column.getName();
-				name = name + "_2";
+				//name = name + "_2";
 				columns.add(new DataColumnSpecCreator(name, column.getType()).createSpec());
 			}
 			k++;
