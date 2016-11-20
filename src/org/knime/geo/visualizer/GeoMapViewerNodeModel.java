@@ -25,6 +25,7 @@ import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.geoutils.WriteShapefile;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -48,11 +49,16 @@ import org.knime.core.node.NodeSettingsWO;
  */
 public class GeoMapViewerNodeModel extends NodeModel {
     
+	 static final String CFG_SHP_FILE = "ShpFile";
+	    public final SettingsModelString shpFile =
+		        new SettingsModelString(CFG_SHP_FILE,"temp"+((int)Math.random()*1000)+".shp");
+
+	
     // the logger instance
     private static final NodeLogger logger = NodeLogger
             .getLogger(GeoMapViewerNodeModel.class);
         
-    static FeatureCollection<SimpleFeatureType, SimpleFeature> features;
+    protected FeatureCollection<SimpleFeatureType, SimpleFeature> features;
     
     /**
      * Constructor for the node model.
@@ -146,9 +152,7 @@ public class GeoMapViewerNodeModel extends NodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
 
-        // TODO save user settings to the config object.
-        
-        //m_count.saveSettingsTo(settings);
+    	this.shpFile.saveSettingsTo(settings);
 
     }
 
@@ -159,11 +163,7 @@ public class GeoMapViewerNodeModel extends NodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
             
-        // TODO load (valid) settings from the config object.
-        // It can be safely assumed that the settings are valided by the 
-        // method below.
-        
-        //m_count.loadSettingsFrom(settings);
+    	this.shpFile.loadSettingsFrom(settings);
 
     }
 
@@ -174,12 +174,7 @@ public class GeoMapViewerNodeModel extends NodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
             
-        // TODO check if the settings could be applied to our model
-        // e.g. if the count is in a certain range (which is ensured by the
-        // SettingsModel).
-        // Do not actually set any values of any member variables.
-
-        //m_count.validateSettings(settings);
+        this.shpFile.validateSettings(settings);
 
     }
     

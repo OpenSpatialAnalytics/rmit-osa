@@ -93,7 +93,7 @@ public class IntersectionNodeModel extends NodeModel {
 	    			Geometry geo1 = new GeometryJSON().read(geoJsonString1);
 	    			String geoJsonString2 = ((StringValue) geometryCell2).getStringValue();	    			
 	    			Geometry geo2 = new GeometryJSON().read(geoJsonString2);	    				    			
-	    			if ( (geo1.intersects(geo2)) && (!geo1.touches(geo2)) ){
+	    			if ( ( geo1.intersects(geo2) && isIntersects) && (!geo1.touches(geo2) && !isTouches) ){
 	    				Geometry geo = geo1.intersection(geo2);
 	    				GeometryJSON json = new GeometryJSON();
     					String str = json.toString(geo);
@@ -113,7 +113,7 @@ public class IntersectionNodeModel extends NodeModel {
     		    				cells[inTable1.getSpec().getNumColumns()-1+col] = r2.getCell(col);
     						}
     		    		}
-    					cells[outSpec.getNumColumns()-1] = new IntCell(index+1);
+    					//cells[outSpec.getNumColumns()-1] = new IntCell(index+1);
     					
     					container.addRowToTable(new DefaultRow("Row"+index, cells));
     		    		exec.checkCanceled();
@@ -222,13 +222,19 @@ public class IntersectionNodeModel extends NodeModel {
 		for (DataColumnSpec column : inSpec2) {
 			if ( k != geomIndex ) {				
 				String name = column.getName();
-				//name = name + "_2";
+				if (name.contains("_") ){
+					name = name.substring(0,name.indexOf("_"));
+				}
+				else if (name.contains("(#")){
+					name = name.substring(0,name.indexOf("(")-1);
+				}
+				name = name + "_2";
 				columns.add(new DataColumnSpecCreator(name, column.getType()).createSpec());
 			}
 			k++;
 		}
 		
-		columns.add(new DataColumnSpecCreator(Constants.OVID, IntCell.TYPE).createSpec());
+		//columns.add(new DataColumnSpecCreator(Constants.OVID, IntCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

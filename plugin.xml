@@ -3,17 +3,19 @@
       <extension point="org.knime.workbench.repository.categories">
       <category description="Geo-Spatial operations of GeoTools" icon="icons/geom.png" level-id="geo" name="Geo-Spatial operation nodes" path="/">
 	  </category>
-      <category description="Reading and writing shape files." icon="icons/unique.png" level-id="io" name="IO" path="/geo">
+      <category description="Reading and writing geometry files" icon="icons/io.png" level-id="io" name="IO" path="/geo">
       </category>
-      <category description="Basic Geo-Spatial operations." icon="icons/export_projection.png" level-id="operations" name="Geo Process" path="/geo">
+      <category description="Basic Geo-Spatial operations." icon="icons/operations.png" level-id="operations" name="Geo Process" path="/geo">
       </category>
-      <category description="Basic Geo-Spatial operations." icon="icons/default.png" level-id="conv" name="Conversion" path="/geo">
+      <category description="Geometry Conversion" icon="icons/conversion.png" level-id="conv" name="Conversion" path="/geo">
       </category>
-      <category description="Geo Map Visualization" icon="icons/multi_to_single.png" level-id="view" name="Geo Map Viewer" path="/geo">
+      <category description="Describe Geometry" icon="icons/info.png" level-id="info" name="Geometry Info" path="/geo">
       </category>
-      <category description="GDAL Operations" icon="icons/default.png" level-id="gdal" name="GDAL Operations" path="/geo">         
+      <category description="Geo Map Visualization" icon="icons/visualization.png" level-id="view" name="Geo Map Viewer" path="/geo">
+      </category>
+      <category description="GDAL Operations" icon="icons/gdal.png" level-id="gdal" name="GDAL Operations" path="/geo">         
       </category>    
-       <category description="Raster File Operations" icon="icons/default.png" level-id="raster" name="Raster File Operations" path="/geo">         
+       <category description="Raster File Operations" icon="icons/raster.jpg" level-id="raster" name="Raster Operations" path="/geo">         
       </category>            
    	</extension>
    
@@ -33,8 +35,15 @@
 	<node category-path="/geo/gdal" factory-class="org.knime.geo.clip.ClipPolygonToRasterNodeFactory" id="org.knime.geo.clip.ClipPolygonToRasterNodeFactory"/>			
 	<node category-path="/geo/raster" factory-class="org.knime.geo.shpmerge.ShapeMergeNodeFactory" id="org.knime.geo.shpmerge.ShapeMergeNodeFactory"/>  
 	<node category-path="/geo/conv" factory-class="org.knime.geo.polygontoline.PolygonToLineNodeFactory" id="org.knime.geo.polygontoline.PolygonToLineNodeFactory"/>
- <node category-path="geo/conv" factory-class="org.knime.geo.multtoply.MultiPolygonToPolygonNodeFactory" id="org.knime.geo.multtoply.MultiPolygonToPolygonNodeFactory"/>
-<node category-path="geo/operations" factory-class="org.knime.geo.intersection.IntersectionNodeFactory" id="org.knime.geo.intersection.IntersectionNodeFactory"/>
+ 	<node category-path="/geo/conv" factory-class="org.knime.geo.multtoply.MultiPolygonToPolygonNodeFactory" id="org.knime.geo.multtoply.MultiPolygonToPolygonNodeFactory"/>
+	<node category-path="/geo/operations" factory-class="org.knime.geo.intersection.IntersectionNodeFactory" id="org.knime.geo.intersection.IntersectionNodeFactory"/>
+	<node category-path="/geo/conv" factory-class="org.knime.geo.filter.FilterGeomNodeFactory" id="org.knime.geo.filter.FilterGeomNodeFactory"/>
+	<node category-path="/geo/info" factory-class="org.knime.geo.centroid.CentroidsNodeFactory" id="org.knime.geo.centroid.CentroidsNodeFactory"/>
+	<node category-path="/geo/info" factory-class="org.knime.geo.linemerge.LineMergerNodeFactory" id="org.knime.geo.linemerge.LineMergerNodeFactory"/>
+	<node category-path="/geo/info" factory-class="org.knime.geo.length.LengthNodeFactory" id="org.knime.geo.length.LengthNodeFactory"/>
+	<node category-path="/geo/info" factory-class="org.knime.geo.linepoint.LinePointsNodeFactory" id="org.knime.geo.linepoint.LinePointsNodeFactory"/>
+	<node category-path="/geo/operations" factory-class="org.knime.geo.crossjoin.CrossJoinerNodeFactory" id="org.knime.geo.crossjoin.CrossJoinerNodeFactory"/>
+	<node category-path="/geo/conv" factory-class="org.knime.geo.snapper.SnapToGridNodeFactory" id="org.knime.geo.snapper.SnapToGridNodeFactory"/>
 </extension>
    
 </plugin>

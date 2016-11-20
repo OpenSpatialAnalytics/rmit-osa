@@ -54,11 +54,15 @@ public class GeoMapViewerNodeView extends NodeView<GeoMapViewerNodeModel> {
         super(nodeModel);
 
         try {
-        	File dir = new File("/temp");
+        	/*
+        	String currentDir = System.getProperty("user.dir");
+        	currentDir.replaceAll("\\", "/");
+        	File dir = new File(currentDir+"/temp");
         	if (!dir.exists())
         		dir.mkdir();
+        		*/
         	
-    		File file = new File("temp.shp");
+    		File file = new File(nodeModel.shpFile.getStringValue());
     		FeatureCollection<SimpleFeatureType, SimpleFeature> features = nodeModel.features;
     		//File file = new File(fname);
 			WriteShapefile writer = new WriteShapefile(file);

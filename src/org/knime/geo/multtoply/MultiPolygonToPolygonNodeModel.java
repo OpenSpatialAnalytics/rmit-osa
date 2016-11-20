@@ -27,7 +27,10 @@ import org.knime.geoutils.Constants;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -97,12 +100,92 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
     						}
     		    		}
 	    			}
-	    				
+	    			else if (geomType == Geometries.MULTILINESTRING){	
+	    				MultiLineString  ml = (MultiLineString)geo;
+	    				for (int i = 0; i < ml.getNumGeometries(); i++ ){
+	    					LineString line = (LineString) ml.getGeometryN(i);	    					
+	    					GeometryJSON json = new GeometryJSON();
+	    					String str = json.toString(line);
+	    					cells[geomIndex] = new StringCell(str);
+	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+	    						if (col != geomIndex ) {
+	    		    				cells[col] = row.getCell(col);
+	    						}
+	    		    		}
+	    				}		
+	    			}
+	    			else if(geomType == Geometries.LINESTRING) {
+	    				LineString line = (LineString)geo;	    				
+	    				GeometryJSON json = new GeometryJSON();
+    					String str = json.toString(line);
+    					cells[geomIndex] = new StringCell(str);
+    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+    						if (col != geomIndex ) {
+    		    				cells[col] = row.getCell(col);
+    						}
+    		    		}
+	    			}
+	    			else if (geomType == Geometries.MULTIPOINT){	
+	    				MultiPoint  mp = (MultiPoint)geo;
+	    				for (int i = 0; i < mp.getNumGeometries(); i++ ){
+	    					Point point = (Point) mp.getGeometryN(i);	    					
+	    					GeometryJSON json = new GeometryJSON();
+	    					String str = json.toString(point);
+	    					cells[geomIndex] = new StringCell(str);
+	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+	    						if (col != geomIndex ) {
+	    		    				cells[col] = row.getCell(col);
+	    						}
+	    		    		}
+	    				}		
+	    			}
+	    			else if(geomType == Geometries.POINT) {
+	    				Point point = (Point)geo;	    				
+	    				GeometryJSON json = new GeometryJSON();
+    					String str = json.toString(point);
+    					cells[geomIndex] = new StringCell(str);
+    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+    						if (col != geomIndex ) {
+    		    				cells[col] = row.getCell(col);
+    						}
+    		    		}
+	    			}
+	    			else if(geomType == Geometries.GEOMETRYCOLLECTION) {
+	    				for (int i = 0; i < geo.getNumGeometries(); i++ ){	    					
+	    					
+	    					Geometry g = geo.getGeometryN(i);
+	    					Geometries gtype = Geometries.get(g);
+	    					if(gtype==Geometries.MULTIPOLYGON ||gtype==Geometries.MULTILINESTRING || gtype==Geometries.MULTIPOINT){
+	    						for (int j = 0; j < geo.getNumGeometries(); j++ ){
+	    							GeometryJSON json = new GeometryJSON();
+	    	    					String str = json.toString(g.getGeometryN(i));
+	    	    					cells[geomIndex] = new StringCell(str);
+	    	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+	    	    						if (col != geomIndex ) {
+	    	    		    				cells[col] = row.getCell(col);
+	    	    						}
+	    	    		    		}
+	    						}
+	    					}
+	    					else{
+	    						GeometryJSON json = new GeometryJSON();
+		    					String str = json.toString(g);
+		    					cells[geomIndex] = new StringCell(str);
+		    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+		    						if (col != geomIndex ) {
+		    		    				cells[col] = row.getCell(col);
+		    						}
+		    		    		}
+	    					}
+	    	
+	    				}
+	    			
+	    			}
 	    		}	    			    			    			    			    			    		
 	    		container.addRowToTable(new DefaultRow(row.getKey(), cells));
 	    		exec.checkCanceled();
 				exec.setProgress((double) index / (double) inTable.size());
-				index++;	    		
+				index++;	   
 	    	}
     	}
     	catch (Exception e)
