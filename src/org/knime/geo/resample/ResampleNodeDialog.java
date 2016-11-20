@@ -36,10 +36,15 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     			"Resample Method",ResampleMethods());
     	
     	DialogComponentString workingMemory = new DialogComponentString(
-    			new SettingsModelString(ResampleNodeModel.WM,"500"), "Working memoty");
+    			new SettingsModelString(ResampleNodeModel.WM,"500"), "Working memory");
+    	
+    	DialogComponentString sSRSDialog = new DialogComponentString(
+    			new SettingsModelString(ResampleNodeModel.S_SRS,""), "Source Spatial Reference Set");
+    	
+    	DialogComponentString tSRSDialog = new DialogComponentString(
+    			new SettingsModelString(ResampleNodeModel.T_SRS,""), "Target Spatial Reference Set");
     	
     	DialogComponentLabel resoluation = new DialogComponentLabel("Output File Resolution");
-    	
     	
     	DialogComponentString xres = new DialogComponentString(
     			new SettingsModelString(ResampleNodeModel.XRES,"25"), "X resolution");
@@ -57,25 +62,29 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     			new DialogComponentFileChooser(new SettingsModelString(ResampleNodeModel.INPATH,""), 
     					ResampleNodeModel.INPATH, JFileChooser.OPEN_DIALOG,".zip");
     					*/
+      	DialogComponentBoolean tapSelection = 
+    			new DialogComponentBoolean ( new SettingsModelBoolean(ResampleNodeModel.TAP,false), "Target Aligned Pixels");
     	
     	DialogComponentBoolean overWriteSelection = 
     			new DialogComponentBoolean ( new SettingsModelBoolean(ResampleNodeModel.OR,true), "Overwrite");
     	
-
     	
     	DialogComponentFileChooser outputPath = 
     			new DialogComponentFileChooser(new SettingsModelString("output_path",""), 
     					ResampleNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
     	
-    	outputPath.setBorderTitle("Output location of resampled files");
+    	outputPath.setBorderTitle("Output File location");
     	
     	
     	addDialogComponent(resampleMethodSelectDialog);
     	addDialogComponent(workingMemory);
+    	addDialogComponent(sSRSDialog);
+    	addDialogComponent(tSRSDialog);
     	addDialogComponent(resoluation);
     	addDialogComponent(xres);
     	addDialogComponent(yres);
     	addDialogComponent(outputFormatSelectDialog);
+    	addDialogComponent(tapSelection);
     	addDialogComponent(overWriteSelection);
     	addDialogComponent(outputPath);
 

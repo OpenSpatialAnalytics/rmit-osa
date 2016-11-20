@@ -52,6 +52,9 @@ public class ResampleNodeModel extends NodeModel {
 		static final String YRES = "yres";
 		static final String OUTPATH = "output_path";
 		static final String OF = "output_format";
+		static final String TAP = "tap";
+		static final String S_SRS = "src_srs";
+		static final String T_SRS = "t_srs";
 	 	
 	    public final SettingsModelString resampleMethod = new SettingsModelString(RM,"average");
 	    public final SettingsModelString workingMemory = new SettingsModelString(WM,"500");
@@ -61,6 +64,10 @@ public class ResampleNodeModel extends NodeModel {
 	    public final SettingsModelString outPath = new SettingsModelString(OUTPATH,"");
 	    public final SettingsModelString outputFormat = new SettingsModelString(OF,"GTiff");
 	    public final SettingsModelString location = new SettingsModelString(Utility.LOC_COLUMN,"Location");
+	    
+	    public final SettingsModelBoolean tap = new SettingsModelBoolean(TAP,false);
+	    public final SettingsModelString s_srs = new SettingsModelString(S_SRS,"");
+	    public final SettingsModelString t_srs = new SettingsModelString(T_SRS,"");
 	
 	
 	/**
@@ -97,9 +104,10 @@ public class ResampleNodeModel extends NodeModel {
 	    		isZip = true;
 	    	
 			String outFile = Utility.ReSampleRaster(inPath, outPath.getStringValue(), 
-					overWrite.getBooleanValue(), resampleMethod.getStringValue(), 
-					workingMemory.getStringValue(), outputFormat.getStringValue(), xRes
-					.getStringValue(), yRes.getStringValue(), isZip);
+					overWrite.getBooleanValue(), tap.getBooleanValue(),
+					resampleMethod.getStringValue(), workingMemory.getStringValue(), 
+					outputFormat.getStringValue(),s_srs.getStringValue(),
+					t_srs.getStringValue(), xRes.getStringValue(), yRes.getStringValue(), isZip);
 			
 			DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 			int rankIndex = inTable.getSpec().findColumnIndex(Utility.RANK);
@@ -154,6 +162,9 @@ public class ResampleNodeModel extends NodeModel {
     	this.yRes.saveSettingsTo(settings);
     	this.outputFormat.saveSettingsTo(settings);
     	this.outPath.saveSettingsTo(settings);
+    	this.s_srs.saveSettingsTo(settings);
+    	this.t_srs.saveSettingsTo(settings);
+    	this.tap.saveSettingsTo(settings);
     }
 
     /**
@@ -170,6 +181,9 @@ public class ResampleNodeModel extends NodeModel {
     	this.yRes.loadSettingsFrom(settings);
     	this.outputFormat.loadSettingsFrom(settings);
     	this.outPath.loadSettingsFrom(settings);
+    	this.s_srs.loadSettingsFrom(settings);
+    	this.tap.loadSettingsFrom(settings);
+    	this.t_srs.loadSettingsFrom(settings);
     }
 
     /**
@@ -186,6 +200,9 @@ public class ResampleNodeModel extends NodeModel {
     	this.yRes.validateSettings(settings);
     	this.outputFormat.validateSettings(settings);
     	this.outPath.validateSettings(settings);
+    	this.tap.validateSettings(settings);
+    	this.s_srs.validateSettings(settings);
+    	this.t_srs.validateSettings(settings);
     }
     
     /**

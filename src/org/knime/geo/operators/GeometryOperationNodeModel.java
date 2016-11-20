@@ -224,6 +224,36 @@ public class GeometryOperationNodeModel extends NodeModel {
 		columns.add(column);
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}
+    
+    /*
+    private static DataTableSpec createSpec(DataTableSpec inSpec1, DataTableSpec inSpec2, int geomIndex) throws InvalidSettingsException {
+		
+		List<DataColumnSpec> columns = new ArrayList<DataColumnSpec>();
+		List<String> columnNames = new ArrayList<String>();
+
+		int k = 0;
+		for (DataColumnSpec column : inSpec1) {
+			columns.add(column);
+			columnNames.add(column.getName());
+		}
+		
+		k = 0;
+		for (DataColumnSpec column : inSpec2) {
+			if ( k != geomIndex ) {				
+				String name = column.getName();
+				if ( ArrayUtils.contains(columnNames.toArray(), name))
+					columns.add(new DataColumnSpecCreator(name+"_1", column.getType()).createSpec());
+				else {
+					columns.add(column);
+					columnNames.add(column.getName());
+				}
+			}
+			k++;
+		}
+		
+		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
+	}
+	*/
 
 }
 

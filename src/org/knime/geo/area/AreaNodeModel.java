@@ -1,4 +1,4 @@
-package org.knime.geo.centroid;
+package org.knime.geo.area;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.geojson.geom.GeometryJSON;
-import org.geotools.geometry.jts.Geometries;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.StringValue;
 import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.StringCell;
+import org.knime.core.data.def.DoubleCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -26,21 +26,19 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.geoutils.Constants;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.operation.union.UnaryUnionOp;
 
 /**
- * This is the model implementation of Centroids.
+ * This is the model implementation of Area.
  * 
  *
  * @author Forkan
  */
-public class CentroidsNodeModel extends NodeModel {
+public class AreaNodeModel extends NodeModel {
     
     /**
      * Constructor for the node model.
      */
-    protected CentroidsNodeModel() {
+    protected AreaNodeModel() {
     
         // TODO: Specify the amount of input and output ports needed.
         super(1, 1);
@@ -54,11 +52,11 @@ public class CentroidsNodeModel extends NodeModel {
             final ExecutionContext exec) throws Exception {
 
     	BufferedDataTable inTable = inData[0];    	
-    	DataTableSpec outSpec = createSpec(inTable.getSpec());
-    	BufferedDataContainer container = exec.createDataContainer(outSpec);
-    	
     	int geomIndex = inTable.getSpec().findColumnIndex(Constants.GEOM);	 
     	int numberOfColumns = inTable.getSpec().getNumColumns();
+    	
+    	DataTableSpec outSpec = createSpec(inTable.getSpec(),geomIndex);
+    	BufferedDataContainer container = exec.createDataContainer(outSpec);
     	
     	int index = 0;
     	for (DataRow row : inTable) {	    		
@@ -67,11 +65,8 @@ public class CentroidsNodeModel extends NodeModel {
     		if (geometryCell instanceof StringValue){
     			String geoJsonString = ((StringValue) geometryCell).getStringValue();
     			Geometry geo = new GeometryJSON().read(geoJsonString);
-    			//UnaryUnionOp.union(geoms)
-    			Point p = geo.getCentroid();    			
-				GeometryJSON json = new GeometryJSON();
-				String str = json.toString(p);
-				cells[geomIndex] = new StringCell(str);
+    			double length = geo.getArea();   			
+				cells[geomIndex] = new DoubleCell(length);
 				for ( int col = 0; col < numberOfColumns; col++ ) {	
 					if (col != geomIndex ) {
 	    				cells[col] = row.getCell(col);
@@ -154,12 +149,18 @@ public class CentroidsNodeModel extends NodeModel {
         // TODO: generated method stub
     }
     
-    private static DataTableSpec createSpec(DataTableSpec inSpec) throws InvalidSettingsException {
+    private static DataTableSpec createSpec(DataTableSpec inSpec, int geomIndex) throws InvalidSettingsException {
 		
 		List<DataColumnSpec> columns = new ArrayList<>();
 
+		int k = 0;
 		for (DataColumnSpec column : inSpec) {
-			columns.add(column);
+			if (k==geomIndex){
+				columns.add(new DataColumnSpecCreator("Area", DoubleCell.TYPE).createSpec());
+			}
+			else
+				columns.add(column);
+			k++;
 		}
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

@@ -21,6 +21,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.gdalutils.Utility;
 
@@ -35,6 +36,24 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
     /**
      * Constructor for the node model.
      */
+	
+	static final String OR = "over_write";
+	static final String TAP = "tap";
+	static final String WO_NAME = "wo_name";
+	static final String WO_VALUE = "wo_value";
+	static final String XRES = "xres";
+	static final String YRES = "yres";
+	static final String CWHERE = "cwhere";
+	 
+	
+	 public final SettingsModelBoolean overWrite = new SettingsModelBoolean(OR,true);
+	 public final SettingsModelBoolean tap = new SettingsModelBoolean(TAP,false);
+	 public final SettingsModelString xRes = new SettingsModelString(XRES,"");
+	 public final SettingsModelString yRes = new SettingsModelString(YRES,"");
+	 public final SettingsModelString woName = new SettingsModelString(WO_NAME,"");
+	 public final SettingsModelString woValue = new SettingsModelString(WO_VALUE,"");
+	 public final SettingsModelString cwhere = new SettingsModelString(CWHERE,"");
+	
 		
 	//static final String OUTFILE = "output_file";
 	//public final SettingsModelString outFile = new SettingsModelString(OUTFILE,"");
@@ -71,7 +90,10 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 	    	String srcTifFile = inPathCell.getStringValue();
 	    	StringCell outPathCell = (StringCell)r.getCell(1);
 	    	String destFile = outPathCell.getStringValue();
-	    	Utility.ClipPolygonToRaster(overlapShapeFile, ovid, srcTifFile, destFile, true);
+	    	Utility.ClipRaster(overlapShapeFile, srcTifFile, destFile, 
+	    			overWrite.getBooleanValue(), tap.getBooleanValue(), 
+	    			xRes.getStringValue(), yRes.getStringValue(),
+	    			woName.getStringValue(),woValue.getStringValue(),cwhere.getStringValue());
 	    	
 	    	DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 			cells[0] = new StringCell(destFile);
@@ -112,7 +134,14 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-         //this.outFile.saveSettingsTo(settings);         
+         //this.outFile.saveSettingsTo(settings);      
+    	this.overWrite.saveSettingsTo(settings);
+    	this.tap.saveSettingsTo(settings);
+    	this.xRes.saveSettingsTo(settings);
+    	this.yRes.saveSettingsTo(settings);
+    	this.woName.saveSettingsTo(settings);
+    	this.woValue.saveSettingsTo(settings);
+    	this.cwhere.saveSettingsTo(settings);
     }
 
     /**
@@ -122,6 +151,13 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         //this.outFile.loadSettingsFrom(settings);
+    	this.overWrite.loadSettingsFrom(settings);
+    	this.tap.loadSettingsFrom(settings);
+    	this.xRes.loadSettingsFrom(settings);
+    	this.yRes.loadSettingsFrom(settings);
+    	this.woName.loadSettingsFrom(settings);
+    	this.woValue.loadSettingsFrom(settings);
+    	this.cwhere.loadSettingsFrom(settings);
     }
 
     /**
@@ -131,6 +167,13 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         //this.outFile.validateSettings(settings);
+    	this.overWrite.validateSettings(settings);
+    	this.tap.validateSettings(settings);
+    	this.xRes.validateSettings(settings);
+    	this.yRes.validateSettings(settings);
+    	this.woName.validateSettings(settings);
+    	this.woValue.validateSettings(settings);
+    	this.cwhere.validateSettings(settings);
     }
     
     /**

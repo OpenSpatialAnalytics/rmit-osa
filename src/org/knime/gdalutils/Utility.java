@@ -289,16 +289,27 @@ public class Utility {
 	}
 	*/
 	
-	public static String ReSampleRaster(String inPath, String outDir, boolean overWrite, String resample, 
-			String workingMemory, String oFormat, String xRes, String yRes, boolean isZip)
+	public static String ReSampleRaster(String inPath, String outDir, boolean overWrite, boolean tap,
+			String resample, String workingMemory, String oFormat, String s_srs, String t_srs,
+			String xRes, String yRes, boolean isZip)
 	{
 		inPath = inPath.replace("\\", "/");
 		outDir = outDir.replace("\\", "/");
 		
 		List<String> commandList = new ArrayList<String>();
 		commandList.add("gdalwarp");
+		if (tap)
+			commandList.add("-tap");
 		if (overWrite)
 			commandList.add("-overwrite");
+		if(!s_srs.isEmpty()){
+			commandList.add("-s_srs");
+			commandList.add(s_srs);
+		}
+		if(!t_srs.isEmpty()){
+			commandList.add("-t_srs");
+			commandList.add(t_srs);
+		}
 		commandList.add("-r");
 		commandList.add(resample);
 		commandList.add("-wm");
@@ -536,22 +547,37 @@ public class Utility {
 		return destFile;						
 	}
 	
-	public static String ClipPolygonToRaster(String overlapShapeFile, String ovid, String srcTifFile, String destTifFile, 
-			boolean overWrite)
+	public static String ClipRaster(String srcClipFile, String srcTifFile, String destTifFile, 
+			boolean overWrite, boolean tap, String xRes, String yRes, String woName, String woValue,
+			String cWhere)
 	{
 		
-		overlapShapeFile = overlapShapeFile.replace("\\", "/");
+		srcClipFile = srcClipFile.replace("\\", "/");
 		srcTifFile = srcTifFile.replace("\\", "/");
 		destTifFile = destTifFile.replace("\\", "/");
 		
 		List<String> commandList = new ArrayList<String>();
 		commandList.add("gdalwarp");
+		if(!woName.isEmpty() && !woValue.isEmpty()){
+			commandList.add("-wo");
+			commandList.add(pathBuilder(woName+"="+woValue));
+		}
+		if (tap)
+			commandList.add("-tap");
 		if (overWrite)
 			commandList.add("-overwrite");
+		if( !xRes.isEmpty() && !yRes.isEmpty() ){
+			commandList.add("-tr");
+			commandList.add(xRes);
+			commandList.add(yRes);
+		}
 		commandList.add("-cutline");
-		commandList.add(pathBuilder(overlapShapeFile));
+		commandList.add(pathBuilder(srcClipFile));
 		commandList.add("-cwhere");
-		commandList.add("'ovid="+pathBuilder(ovid)+"'");
+		String[] cutlineFeatures = cWhere.split("=");
+		String name = cutlineFeatures[0].trim();
+		String value = cutlineFeatures[1].trim();
+		commandList.add("'"+name+"="+pathBuilder(value)+"'");
 		commandList.add("-crop_to_cutline");
 		commandList.add(pathBuilder(srcTifFile));
 		commandList.add(pathBuilder(destTifFile));
@@ -561,9 +587,9 @@ public class Utility {
 		String command = toCommand(commandList);		
 		String outputStr = executeCommand(commandList);
 		    	    	
-    	String folderLoc = overlapShapeFile.substring(0, overlapShapeFile.lastIndexOf("/"));
-    	String outputCommandFile = folderLoc +"/ClipPolygonToRaster.txt";
-    	String outputLogFile = folderLoc +"/ClipPolygonToRaster_log.txt";
+    	String folderLoc = srcClipFile.substring(0, srcClipFile.lastIndexOf("/"));
+    	String outputCommandFile = folderLoc +"/ClipRaster.txt";
+    	String outputLogFile = folderLoc +"/ClipRaster_log.txt";
     	    	
     	writeOutputCommand(outputCommandFile,toCommand(commandList));
     	writeOutputLog(outputLogFile, command, outputStr);

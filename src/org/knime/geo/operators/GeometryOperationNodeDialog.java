@@ -3,6 +3,7 @@ package org.knime.geo.operators;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.geo.resample.ReSampleMethod;
 
 /**
  * <code>NodeDialog</code> for the "GeometryOperation" Node.
@@ -21,12 +22,24 @@ public class GeometryOperationNodeDialog extends DefaultNodeSettingsPane {
      * New pane for configuring the GeometryOperation node.
      */
     protected GeometryOperationNodeDialog() {
-    	String operations[] = {"Union","Intersect","Difference"};
     	
     	DialogComponentStringSelection operatorSelectDialog = new DialogComponentStringSelection(
     			new SettingsModelString(GeometryOperationNodeModel.CFG_OPERATOR,GeometryOperationNodeModel.DEFAULT_SELECTION),
-    			"Geometry Operation",operations);
+    			"Geometry Operation",OperationMethods());
     	addDialogComponent(operatorSelectDialog);
+    }
+    
+    
+    private String[] OperationMethods()
+    {
+    	Operations[] methods = Operations.values();
+		String[] names = new String[methods.length];
+		
+		for (int i = 0; i < methods.length; i++) {
+	        names[i] = methods[i].toString();
+	    }
+		
+		return names;
     }
 }
 

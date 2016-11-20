@@ -24,7 +24,7 @@
    	<node category-path="/geo/view" factory-class="org.knime.geo.visualizer.GeoMapViewerNodeFactory" id="org.knime.geo.visualizer.GeoMapViewerNodeFactory"/>
 	<node category-path="/geo/operations" factory-class="org.knime.geo.buffer.BufferNodeFactory" id="org.knime.geo.buffer.BufferNodeFactory"/>
 	<node category-path="/geo/operations" factory-class="org.knime.geo.operators.GeometryOperationNodeFactory" id="org.knime.geo.operators.GeometryOperationNodeFactory"/>
-	<node category-path="/geo/operations" factory-class="org.knime.geo.overlay.OverlayNodeFactory" id="org.knime.geo.overlay.OverlayNodeFactory"/>
+	<!--node category-path="/geo/operations" factory-class="org.knime.geo.overlay.OverlayNodeFactory" id="org.knime.geo.overlay.OverlayNodeFactory"/-->
 	<node category-path="/geo/io" factory-class="org.knime.geo.writer.ShapeFileWriterNodeFactory" id="org.knime.geo.writer.ShapeFileWriterNodeFactory"/>
 	<node category-path="/geo/gdal" factory-class="org.knime.geo.resample.ResampleNodeFactory" id="org.knime.geo.resample.ResampleNodeFactory"/>
    	<node category-path="/geo/raster" factory-class="org.knime.geo.listhdr.ListHdrNodeFactory" id="org.knime.geo.listhdr.ListHdrNodeFactory"/>
@@ -42,8 +42,11 @@
 	<node category-path="/geo/info" factory-class="org.knime.geo.linemerge.LineMergerNodeFactory" id="org.knime.geo.linemerge.LineMergerNodeFactory"/>
 	<node category-path="/geo/info" factory-class="org.knime.geo.length.LengthNodeFactory" id="org.knime.geo.length.LengthNodeFactory"/>
 	<node category-path="/geo/info" factory-class="org.knime.geo.linepoint.LinePointsNodeFactory" id="org.knime.geo.linepoint.LinePointsNodeFactory"/>
-	<node category-path="/geo/operations" factory-class="org.knime.geo.crossjoin.CrossJoinerNodeFactory" id="org.knime.geo.crossjoin.CrossJoinerNodeFactory"/>
+	<!--node category-path="/geo/operations" factory-class="org.knime.geo.crossjoin.CrossJoinerNodeFactory" id="org.knime.geo.crossjoin.CrossJoinerNodeFactory"/-->
 	<node category-path="/geo/conv" factory-class="org.knime.geo.snapper.SnapToGridNodeFactory" id="org.knime.geo.snapper.SnapToGridNodeFactory"/>
+	<node category-path="/geo/info" factory-class="org.knime.geo.distance.DistanceNodeFactory" id="org.knime.geo.distance.DistanceNodeFactory"/>
+	<node category-path="/geo/info" factory-class="org.knime.geo.area.AreaNodeFactory" id="org.knime.geo.area.AreaNodeFactory"/>
+	<node category-path="/geo/operations" factory-class="org.knime.geo.split.SplitNodeFactory" id="org.knime.geo.split.SplitNodeFactory"/>
 </extension>
    
 </plugin>
