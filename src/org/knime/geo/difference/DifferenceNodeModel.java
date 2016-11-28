@@ -1,4 +1,4 @@
-package org.knime.geo.intersection;
+package org.knime.geo.difference;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,16 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geotools.geojson.geom.GeometryJSON;
-import org.geotools.geometry.jts.Geometries;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.RowIterator;
 import org.knime.core.data.StringValue;
 import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.IntCell;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
@@ -26,32 +23,24 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.geoutils.Constants;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * This is the model implementation of Intersection.
+ * This is the model implementation of Difference.
  * 
  *
- * @author 
+ * @author Forkan
  */
-public class IntersectionNodeModel extends NodeModel {
-	
-		//static final String IN = "intersects";
-		//static final String TO = "touches";
-	
-		//public final SettingsModelBoolean intersects = new SettingsModelBoolean(IN,true);
-		//public final SettingsModelBoolean touches = new SettingsModelBoolean(TO,false);
+public class DifferenceNodeModel extends NodeModel {
     
     /**
      * Constructor for the node model.
      */
-    protected IntersectionNodeModel() {
+    protected DifferenceNodeModel() {
     
+        // TODO: Specify the amount of input and output ports needed.
         super(1, 1);
     }
 
@@ -97,7 +86,7 @@ public class IntersectionNodeModel extends NodeModel {
 	    			String geoJsonString2 = ((StringValue) geometryCell2).getStringValue();	    			
 	    			Geometry geo2 = new GeometryJSON().read(geoJsonString2);	    				    			
 	    		
-	    			Geometry geo = geo1.intersection(geo2);
+	    			Geometry geo = geo1.difference(geo2);
 	    			GeometryJSON json = new GeometryJSON();
     				String str = json.toString(geo);
     					
@@ -156,7 +145,7 @@ public class IntersectionNodeModel extends NodeModel {
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-    	
+         // TODO: generated method stub
     }
 
     /**
@@ -165,7 +154,7 @@ public class IntersectionNodeModel extends NodeModel {
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-    	
+        // TODO: generated method stub
     }
 
     /**
@@ -174,7 +163,7 @@ public class IntersectionNodeModel extends NodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-    	
+        // TODO: generated method stub
     }
     
     /**

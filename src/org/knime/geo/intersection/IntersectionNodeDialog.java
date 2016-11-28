@@ -23,13 +23,6 @@ public class IntersectionNodeDialog extends DefaultNodeSettingsPane {
      */
     protected IntersectionNodeDialog() {
     	
-    	DialogComponentBoolean intersectSelection = 
-    			new DialogComponentBoolean ( new SettingsModelBoolean(IntersectionNodeModel.IN,true), "Intersects");
-    	DialogComponentBoolean touchSelection = 
-    			new DialogComponentBoolean ( new SettingsModelBoolean(IntersectionNodeModel.TO,false), "Touches");
-    	
-    	addDialogComponent(intersectSelection);
-    	addDialogComponent(touchSelection);
 
     }
 }

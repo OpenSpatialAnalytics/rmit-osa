@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./default.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Intersection</name>
+    <name>Difference</name>
     
     <shortDescription>
         
@@ -25,9 +25,9 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Input Geometry Table">A Table with 2 Geometry columns</inPort>
+        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Output Geometry Table">Output Table with Single Geometry column</outPort>
+        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
