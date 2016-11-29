@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
@@ -41,6 +42,7 @@ public class MosaicNodeModel extends NodeModel {
 	static final String OF = "output_format";
 	static final String RANK = Utility.RANK;
 	static final String LOC_COLUMN = Utility.LOC_COLUMN;
+	static final String RC = "run_command";
 	//static final String SPILT = "split";
 	static String NODATA = Utility.getNoDataValue();
 	
@@ -49,6 +51,7 @@ public class MosaicNodeModel extends NodeModel {
     public final SettingsModelString outputFormat = new SettingsModelString(OF,"GTiff");
     public final SettingsModelString location = new SettingsModelString(LOC_COLUMN,"Location");
    // public final SettingsModelString split =  new SettingsModelString(SPILT,"0");
+    public final SettingsModelBoolean rc = new SettingsModelBoolean(RC,false);
     
     public int Rank;
     
@@ -94,23 +97,102 @@ public class MosaicNodeModel extends NodeModel {
 		}
 		*/
 		
+		FileUtils.cleanDirectory(new File(outPath.getStringValue())); 
+		
 		List<String> inPathList = new ArrayList<String>();
 		//List<String> splitSet = null;
 		
-		DataRow r1 = inTable.iterator().next();
-		IntCell rankCell = (IntCell)r1.getCell(inTable.getSpec().findColumnIndex(RANK));
-    	int rank = rankCell.getIntValue();
-    	Rank = rank;
-    	String mergedFile  = outPath.getStringValue() + "/" + rank + Utility.outputFormat;
+		String mergedFile = "";
+		DataRow r1 = inTable.iterator().next();		
+		int rankIndex = inTable.getSpec().findColumnIndex(Utility.RANK);
+		int locIndex = inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN);		
+		int numRows = (int) inTable.size();		
+		
+		if (rankIndex != -1){
+			IntCell rankCell = (IntCell)r1.getCell(rankIndex);
+    		int rank = rankCell.getIntValue();
+    		Rank = rank;    		
+    		mergedFile  = outPath.getStringValue() + "/" + rank + Utility.outputFormat;
+    		RowIterator ri = inTable.iterator();
+    		int k = 0;
+    		String inPath = "";
+    		while( ri.hasNext() ){
+    			DataRow r = ri.next();
+    			rankCell = (IntCell)r.getCell(rankIndex);
+        		rank = rankCell.getIntValue();
+        		int currentRank = rank;
+        		while ( ri.hasNext() && currentRank == rank ){
+        			StringCell inPathCell = (StringCell)r.getCell(locIndex);
+        	    	inPath = inPathCell.getStringValue();        	    
+        	    	inPathList.add(inPath);
+        	    	r = ri.next(); 
+        	    	rankCell = (IntCell)r.getCell(rankIndex);
+            		rank = rankCell.getIntValue();
+        		}
+        		currentRank = rank;        		
+        		String outFile = Utility.MergeRasters(inPathList, mergedFile, outputType.getStringValue(), NODATA, 
+        				outputFormat.getStringValue(), rc.getBooleanValue() );        	
+        		DataCell[] cells = new DataCell[outSpec.getNumColumns()];
+        		cells[0] = new StringCell(outFile);
+        		container.addRowToTable(new DefaultRow("Row"+k, cells));        		
+        		inPathList = new ArrayList<String>();
+        		StringCell inPathCell = (StringCell)r.getCell(locIndex);
+    	    	inPath = inPathCell.getStringValue();    	    	
+        		inPathList.add(inPath);        		
+        		mergedFile  = outPath.getStringValue() + "/" + rank + Utility.outputFormat;
+        		k++;
+    		}
+    		
+		}
+		else{
+			StringCell inPathCell1 = (StringCell)r1.getCell(locIndex);
+			String inPath1File = inPathCell1.getStringValue();
+			inPath1File = inPath1File.replace("\\", "/");
+			String inPaths[] = inPath1File.split("/");
+			String parentFolder = inPaths[inPaths.length-2];
+			mergedFile  = outPath.getStringValue() + parentFolder + Utility.outputFormat;
+			
+			RowIterator ri = inTable.iterator();
+    		int k = 0;
+    		String inPath = "";			
+			while( ri.hasNext() ){
+    			DataRow r = ri.next();    			
+        		String currentFolder = parentFolder;
+        		while ( ri.hasNext() && (parentFolder.compareTo(currentFolder)==0) ){
+        			StringCell inPathCell = (StringCell)r.getCell(locIndex);
+        	    	inPath = inPathCell.getStringValue();
+        	    	inPathList.add(inPath);
+        	    	String inPathsList[] = inPath.split("/");
+        	    	parentFolder = inPathsList[inPathsList.length-2];
+        	    	r = ri.next();        	    	        	    	
+        		}
+        		currentFolder = parentFolder;
+        		String outFile = Utility.MergeRasters(inPathList, mergedFile, outputType.getStringValue(), 
+        				NODATA, outputFormat.getStringValue(), rc.getBooleanValue());
+        		DataCell[] cells = new DataCell[outSpec.getNumColumns()];
+        		cells[0] = new StringCell(outFile);
+        		container.addRowToTable(new DefaultRow("Row"+k, cells));
+        		inPathList = new ArrayList<String>();
+        		StringCell inPathCell = (StringCell)r.getCell(locIndex);
+    	    	inPath = inPathCell.getStringValue();
+        		inPathList.add(inPath);
+        		mergedFile  = outPath.getStringValue() + "/" + parentFolder + Utility.outputFormat;
+        		k++;
+    		}						
+		}
+    			
+		/*
+    	
     	String outFile = "";
     	
 		for (DataRow r : inTable) {
-	    	StringCell inPathCell = (StringCell)r.getCell(inTable.getSpec().findColumnIndex(LOC_COLUMN));
+	    	StringCell inPathCell = (StringCell)r.getCell(locIndex);
 	    	String inPath = inPathCell.getStringValue();
 	    	inPathList.add(inPath);
 		}
+		*/
 		
-		outFile = Utility.MergeRasters(inPathList, mergedFile, outputType.getStringValue(), NODATA, outputFormat.getStringValue());
+		//outFile = Utility.MergeRasters(inPathList, mergedFile, outputType.getStringValue(), NODATA, outputFormat.getStringValue());
 		
 		/*
 		if ( numberOfSplit != 1){
@@ -139,11 +221,7 @@ public class MosaicNodeModel extends NodeModel {
 			outFile = Utility.MergeRasters(inPathList, mergedFile, outputType.getStringValue(), NODATA, outputFormat.getStringValue());
 		}
 		*/
-		
-		DataCell[] cells = new DataCell[outSpec.getNumColumns()];
-		cells[0] = new StringCell(outFile);
-		container.addRowToTable(new DefaultRow("Row0", cells));
-	    	
+				    	
     	container.close();
 		return new BufferedDataTable[] { container.getTable() };
     }
@@ -175,7 +253,7 @@ public class MosaicNodeModel extends NodeModel {
         this.outputType.saveSettingsTo(settings);
         this.outPath.saveSettingsTo(settings);
         this.outputFormat.saveSettingsTo(settings);
-        //this.split.saveSettingsTo(settings);
+        this.rc.saveSettingsTo(settings);
     }
 
     /**
@@ -187,7 +265,7 @@ public class MosaicNodeModel extends NodeModel {
     	this.outputType.loadSettingsFrom(settings);
         this.outPath.loadSettingsFrom(settings);
         this.outputFormat.loadSettingsFrom(settings);
-        //this.split.loadSettingsFrom(settings);
+        this.rc.loadSettingsFrom(settings);
     }
 
     /**
@@ -199,7 +277,7 @@ public class MosaicNodeModel extends NodeModel {
     	this.outputType.validateSettings(settings);
         this.outPath.validateSettings(settings);
         this.outputFormat.validateSettings(settings);
-        //this.split.validateSettings(settings);
+        this.rc.validateSettings(settings);
     }
     
     /**

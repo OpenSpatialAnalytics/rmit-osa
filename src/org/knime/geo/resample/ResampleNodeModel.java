@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.io.FileUtils;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
@@ -55,6 +56,7 @@ public class ResampleNodeModel extends NodeModel {
 		static final String TAP = "tap";
 		static final String S_SRS = "src_srs";
 		static final String T_SRS = "t_srs";
+		static final String RC = "run_command";
 	 	
 	    public final SettingsModelString resampleMethod = new SettingsModelString(RM,"average");
 	    public final SettingsModelString workingMemory = new SettingsModelString(WM,"500");
@@ -68,6 +70,7 @@ public class ResampleNodeModel extends NodeModel {
 	    public final SettingsModelBoolean tap = new SettingsModelBoolean(TAP,false);
 	    public final SettingsModelString s_srs = new SettingsModelString(S_SRS,"");
 	    public final SettingsModelString t_srs = new SettingsModelString(T_SRS,"");
+	    public final SettingsModelBoolean rc = new SettingsModelBoolean(RC,false);
 	
 	
 	/**
@@ -87,6 +90,8 @@ public class ResampleNodeModel extends NodeModel {
     	BufferedDataTable inTable = inData[0];
     	DataTableSpec outSpec = createSpec(inTable.getSpec());
 		BufferedDataContainer container = exec.createDataContainer(outSpec);
+		
+		FileUtils.cleanDirectory(new File(outPath.getStringValue())); 
     	
     	RowIterator ri = inTable.iterator();
     	long numFiles = inTable.size();
@@ -107,7 +112,8 @@ public class ResampleNodeModel extends NodeModel {
 					overWrite.getBooleanValue(), tap.getBooleanValue(),
 					resampleMethod.getStringValue(), workingMemory.getStringValue(), 
 					outputFormat.getStringValue(),s_srs.getStringValue(),
-					t_srs.getStringValue(), xRes.getStringValue(), yRes.getStringValue(), isZip);
+					t_srs.getStringValue(), xRes.getStringValue(), yRes.getStringValue(), 
+					rc.getBooleanValue(), isZip);
 			
 			DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 			int rankIndex = inTable.getSpec().findColumnIndex(Utility.RANK);
@@ -165,6 +171,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.s_srs.saveSettingsTo(settings);
     	this.t_srs.saveSettingsTo(settings);
     	this.tap.saveSettingsTo(settings);
+    	this.rc.saveSettingsTo(settings);
     }
 
     /**
@@ -184,6 +191,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.s_srs.loadSettingsFrom(settings);
     	this.tap.loadSettingsFrom(settings);
     	this.t_srs.loadSettingsFrom(settings);
+    	this.rc.loadSettingsFrom(settings);
     }
 
     /**
@@ -203,6 +211,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.tap.validateSettings(settings);
     	this.s_srs.validateSettings(settings);
     	this.t_srs.validateSettings(settings);
+    	this.rc.validateSettings(settings);
     }
     
     /**

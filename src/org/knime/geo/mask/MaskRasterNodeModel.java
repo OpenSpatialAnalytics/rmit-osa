@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataRow;
@@ -58,6 +59,8 @@ public class MaskRasterNodeModel extends NodeModel {
     	BufferedDataTable inTable = inData[0];
     	DataTableSpec outSpec = createSpec(inTable.getSpec());
 		BufferedDataContainer container = exec.createDataContainer(outSpec);
+		
+		FileUtils.cleanDirectory(new File(outPath.getStringValue())); 
 		
 		int index = 0;
 		for (DataRow r : inTable) {

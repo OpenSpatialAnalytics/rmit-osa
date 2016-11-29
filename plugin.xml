@@ -62,6 +62,6 @@
 	<node category-path="/geo/bool" factory-class="org.knime.geo.bool.disjoint.DisjointNodeFactory" id="org.knime.geo.bool.disjoint.DisjointNodeFactory"/>
 	<node category-path="/geo/bool" factory-class="org.knime.geo.bool.overlap.OverlapNodeFactory" id="org.knime.geo.bool.overlap.OverlapNodeFactory"/>
 	<node category-path="/geo/bool" factory-class="org.knime.geo.bool.within.WithinNodeFactory" id="org.knime.geo.bool.within.WithinNodeFactory"/>
- </extension>
+</extension>
    
 </plugin>

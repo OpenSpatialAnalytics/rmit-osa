@@ -75,6 +75,10 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     	
     	outputPath.setBorderTitle("Output File location");
     	
+
+    	DialogComponentBoolean runCommandDialog = 
+    			new DialogComponentBoolean ( new SettingsModelBoolean(ResampleNodeModel.RC,false), "Run commands");
+    	
     	
     	addDialogComponent(resampleMethodSelectDialog);
     	addDialogComponent(workingMemory);
@@ -87,6 +91,7 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     	addDialogComponent(tapSelection);
     	addDialogComponent(overWriteSelection);
     	addDialogComponent(outputPath);
+    	addDialogComponent(runCommandDialog);
 
     }
     

@@ -29,6 +29,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.geoutils.Constants;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.util.GeometryCombiner;
 
 /**
  * This is the model implementation of Intersects.

@@ -291,7 +291,7 @@ public class Utility {
 	
 	public static String ReSampleRaster(String inPath, String outDir, boolean overWrite, boolean tap,
 			String resample, String workingMemory, String oFormat, String s_srs, String t_srs,
-			String xRes, String yRes, boolean isZip)
+			String xRes, String yRes, boolean isRun, boolean isZip)
 	{
 		inPath = inPath.replace("\\", "/");
 		outDir = outDir.replace("\\", "/");
@@ -323,14 +323,32 @@ public class Utility {
 		
 		String[] inPaths = inPath.split("/");
 		String folderName = inPaths[inPaths.length-2];
-		String outFileName = folderName + outputFormat;
-		String createdFile = outDir+"/"+outFileName;
-		commandList.add(pathBuilder(outDir+"/"+outFileName));
+		String parentFolder = inPaths[inPaths.length-3];
+		if ( parentFolder.contains(".zip") ){
+			parentFolder = parentFolder.substring(0, parentFolder.length()-5);			
+		}
 				
-		String outputStr = executeCommand(commandList);
+		String outputSubFolder = outDir+"/"+parentFolder;
+		String outFileName = folderName + outputFormat;
 		
-		String outputStringFile = outDir +"/resample_log.txt";
-    	String outputCommandFile = outDir +"/commands.txt";
+		File directory = new File(outputSubFolder);
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+				
+		String createdFile = outputSubFolder+"/"+outFileName;
+		commandList.add(pathBuilder(createdFile));
+				
+		
+		String outputStr = "";
+		
+		if (isRun)
+			outputStr = executeCommand(commandList);
+		else
+			outputStr = "commands";
+				
+		String outputStringFile = outputSubFolder +"/resample_log.txt";
+    	String outputCommandFile = outputSubFolder +"/commands.txt";
     	
     	String command = toCommand(commandList); 
     	writeOutputCommand(outputCommandFile, command);
@@ -341,7 +359,7 @@ public class Utility {
 	
 	
 	public static String MergeRasters(List<String> inList, String mergedFile, String outputType,
-			String noDataValue, String oFormat)
+			String noDataValue, String oFormat, boolean isRun)
 	{
 		mergedFile = mergedFile.replace("\\", "/");
 		String gdalPath = getGdalPath();
@@ -387,6 +405,10 @@ public class Utility {
 		}
 		else{
 			File folder = new File(inPath+"temp");
+			if (! folder.exists()){
+				folder.mkdir();
+			}
+			
 			for (int i = 0; i < inList.size(); i++ ){
 				String inFile = inList.get(i).replace("\\", "/");
 				File oldFile = new File(inFile);
@@ -402,8 +424,13 @@ public class Utility {
 			}
 		}
 		
-		String outputStr = executeMergeCommand(commandList,inPath);
+		String outputStr = "";
 		
+		if (isRun)
+			outputStr = executeMergeCommand(commandList,inPath);
+		else
+			outputStr = "commands";
+				
 		String folderLoc = mergedFile.substring(0, mergedFile.lastIndexOf("/"));
 		
 		String outputCommandFile = folderLoc +"/merge.txt";

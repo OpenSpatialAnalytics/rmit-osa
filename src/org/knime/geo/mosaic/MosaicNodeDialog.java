@@ -3,9 +3,11 @@ package org.knime.geo.mosaic;
 import javax.swing.JFileChooser;
 
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
+import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
+import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.geo.resample.OutputFormat;
 import org.knime.geo.resample.ResampleNodeModel;
@@ -45,9 +47,13 @@ public class MosaicNodeDialog extends DefaultNodeSettingsPane {
     			new SettingsModelString(MosaicNodeModel.SPILT,"0"), "Split size");
     	*/
     	
+    	DialogComponentBoolean runCommandDialog = 
+    			new DialogComponentBoolean ( new SettingsModelBoolean(MosaicNodeModel.RC,false), "Run commands");
+    	
     	addDialogComponent(outputTypeSelectDialog);
     	addDialogComponent(outputFormatSelectDialog);
     	addDialogComponent(outputPath);
+    	addDialogComponent(runCommandDialog);
     	//addDialogComponent(splitDialog);
     }
     
