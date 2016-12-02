@@ -7,7 +7,7 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>Area plugin</intro>
         
         
         <option name="short name of first option (like in the dialog)">description of first option</option>
