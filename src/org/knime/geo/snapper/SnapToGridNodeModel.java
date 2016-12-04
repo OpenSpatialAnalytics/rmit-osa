@@ -3,6 +3,7 @@ package org.knime.geo.snapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.geotools.geojson.geom.GeometryJSON;
@@ -10,6 +11,8 @@ import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DataType;
+import org.knime.core.data.DoubleValue;
 import org.knime.core.data.RowIterator;
 import org.knime.core.data.StringValue;
 import org.knime.core.data.def.DefaultRow;
@@ -24,6 +27,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.gdalutils.Utility;
 import org.knime.geoutils.Constants;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -118,8 +122,19 @@ public class SnapToGridNodeModel extends NodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
+    	
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	if (!Arrays.asList(columNames).contains(Constants.GEOM)){
+			throw new InvalidSettingsException( "Input table 1 must contain 1 geometry column (the_geom)");
+		}
+    	
+    	DataColumnSpec columnSpec = inSpecs[1].getColumnSpec(0);
+    	DataType t = columnSpec.getType();
+    	
+    	if (!t.isCompatible(DoubleValue.class))
+    		throw new InvalidSettingsException( "Input table 2 must contain a Dobule value");
 
-        // TODO: generated method stub
+    	
         return new DataTableSpec[]{null};
     }
 

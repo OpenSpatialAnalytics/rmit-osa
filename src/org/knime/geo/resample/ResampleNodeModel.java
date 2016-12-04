@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -57,6 +58,7 @@ public class ResampleNodeModel extends NodeModel {
 		static final String S_SRS = "src_srs";
 		static final String T_SRS = "t_srs";
 		static final String RC = "run_command";
+		static final String DF = "directory_format";
 	 	
 	    public final SettingsModelString resampleMethod = new SettingsModelString(RM,"average");
 	    public final SettingsModelString workingMemory = new SettingsModelString(WM,"500");
@@ -66,6 +68,7 @@ public class ResampleNodeModel extends NodeModel {
 	    public final SettingsModelString outPath = new SettingsModelString(OUTPATH,"");
 	    public final SettingsModelString outputFormat = new SettingsModelString(OF,"GTiff");
 	    public final SettingsModelString location = new SettingsModelString(Utility.LOC_COLUMN,"Location");
+	    public final SettingsModelString df = new SettingsModelString(DF,DirectoryFormat.MainDir.toString());
 	    
 	    public final SettingsModelBoolean tap = new SettingsModelBoolean(TAP,false);
 	    public final SettingsModelString s_srs = new SettingsModelString(S_SRS,"");
@@ -108,7 +111,7 @@ public class ResampleNodeModel extends NodeModel {
 	    	if (inPath.toLowerCase().contains(".zip"))
 	    		isZip = true;
 	    	
-			String outFile = Utility.ReSampleRaster(inPath, outPath.getStringValue(), 
+			String outFile = Utility.ReSampleRaster(inPath, outPath.getStringValue(), df.getStringValue(),
 					overWrite.getBooleanValue(), tap.getBooleanValue(),
 					resampleMethod.getStringValue(), workingMemory.getStringValue(), 
 					outputFormat.getStringValue(),s_srs.getStringValue(),
@@ -147,9 +150,13 @@ public class ResampleNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
 
-    	
     	if (outPath.getStringValue() == null) {
 			throw new InvalidSettingsException("No output path specified");
+		}
+    	
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	if (!Arrays.asList(columNames).contains(Utility.LOC_COLUMN)){
+			throw new InvalidSettingsException( "Input table must contain Location column");
 		}
     
         return new DataTableSpec[]{null};
@@ -172,6 +179,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.t_srs.saveSettingsTo(settings);
     	this.tap.saveSettingsTo(settings);
     	this.rc.saveSettingsTo(settings);
+    	this.df.saveSettingsTo(settings);
     }
 
     /**
@@ -192,6 +200,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.tap.loadSettingsFrom(settings);
     	this.t_srs.loadSettingsFrom(settings);
     	this.rc.loadSettingsFrom(settings);
+    	this.df.loadSettingsFrom(settings);
     }
 
     /**
@@ -212,6 +221,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.s_srs.validateSettings(settings);
     	this.t_srs.validateSettings(settings);
     	this.rc.validateSettings(settings);
+    	this.df.validateSettings(settings);
     }
     
     /**

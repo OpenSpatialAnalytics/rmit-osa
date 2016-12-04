@@ -3,6 +3,7 @@ package org.knime.geo.mosaic;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -241,7 +242,15 @@ public class MosaicNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
 
-        // TODO: generated method stub
+    	if (outPath.getStringValue() == null) {
+			throw new InvalidSettingsException("No output path specified");
+		}
+    	
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	if (!Arrays.asList(columNames).contains(Utility.LOC_COLUMN)){
+			throw new InvalidSettingsException( "Input table must contain Location column");
+		}
+    	
         return new DataTableSpec[]{null};
     }
 

@@ -73,7 +73,12 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     			new DialogComponentFileChooser(new SettingsModelString("output_path",""), 
     					ResampleNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
     	
-    	outputPath.setBorderTitle("Output File location");
+    	outputPath.setBorderTitle("Output Folder location");
+    	
+
+    	DialogComponentStringSelection directoryFormatSelectDialog = new DialogComponentStringSelection(
+    			new SettingsModelString(ResampleNodeModel.DF,DirectoryFormat.MainDir.toString()),
+    			"File Naming",DirectoryFOrmats());
     	
 
     	DialogComponentBoolean runCommandDialog = 
@@ -91,6 +96,7 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     	addDialogComponent(tapSelection);
     	addDialogComponent(overWriteSelection);
     	addDialogComponent(outputPath);
+    	addDialogComponent(directoryFormatSelectDialog);
     	addDialogComponent(runCommandDialog);
 
     }
@@ -110,6 +116,18 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     private String[] OutputFormats()
     {
     	OutputFormat[] methods = OutputFormat.values();
+		String[] names = new String[methods.length];
+		
+		for (int i = 0; i < methods.length; i++) {
+	        names[i] = methods[i].toString();
+	    }
+		
+		return names;
+    }
+    
+    private String[] DirectoryFOrmats()
+    {
+    	DirectoryFormat[] methods = DirectoryFormat.values();
 		String[] names = new String[methods.length];
 		
 		for (int i = 0; i < methods.length; i++) {

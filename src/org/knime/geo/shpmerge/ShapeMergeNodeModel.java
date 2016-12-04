@@ -3,6 +3,7 @@ package org.knime.geo.shpmerge;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.geotools.data.collection.ListFeatureCollection;
@@ -33,7 +34,9 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.operation.overlay.snap.GeometrySnapper;
+import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 
 /**
  * This is the model implementation of ShapeMerge.
@@ -96,8 +99,8 @@ public class ShapeMergeNodeModel extends NodeModel {
 		while (iterator.hasNext()){
 			SimpleFeature feature = iterator.next();
 			Geometry geo = (Geometry)feature.getDefaultGeometryProperty().getValue();
-			GeometrySnapper gs = new GeometrySnapper(geo);
-			geo = gs.snapToSelf(1, true);
+			PrecisionModel pm = new PrecisionModel(1.0);
+			geo = GeometryPrecisionReducer.reduce(geo, pm);
 			featureBuilder.add(geo);
 			featureBuilder.add(feature.getAttribute(Utility.RANK));
 			featureBuilder.add(i+1);		
@@ -135,7 +138,11 @@ public class ShapeMergeNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
 
-        // TODO: generated method stub
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	if (!Arrays.asList(columNames).contains(Utility.LOC_COLUMN)){
+			throw new InvalidSettingsException( "Input table must contain Location column");
+		}
+    	
         return new DataTableSpec[]{null};
     }
 

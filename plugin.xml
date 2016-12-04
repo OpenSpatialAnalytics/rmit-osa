@@ -32,6 +32,7 @@
 	<node category-path="/geo/operations" factory-class="org.knime.geo.split.SplitNodeFactory" id="org.knime.geo.split.SplitNodeFactory"/>
 	<node category-path="/geo/operations" factory-class="org.knime.geo.convex.ConvexHullNodeFactory" id="org.knime.geo.convex.ConvexHullNodeFactory"/>
 	<node category-path="/geo/operations" factory-class="org.knime.geo.unary.UnaryUnionNodeFactory" id="org.knime.geo.unary.UnaryUnionNodeFactory"/>
+	<node category-path="/geo/operations" factory-class="org.knime.geo.combine.CombineNodeFactory" id="org.knime.geo.combine.CombineNodeFactory"/>
 	<!--node category-path="/geo/operations" factory-class="org.knime.geo.operators.GeometryOperationNodeFactory" id="org.knime.geo.operators.GeometryOperationNodeFactory"/-->
 	<!--node category-path="/geo/operations" factory-class="org.knime.geo.overlay.OverlayNodeFactory" id="org.knime.geo.overlay.OverlayNodeFactory"/-->
 	<!--node category-path="/geo/operations" factory-class="org.knime.geo.crossjoin.CrossJoinerNodeFactory" id="org.knime.geo.crossjoin.CrossJoinerNodeFactory"/-->

@@ -55,7 +55,7 @@ public class AreaNodeModel extends NodeModel {
     	int geomIndex = inTable.getSpec().findColumnIndex(Constants.GEOM);	 
     	int numberOfColumns = inTable.getSpec().getNumColumns();
     	
-    	DataTableSpec outSpec = createSpec(inTable.getSpec(),geomIndex);
+    	DataTableSpec outSpec = createSpec(inTable.getSpec(), geomIndex);
     	BufferedDataContainer container = exec.createDataContainer(outSpec);
     	
     	int index = 0;

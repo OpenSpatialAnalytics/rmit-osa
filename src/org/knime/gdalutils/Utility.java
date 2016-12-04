@@ -11,10 +11,12 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.commons.lang.StringUtils;
+import org.knime.geo.resample.DirectoryFormat;
 
 
 public class Utility {
@@ -289,7 +292,8 @@ public class Utility {
 	}
 	*/
 	
-	public static String ReSampleRaster(String inPath, String outDir, boolean overWrite, boolean tap,
+	public static String ReSampleRaster(String inPath, String outDir, String directoryFormat,
+			boolean overWrite, boolean tap,
 			String resample, String workingMemory, String oFormat, String s_srs, String t_srs,
 			String xRes, String yRes, boolean isRun, boolean isZip)
 	{
@@ -321,16 +325,26 @@ public class Utility {
 		commandList.add(yRes);		
 		commandList.add(BuildInputPath(inPath,isZip));
 		
+		String outputSubFolder = "";
+		String outFileName = "";
 		String[] inPaths = inPath.split("/");
-		String folderName = inPaths[inPaths.length-2];
-		String parentFolder = inPaths[inPaths.length-3];
-		if ( parentFolder.contains(".zip") ){
-			parentFolder = parentFolder.substring(0, parentFolder.length()-5);			
-		}
-				
-		String outputSubFolder = outDir+"/"+parentFolder;
-		String outFileName = folderName + outputFormat;
 		
+		if (directoryFormat.compareTo(DirectoryFormat.MainDir.toString())==0){
+			
+			outputSubFolder = outDir;
+			outFileName = inPaths[inPaths.length-1];
+		}
+		else if (directoryFormat.compareTo(DirectoryFormat.SubDir.toString())==0){
+			String folderName = inPaths[inPaths.length-2];
+			String parentFolder = inPaths[inPaths.length-3];
+			if ( parentFolder.contains(".zip") ){
+				parentFolder = parentFolder.substring(0, parentFolder.length()-5);			
+			}
+			outputSubFolder = outDir+"/"+parentFolder;
+			outFileName = folderName + outputFormat;
+			
+		}
+	
 		File directory = new File(outputSubFolder);
 		if (! directory.exists()){
 			directory.mkdir();
@@ -920,7 +934,6 @@ public class Utility {
 		return inPath+"/"+mergedFileName;
 					
 	}	
-	
 	
 	/*
 	public static void main (String args[])

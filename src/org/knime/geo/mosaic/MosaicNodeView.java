@@ -28,13 +28,11 @@ public class MosaicNodeView extends NodeView<MosaicNodeModel> {
      */
     protected MosaicNodeView(final MosaicNodeModel nodeModel) {
         super(nodeModel);
+        
+        /*
         String fname= nodeModel.getMergedFileName();
         String output = Utility.GetGdalInfo(fname);
-        /*
-        JPanel jp = new JPanel();
-        jp.setPreferredSize(new Dimension(600, 600));
-        */
-        
+       
         JFrame jf = new JFrame();
         jf.setTitle("Gdal Info");
         jf.setVisible(true);
@@ -49,6 +47,7 @@ public class MosaicNodeView extends NodeView<MosaicNodeModel> {
         JScrollPane sp = new JScrollPane(ta);
         jf.add(sp);
         setComponent(jf);
+        */
     }
 
     /**

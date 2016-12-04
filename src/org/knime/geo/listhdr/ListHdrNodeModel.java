@@ -3,6 +3,7 @@ package org.knime.geo.listhdr;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.knime.core.data.DataCell;
@@ -24,6 +25,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 
 import org.knime.gdalutils.*;
+import org.knime.geoutils.Constants;
 
 /**
  * This is the model implementation of ListHdr.
@@ -110,8 +112,32 @@ public class ListHdrNodeModel extends NodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
+    	
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	int numColumns = inSpecs[0].getNumColumns();
+    	
+    	if ( numColumns > 1 ){
+    		if (!Arrays.asList(columNames).contains(Utility.RANK)){
+    			throw new InvalidSettingsException( "Input table must contain Location column or " 
+    					+ "Location and Rank column");
+    		}
+    		if (!Arrays.asList(columNames).contains(Utility.LOC_COLUMN)){
+    			throw new InvalidSettingsException( "Input table must contain Location column or " 
+    					+ "Location and Rank column");
+    		}
+    	}
+    	else if (numColumns == 1){
+    		if (!Arrays.asList(columNames).contains(Utility.LOC_COLUMN)){
+    			throw new InvalidSettingsException( "Input table must contain Location column or " 
+    					+ "Location and Rank column");
+    		}
+    	}
+    	else{
+    		throw new InvalidSettingsException( "Input table must contain Location column or " 
+					+ "Location and Rank column");
+    	}
+    	
 
-        // TODO: generated method stub
         return new DataTableSpec[]{null};
     }
 

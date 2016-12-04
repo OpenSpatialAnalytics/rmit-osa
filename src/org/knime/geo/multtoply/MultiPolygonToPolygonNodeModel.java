@@ -3,6 +3,7 @@ package org.knime.geo.multtoply;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.geotools.geojson.geom.GeometryJSON;
@@ -212,7 +213,10 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
 
-        // TODO: generated method stub
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	if (!Arrays.asList(columNames).contains(Constants.GEOM)){
+			throw new InvalidSettingsException( "Input table must contain a geometry column (the_geom)");
+		}
         return new DataTableSpec[]{null};
     }
 

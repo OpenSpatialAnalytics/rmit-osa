@@ -42,7 +42,7 @@ public class DistanceNodeModel extends NodeModel {
     protected DistanceNodeModel() {
     
         // TODO: Specify the amount of input and output ports needed.
-        super(2, 1);
+        super(1, 1);
     }
 
     /**
@@ -52,36 +52,44 @@ public class DistanceNodeModel extends NodeModel {
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws Exception {
 
-    	BufferedDataTable inTable1 = inData[0];    	
-    	BufferedDataTable inTable2 = inData[1]; 
-    	int geomIndex = inTable1.getSpec().findColumnIndex(Constants.GEOM);	 
+    	BufferedDataTable inTable = inData[0];
+    	String columNames[] = inTable.getSpec().getColumnNames();
+    	int numColumns = inTable.getSpec().getNumColumns();
+    	int geomIndexs[] = new int[2];
+    	
+    	int j = 0;
+    	for (int i = 0; i < numColumns; i++) {
+    		if (columNames[i].contains(Constants.GEOM) ){
+    			geomIndexs[j] = i;
+    			j++;
+    			if (j==2)
+    				break;
+    		}
+    	}
   
     	DataTableSpec outSpec = createSpec();
     	BufferedDataContainer container = exec.createDataContainer(outSpec);
     	
-    	RowIterator ri1 = inTable1.iterator();
-    	RowIterator ri2 = inTable2.iterator();
+    	RowIterator ri = inTable.iterator();
     	
     	int index = 0;
-    	for (int i = 0; i < inTable1.size(); i++ ) {
+    	for (int i = 0; i < inTable.size(); i++ ) {
     		
-    		DataRow r1 = ri1.next();
-    		DataRow r2 = ri2.next();	 
-    		
-    		DataCell[] cells = new DataCell[outSpec.getNumColumns()];	    		   		
-    		DataCell geometryCell1 = r1.getCell(geomIndex);
-    		DataCell geometryCell2 = r2.getCell(geomIndex);
+    		DataRow r = ri.next();				    		
+    		DataCell geometryCell1 = r.getCell(geomIndexs[0]);
+    		DataCell geometryCell2 = r.getCell(geomIndexs[1]);
     		
     		if ( (geometryCell1 instanceof StringValue) && (geometryCell2 instanceof StringValue) ){
     			String geoJsonString1 = ((StringValue) geometryCell1).getStringValue();	    			
     			Geometry geo1 = new GeometryJSON().read(geoJsonString1);
     			String geoJsonString2 = ((StringValue) geometryCell2).getStringValue();	    			
     			Geometry geo2 = new GeometryJSON().read(geoJsonString2);
-    			double distance = geo1.distance(geo2);			
-				cells[geomIndex] = new DoubleCell(distance);	
-				container.addRowToTable(new DefaultRow(r1.getKey(), cells));
+    			double distance = geo1.distance(geo2);		
+    			DataCell[] cells = new DataCell[outSpec.getNumColumns()];
+				cells[0] = new DoubleCell(distance);	
+				container.addRowToTable(new DefaultRow(r.getKey(), cells));
 	    		exec.checkCanceled();
-				exec.setProgress((double) index / (double) inTable1.size());
+				exec.setProgress((double) index / (double) inTable.size());
 				index++;
     		}
     	}
@@ -105,7 +113,20 @@ public class DistanceNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
 
-        // TODO: generated method stub
+    	int j = 0;
+    	int numColumns = inSpecs[0].getNumColumns();
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	for (int i = 0; i < numColumns; i++) {
+    		if (columNames[i].contains(Constants.GEOM) ){
+    			j++;
+    			if (j==2)
+    				break;
+    		}
+    	}
+    	
+    	if ( j < 2 )
+    		throw new InvalidSettingsException( "Input table must contain 2 geometry columns "
+                    + "and those column headers must start with the_geom");
         return new DataTableSpec[]{null};
     }
 

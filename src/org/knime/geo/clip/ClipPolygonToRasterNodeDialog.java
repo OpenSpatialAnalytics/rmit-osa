@@ -10,6 +10,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.geo.mosaic.MosaicNodeModel;
+import org.knime.geo.reader.ShapeFileReaderNodeModel;
 import org.knime.geo.resample.ResampleNodeModel;
 
 /**
@@ -32,7 +33,7 @@ public class ClipPolygonToRasterNodeDialog extends DefaultNodeSettingsPane {
     	
     	
     	DialogComponentBoolean tapSelection = 
-    			new DialogComponentBoolean ( new SettingsModelBoolean(ClipPolygonToRasterNodeModel.TAP,false), "(Target Aligned Pixels");
+    			new DialogComponentBoolean ( new SettingsModelBoolean(ClipPolygonToRasterNodeModel.TAP,false), "(Target Aligned Pixels)");
     	
     	DialogComponentLabel wrapOption = new DialogComponentLabel("Wrap option");
     	
@@ -42,7 +43,7 @@ public class ClipPolygonToRasterNodeDialog extends DefaultNodeSettingsPane {
     	DialogComponentString woValueText = new DialogComponentString(
     			new SettingsModelString(ClipPolygonToRasterNodeModel.WO_VALUE,""), "Value");
     
-    	DialogComponentLabel resoluation = new DialogComponentLabel("Output File Resolution");
+    	//DialogComponentLabel resoluation = new DialogComponentLabel("Output File Resolution");
     	
     	DialogComponentString xres = new DialogComponentString(
     			new SettingsModelString(ClipPolygonToRasterNodeModel.XRES,""), "X resolution");
@@ -53,20 +54,43 @@ public class ClipPolygonToRasterNodeDialog extends DefaultNodeSettingsPane {
     	DialogComponentString cwhereText = new DialogComponentString(
     			new SettingsModelString(ClipPolygonToRasterNodeModel.CWHERE,""), "Attribute query for cutline");
     	
-    	
     	DialogComponentBoolean overWriteSelection = 
     			new DialogComponentBoolean ( new SettingsModelBoolean(ClipPolygonToRasterNodeModel.OR,true), "Overwrite");
+    	
+    	DialogComponentFileChooser shpFileSelect = new DialogComponentFileChooser(
+    		      new SettingsModelString(ClipPolygonToRasterNodeModel.INPATH,""),
+    		      ClipPolygonToRasterNodeModel.INPATH,
+      		      JFileChooser.OPEN_DIALOG,
+      		     	".shp");
+    	
+    	shpFileSelect.setBorderTitle("Clip shape file location");
+    	
+    	DialogComponentFileChooser inputPath = 
+    			new DialogComponentFileChooser(new SettingsModelString(ClipPolygonToRasterNodeModel.SRCPATH,""), 
+    					ClipPolygonToRasterNodeModel.SRCPATH, JFileChooser.OPEN_DIALOG, true);
+    	
+    	inputPath.setBorderTitle("Input files location");
+    	
+    	DialogComponentFileChooser outputPath = 
+    			new DialogComponentFileChooser(new SettingsModelString(ClipPolygonToRasterNodeModel.OUTPATH,""), 
+    					ClipPolygonToRasterNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
+    	
+    	outputPath.setBorderTitle("Output files location");
+    	
     	
     	
     	addDialogComponent(tapSelection);
     	addDialogComponent(wrapOption);
     	addDialogComponent(woNameText);
     	addDialogComponent(woValueText);
-    	addDialogComponent(resoluation);
+    	//addDialogComponent(resoluation);
     	addDialogComponent(xres);
     	addDialogComponent(yres);
     	addDialogComponent(cwhereText);
     	addDialogComponent(overWriteSelection);
+    	addDialogComponent(shpFileSelect);
+    	addDialogComponent(inputPath);
+    	addDialogComponent(outputPath);
     	
     	/*
     	DialogComponentFileChooser outputPath = 

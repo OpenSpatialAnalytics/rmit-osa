@@ -146,8 +146,23 @@ public class IntersectionNodeModel extends NodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
+    	
+    	int j = 0;
+    	int numColumns = inSpecs[0].getNumColumns();
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	for (int i = 0; i < numColumns; i++) {
+    		if (columNames[i].contains(Constants.GEOM) ){
+    			j++;
+    			if (j==2)
+    				break;
+    		}
+    	}
+    	
+    	if ( j < 2 )
+    		throw new InvalidSettingsException( "Input table must contain 2 geometry columns "
+                    + "and those column headers must start with the_geom");
 
-        // TODO: generated method stub
+        
         return new DataTableSpec[]{null};
     }
 

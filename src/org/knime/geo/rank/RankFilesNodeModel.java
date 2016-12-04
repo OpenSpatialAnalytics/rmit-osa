@@ -3,6 +3,7 @@ package org.knime.geo.rank;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +102,10 @@ public class RankFilesNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
 
-        // TODO: generated method stub
+    	String columNames[] = inSpecs[0].getColumnNames();
+    	if (!Arrays.asList(columNames).contains(Utility.LOC_COLUMN)){
+			throw new InvalidSettingsException( "Input table must contain Location column"); 
+		}
         return new DataTableSpec[]{null};
     }
 
