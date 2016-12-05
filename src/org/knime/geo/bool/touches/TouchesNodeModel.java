@@ -197,7 +197,7 @@ public class TouchesNodeModel extends NodeModel {
 			columns.add(column);
 		}
 		
-		columns.add(new DataColumnSpecCreator("Touches", BooleanCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator("touches", BooleanCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

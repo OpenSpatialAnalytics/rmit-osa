@@ -118,7 +118,7 @@ public class BufferNodeModel extends NodeModel {
 	    			}
 				}*/
 	    		
-	    		container.addRowToTable(new DefaultRow(row.getKey(), cells));
+	    		container.addRowToTable(new DefaultRow("Row"+index, cells));
 	    		exec.checkCanceled();
 				exec.setProgress((double) index / (double) geometryTable.size());
 				index++;

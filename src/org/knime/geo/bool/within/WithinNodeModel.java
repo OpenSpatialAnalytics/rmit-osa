@@ -196,7 +196,7 @@ public class WithinNodeModel extends NodeModel {
 			columns.add(column);
 		}
 		
-		columns.add(new DataColumnSpecCreator("Within", BooleanCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator("within", BooleanCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

@@ -55,31 +55,28 @@ public class AreaNodeModel extends NodeModel {
     	int geomIndex = inTable.getSpec().findColumnIndex(Constants.GEOM);	 
     	int numberOfColumns = inTable.getSpec().getNumColumns();
     	
-    	DataTableSpec outSpec = createSpec(inTable.getSpec(), geomIndex);
+    	DataTableSpec outSpec = createSpec(inTable.getSpec());
     	BufferedDataContainer container = exec.createDataContainer(outSpec);
     	
     	int index = 0;
-    	for (DataRow row : inTable) {	    		
-    		DataCell[] cells = new DataCell[outSpec.getNumColumns()];	    		   		
+    	for (DataRow row : inTable) {	    			    		   		
     		DataCell geometryCell = row.getCell(geomIndex);
+    		
     		if (geometryCell instanceof StringValue){
     			String geoJsonString = ((StringValue) geometryCell).getStringValue();
     			Geometry geo = new GeometryJSON().read(geoJsonString);
-    			double length = geo.getArea();   			
-				cells[geomIndex] = new DoubleCell(length);
+    			double length = geo.getArea();   	
+    			DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
+				cells[outSpec.getNumColumns()-1] = new DoubleCell(length);
 				for ( int col = 0; col < numberOfColumns; col++ ) {	
-					if (col != geomIndex ) {
-	    				cells[col] = row.getCell(col);
-					}
+	    			cells[col] = row.getCell(col);
 	    		}
-    			
-    		}
-    		container.addRowToTable(new DefaultRow(row.getKey(), cells));
-    		exec.checkCanceled();
-			exec.setProgress((double) index / (double) inTable.size());
-			index++;
+				container.addRowToTable(new DefaultRow(row.getKey(), cells));
+	    		exec.checkCanceled();
+				exec.setProgress((double) index / (double) inTable.size());
+				index++;
+    		}	
     	}
-    	
     	container.close();
     	return new BufferedDataTable[] { container.getTable() };
     }
@@ -149,19 +146,15 @@ public class AreaNodeModel extends NodeModel {
         // TODO: generated method stub
     }
     
-    private static DataTableSpec createSpec(DataTableSpec inSpec, int geomIndex) throws InvalidSettingsException {
+    private static DataTableSpec createSpec(DataTableSpec inSpec) throws InvalidSettingsException {
 		
 		List<DataColumnSpec> columns = new ArrayList<>();
-
-		int k = 0;
+		
 		for (DataColumnSpec column : inSpec) {
-			if (k==geomIndex){
-				columns.add(new DataColumnSpecCreator("Area", DoubleCell.TYPE).createSpec());
-			}
-			else
-				columns.add(column);
-			k++;
+			columns.add(column);
 		}
+		columns.add(new DataColumnSpecCreator("area", DoubleCell.TYPE).createSpec());
+		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}
 

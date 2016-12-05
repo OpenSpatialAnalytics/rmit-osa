@@ -196,7 +196,7 @@ public class CoversNodeModel extends NodeModel {
 			columns.add(column);
 		}
 		
-		columns.add(new DataColumnSpecCreator("Covers", BooleanCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator("covers", BooleanCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

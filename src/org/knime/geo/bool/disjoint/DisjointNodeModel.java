@@ -196,7 +196,7 @@ public class DisjointNodeModel extends NodeModel {
 			columns.add(column);
 		}
 		
-		columns.add(new DataColumnSpecCreator("Disjoint", BooleanCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator("disjoint", BooleanCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

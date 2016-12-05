@@ -67,12 +67,13 @@ public class DistanceNodeModel extends NodeModel {
     		}
     	}
   
-    	DataTableSpec outSpec = createSpec();
+    	DataTableSpec outSpec = createSpec(inTable.getSpec());
     	BufferedDataContainer container = exec.createDataContainer(outSpec);
     	
     	RowIterator ri = inTable.iterator();
     	
     	int index = 0;
+    	int numberOfColumns = inTable.getSpec().getNumColumns();
     	for (int i = 0; i < inTable.size(); i++ ) {
     		
     		DataRow r = ri.next();				    		
@@ -86,8 +87,11 @@ public class DistanceNodeModel extends NodeModel {
     			Geometry geo2 = new GeometryJSON().read(geoJsonString2);
     			double distance = geo1.distance(geo2);		
     			DataCell[] cells = new DataCell[outSpec.getNumColumns()];
-				cells[0] = new DoubleCell(distance);	
-				container.addRowToTable(new DefaultRow(r.getKey(), cells));
+				cells[outSpec.getNumColumns()-1] = new DoubleCell(distance);	
+				for ( int col = 0; col < numberOfColumns; col++ ) {	
+	    			cells[col] = r.getCell(col);
+	    		}
+				container.addRowToTable(new DefaultRow("Row"+index, cells));
 	    		exec.checkCanceled();
 				exec.setProgress((double) index / (double) inTable.size());
 				index++;
@@ -176,10 +180,13 @@ public class DistanceNodeModel extends NodeModel {
         // TODO: generated method stub
     }
     
-    private static DataTableSpec createSpec() throws InvalidSettingsException {
+    private static DataTableSpec createSpec(DataTableSpec inSpec) throws InvalidSettingsException {
 		
 		List<DataColumnSpec> columns = new ArrayList<>();
-		columns.add(new DataColumnSpecCreator("Distance", DoubleCell.TYPE).createSpec());
+		for (DataColumnSpec column : inSpec) {
+			columns.add(column);
+		}
+		columns.add(new DataColumnSpecCreator("distance", DoubleCell.TYPE).createSpec());
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}
 

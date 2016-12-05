@@ -196,7 +196,7 @@ public class CrossesNodeModel extends NodeModel {
 			columns.add(column);
 		}
 		
-		columns.add(new DataColumnSpecCreator("Crosses", BooleanCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator("crosses", BooleanCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

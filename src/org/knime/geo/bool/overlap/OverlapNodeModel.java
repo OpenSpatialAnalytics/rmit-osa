@@ -196,7 +196,7 @@ public class OverlapNodeModel extends NodeModel {
 			columns.add(column);
 		}
 		
-		columns.add(new DataColumnSpecCreator("Overlap", BooleanCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator("overlaps", BooleanCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

@@ -1,4 +1,4 @@
-package org.knime.geo.bool.coveredBy;
+package org.knime.geo.bool.equals;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,17 +28,17 @@ import org.knime.geoutils.Constants;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * This is the model implementation of CoveredBy.
+ * This is the model implementation of Equals.
  * 
  *
  * @author 
  */
-public class CoveredByNodeModel extends NodeModel {
+public class EqualsNodeModel extends NodeModel {
     
     /**
      * Constructor for the node model.
      */
-    protected CoveredByNodeModel() {
+    protected EqualsNodeModel() {
     
         // TODO: Specify the amount of input and output ports needed.
         super(1, 1);
@@ -83,7 +83,7 @@ public class CoveredByNodeModel extends NodeModel {
 	    			String geoJsonString2 = ((StringValue) geometryCell2).getStringValue();	    			
 	    			Geometry geo2 = new GeometryJSON().read(geoJsonString2);
 	    			
-	    			boolean b = geo1.coveredBy(geo2);
+	    			boolean b = geo1.equals(geo2);
 	    		
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     				cells[outSpec.getNumColumns()-1] = BooleanCell.BooleanCellFactory.create(b);
@@ -138,7 +138,6 @@ public class CoveredByNodeModel extends NodeModel {
     	if ( j < 2 )
     		throw new InvalidSettingsException( "Input table must contain 2 geometry columns "
                     + "and those column headers must start with the_geom");
-
         return new DataTableSpec[]{null};
     }
 
@@ -196,7 +195,7 @@ public class CoveredByNodeModel extends NodeModel {
 			columns.add(column);
 		}
 		
-		columns.add(new DataColumnSpecCreator("covered by", BooleanCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator("equals", BooleanCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

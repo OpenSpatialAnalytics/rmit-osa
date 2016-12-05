@@ -200,7 +200,7 @@ public class IntersectsNodeModel extends NodeModel {
 			columns.add(column);
 		}
 		
-		columns.add(new DataColumnSpecCreator("Intersects", BooleanCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator("intersects", BooleanCell.TYPE).createSpec());
 		
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}
