@@ -89,16 +89,23 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 		String columNames[] = inTable.getSpec().getColumnNames();
 		boolean useOverlap = false;
 		boolean useRank = false;
+		boolean hasRank = false;
 		int ovIndex = -1;
 		
-		if (Arrays.asList(columNames).contains(Constants.OVID)
-				&& Arrays.asList(columNames).contains(Constants.RANK) ){
+		for (int col = 0; col < numColumns; col++) {
+    		if (columNames[col].contains(Constants.RANK) ){
+    			hasRank = true;
+    			break;
+    		}
+    	}
+		
+		if (Arrays.asList(columNames).contains(Constants.OVID) && hasRank  ){
 			useOverlap = true;
 			ovIndex = inTable.getSpec().findColumnIndex(Constants.OVID);
+			
 		}
 		
-		if (!Arrays.asList(columNames).contains(Constants.OVID)
-				&& Arrays.asList(columNames).contains(Constants.RANK) ){
+		if (!Arrays.asList(columNames).contains(Constants.OVID) && hasRank ){
 			useRank = true;
 		}
 				
@@ -132,6 +139,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 	    		String destFile1 = outFolder+"/"+ovidStr + "/" + r.getCell(rankIndexs[0]).toString()+"a.tif";
 	    		String destFile2 = outFolder+"/"+ovidStr + "/" + r.getCell(rankIndexs[1]).toString()+"b.tif";
 	    		
+	    		
 	    		Utility.ClipRaster(overlapShapeFile, srcTifFile, destFile1, 
 		    			overWrite.getBooleanValue(), tap.getBooleanValue(), 
 		    			xRes.getStringValue(), yRes.getStringValue(),
@@ -141,6 +149,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 		    			overWrite.getBooleanValue(), tap.getBooleanValue(), 
 		    			xRes.getStringValue(), yRes.getStringValue(),
 		    			woName.getStringValue(),woValue.getStringValue(),expr);
+	    		
 	    		
 	    		DataCell[] cells1 = new DataCell[outSpec.getNumColumns()];
 				cells1[0] = new StringCell(destFile1);
