@@ -66,8 +66,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
     	    	    	    	    	
     	try{
     		int index = 0;
-	    	for (DataRow row : inTable) {	    		
-	    		DataCell[] cells = new DataCell[outSpec.getNumColumns()];	    		   		
+	    	for (DataRow row : inTable) {	    		    		   		
 	    		DataCell geometryCell = row.getCell(geomIndex);
 	    		
 	    		//logger.info("geometryCell:" + geometryCell.toString());
@@ -82,24 +81,34 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    					Polygon poly = (Polygon) mp.getGeometryN(i);	    					
 	    					GeometryJSON json = new GeometryJSON();
 	    					String str = json.toString(poly);
+	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
 	    					cells[geomIndex] = new StringCell(str);
 	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
 	    						if (col != geomIndex ) {
 	    		    				cells[col] = row.getCell(col);
 	    						}
 	    		    		}
+	    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+	    		    		exec.checkCanceled();
+	    					exec.setProgress((double) index / (double) inTable.size());
+	    					index++;	
 	    				}		
 	    			}
 	    			else if(geomType == Geometries.POLYGON) {
 	    				Polygon poly = (Polygon)geo;	    				
 	    				GeometryJSON json = new GeometryJSON();
     					String str = json.toString(poly);
+    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     					cells[geomIndex] = new StringCell(str);
     					for ( int col = 0; col < numberOfColumns; col++ ) {	
     						if (col != geomIndex ) {
     		    				cells[col] = row.getCell(col);
     						}
     		    		}
+    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+    		    		exec.checkCanceled();
+    					exec.setProgress((double) index / (double) inTable.size());
+    					index++;
 	    			}
 	    			else if (geomType == Geometries.MULTILINESTRING){	
 	    				MultiLineString  ml = (MultiLineString)geo;
@@ -107,24 +116,34 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    					LineString line = (LineString) ml.getGeometryN(i);	    					
 	    					GeometryJSON json = new GeometryJSON();
 	    					String str = json.toString(line);
+	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
 	    					cells[geomIndex] = new StringCell(str);
 	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
 	    						if (col != geomIndex ) {
 	    		    				cells[col] = row.getCell(col);
 	    						}
 	    		    		}
+	    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+	    		    		exec.checkCanceled();
+	    					exec.setProgress((double) index / (double) inTable.size());
+	    					index++;
 	    				}		
 	    			}
 	    			else if(geomType == Geometries.LINESTRING) {
 	    				LineString line = (LineString)geo;	    				
 	    				GeometryJSON json = new GeometryJSON();
     					String str = json.toString(line);
+    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     					cells[geomIndex] = new StringCell(str);
     					for ( int col = 0; col < numberOfColumns; col++ ) {	
     						if (col != geomIndex ) {
     		    				cells[col] = row.getCell(col);
     						}
     		    		}
+    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+    		    		exec.checkCanceled();
+    					exec.setProgress((double) index / (double) inTable.size());
+    					index++;
 	    			}
 	    			else if (geomType == Geometries.MULTIPOINT){	
 	    				MultiPoint  mp = (MultiPoint)geo;
@@ -132,24 +151,34 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    					Point point = (Point) mp.getGeometryN(i);	    					
 	    					GeometryJSON json = new GeometryJSON();
 	    					String str = json.toString(point);
+	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 	    					cells[geomIndex] = new StringCell(str);
 	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
 	    						if (col != geomIndex ) {
 	    		    				cells[col] = row.getCell(col);
 	    						}
 	    		    		}
+	    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+	    		    		exec.checkCanceled();
+	    					exec.setProgress((double) index / (double) inTable.size());
+	    					index++;
 	    				}		
 	    			}
 	    			else if(geomType == Geometries.POINT) {
 	    				Point point = (Point)geo;	    				
 	    				GeometryJSON json = new GeometryJSON();
     					String str = json.toString(point);
+    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     					cells[geomIndex] = new StringCell(str);
     					for ( int col = 0; col < numberOfColumns; col++ ) {	
     						if (col != geomIndex ) {
     		    				cells[col] = row.getCell(col);
     						}
     		    		}
+    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+    		    		exec.checkCanceled();
+    					exec.setProgress((double) index / (double) inTable.size());
+    					index++;
 	    			}
 	    			else if(geomType == Geometries.GEOMETRYCOLLECTION) {
 	    				for (int i = 0; i < geo.getNumGeometries(); i++ ){	    					
@@ -160,33 +189,40 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    						for (int j = 0; j < geo.getNumGeometries(); j++ ){
 	    							GeometryJSON json = new GeometryJSON();
 	    	    					String str = json.toString(g.getGeometryN(i));
+	    	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 	    	    					cells[geomIndex] = new StringCell(str);
 	    	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
 	    	    						if (col != geomIndex ) {
 	    	    		    				cells[col] = row.getCell(col);
 	    	    						}
 	    	    		    		}
+	    	    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+			    		    		exec.checkCanceled();
+			    					exec.setProgress((double) index / (double) inTable.size());
+			    					index++;
 	    						}
 	    					}
 	    					else{
 	    						GeometryJSON json = new GeometryJSON();
 		    					String str = json.toString(g);
+		    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 		    					cells[geomIndex] = new StringCell(str);
 		    					for ( int col = 0; col < numberOfColumns; col++ ) {	
 		    						if (col != geomIndex ) {
 		    		    				cells[col] = row.getCell(col);
 		    						}
 		    		    		}
+		    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+		    		    		exec.checkCanceled();
+		    					exec.setProgress((double) index / (double) inTable.size());
+		    					index++;
 	    					}
 	    	
 	    				}
 	    			
 	    			}
 	    		}	    			    			    			    			    			    		
-	    		container.addRowToTable(new DefaultRow(row.getKey(), cells));
-	    		exec.checkCanceled();
-				exec.setProgress((double) index / (double) inTable.size());
-				index++;	   
+	    		   
 	    	}
     	}
     	catch (Exception e)

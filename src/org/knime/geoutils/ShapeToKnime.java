@@ -42,10 +42,11 @@ public class ShapeToKnime {
 			else{
 			
 			String name = t.getName().toString();
-
 		
 				if (t.getBinding() == Integer.class) {
 					columns.add(new DataColumnSpecCreator(name, IntCell.TYPE).createSpec());
+				}else if (t.getBinding() == Long.class) {
+					columns.add(new DataColumnSpecCreator(name, LongCell.TYPE).createSpec());
 				} else if (t.getBinding() == Double.class) {
 					columns.add(new DataColumnSpecCreator(name, DoubleCell.TYPE).createSpec());
 				} else if (t.getBinding() == Boolean.class) {
@@ -84,6 +85,8 @@ public class ShapeToKnime {
 					cells[column] = new StringCell(str);
 				} else if (value instanceof Integer) {
 					cells[column] = new IntCell((Integer) p.getValue());
+				} else if (value instanceof Long){
+					cells[column] = new LongCell((Long) p.getValue());
 				} else if (value instanceof Double) {
 					cells[column] = new DoubleCell((Double) p.getValue());
 				} else if (value instanceof Boolean) {

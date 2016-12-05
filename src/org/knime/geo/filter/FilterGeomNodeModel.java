@@ -28,6 +28,9 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.geoutils.Constants;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * This is the model implementation of FilterGeom.
@@ -65,8 +68,7 @@ public class FilterGeomNodeModel extends NodeModel {
     	int numberOfColumns = inTable.getSpec().getNumColumns();
     	
     	int index = 0;
-    	for (DataRow row : inTable) {	    		
-    		DataCell[] cells = new DataCell[outSpec.getNumColumns()];	    		   		
+    	for (DataRow row : inTable) {	    		   		
     		DataCell geometryCell = row.getCell(geomIndex);
     		if (geometryCell instanceof StringValue){
     			String geoJsonString = ((StringValue) geometryCell).getStringValue();
@@ -75,6 +77,7 @@ public class FilterGeomNodeModel extends NodeModel {
     			if (gType.toString().equals(geomType.getStringValue())){
     				GeometryJSON json = new GeometryJSON();
 					String str = json.toString(geo);
+					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	  
 					cells[geomIndex] = new StringCell(str);
 					for ( int col = 0; col < numberOfColumns; col++ ) {	
 						if (col != geomIndex ) {
@@ -85,6 +88,52 @@ public class FilterGeomNodeModel extends NodeModel {
 					exec.checkCanceled();
 					exec.setProgress((double) index / (double) inTable.size());
 					index++;
+    			}
+    			else{
+    				if ( gType.toString().contains("Multi") ){
+    					if ( gType.toString().equals("Multi"+geomType.getStringValue())){
+    						GeometryCollection  gc = (GeometryCollection)geo;
+    	    				for (int i = 0; i < gc.getNumGeometries(); i++ ){
+    	    					Geometry g = (Geometry) gc.getGeometryN(i);	    					
+    	    					GeometryJSON json = new GeometryJSON();
+    	    					String str = json.toString(g);
+    	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
+    	    					cells[geomIndex] = new StringCell(str);
+    	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+    	    						if (col != geomIndex ) {
+    	    		    				cells[col] = row.getCell(col);
+    	    						}
+    	    		    		}
+    	    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+    	    					exec.checkCanceled();
+    	    					exec.setProgress((double) index / (double) inTable.size());
+    	    					index++;
+    	    				}		
+    					}
+    				}
+    				else if (gType == Geometries.GEOMETRYCOLLECTION){
+    					GeometryCollection  gc = (GeometryCollection)geo;
+	    				for (int i = 0; i < gc.getNumGeometries(); i++ ){
+	    					Geometry g = (Geometry) gc.getGeometryN(i);	  
+	    					Geometries gTypeChild = Geometries.get(g);
+	    					
+	    					if (gTypeChild.toString().equals(geomType.getStringValue())){
+	    						GeometryJSON json = new GeometryJSON();
+		    					String str = json.toString(g);
+		    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
+		    					cells[geomIndex] = new StringCell(str);
+		    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+		    						if (col != geomIndex ) {
+		    		    				cells[col] = row.getCell(col);
+		    						}
+		    		    		}
+		    					container.addRowToTable(new DefaultRow("Row"+index, cells));
+		    					exec.checkCanceled();
+		    					exec.setProgress((double) index / (double) inTable.size());
+		    					index++;
+	    					}
+	    				}
+    				}
     			}
     		}
     	}
