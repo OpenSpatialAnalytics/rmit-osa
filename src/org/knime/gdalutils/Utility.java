@@ -26,6 +26,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.commons.lang.StringUtils;
 import org.knime.geo.resample.DirectoryFormat;
+import org.knime.geoutils.Constants;
 
 
 public class Utility {
@@ -33,7 +34,6 @@ public class Utility {
 	private final static String hdrFormat = "hdr.adf";
 	private final static String metaDataFormat = "metadata.xml";
 	public static String LOC_COLUMN = "Location";
-	public static String RANK = "Rank";
 	public static String outputFormat = ".tif";
 	public static String shapeFormat = ".shp";
 	
@@ -571,7 +571,7 @@ public class Utility {
 		
 		commandList.add(pathBuilder(destFile));
 		commandList.add("fieldname");
-		commandList.add(RANK);
+		commandList.add(Constants.RANK);
 		
 
 		String outputStr = executeCommand(commandList);

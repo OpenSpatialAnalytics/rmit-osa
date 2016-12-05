@@ -7,8 +7,8 @@ import com.vividsolutions.jts.geom.Geometry;
 public class Constants {
 	
 	public static String GEOM = "the_geom";
-	public static String RANK = "Rank";
-	public static String INDEX = "Index";
+	public static String RANK = "rank";
+	public static String INDEX = "index";
 	public static String OVID = "ovid";
 	
 	public static boolean isGeometry(String str)

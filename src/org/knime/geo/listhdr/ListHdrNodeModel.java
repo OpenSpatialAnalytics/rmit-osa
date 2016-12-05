@@ -72,7 +72,7 @@ public class ListHdrNodeModel extends NodeModel {
 	    	int rank = 0;
 	    	int rankIndex = -1;
 	    	if(numColumns > 1) {
-	    		rankIndex = inTable.getSpec().findColumnIndex(Utility.RANK);
+	    		rankIndex = inTable.getSpec().findColumnIndex(Constants.RANK);
 	    		IntCell rankCell = (IntCell)r.getCell(rankIndex);
 	    		rank = rankCell.getIntValue();
 	    	}
@@ -117,7 +117,7 @@ public class ListHdrNodeModel extends NodeModel {
     	int numColumns = inSpecs[0].getNumColumns();
     	
     	if ( numColumns > 1 ){
-    		if (!Arrays.asList(columNames).contains(Utility.RANK)){
+    		if (!Arrays.asList(columNames).contains(Constants.RANK)){
     			throw new InvalidSettingsException( "Input table must contain Location column or " 
     					+ "Location and Rank column");
     		}

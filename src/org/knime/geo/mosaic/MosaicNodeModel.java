@@ -28,6 +28,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.gdalutils.Utility;
+import org.knime.geoutils.Constants;
 
 
 /**
@@ -41,7 +42,6 @@ public class MosaicNodeModel extends NodeModel {
 	static final String OT = "output_type";
 	static final String OUTPATH = "output_path";
 	static final String OF = "output_format";
-	static final String RANK = Utility.RANK;
 	static final String LOC_COLUMN = Utility.LOC_COLUMN;
 	static final String RC = "run_command";
 	//static final String SPILT = "split";
@@ -105,7 +105,7 @@ public class MosaicNodeModel extends NodeModel {
 		
 		String mergedFile = "";
 		DataRow r1 = inTable.iterator().next();		
-		int rankIndex = inTable.getSpec().findColumnIndex(Utility.RANK);
+		int rankIndex = inTable.getSpec().findColumnIndex(Constants.RANK);
 		int locIndex = inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN);		
 		int numRows = (int) inTable.size();		
 		

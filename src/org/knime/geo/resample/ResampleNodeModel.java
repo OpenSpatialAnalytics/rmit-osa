@@ -36,6 +36,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 import org.knime.gdalutils.*;
+import org.knime.geoutils.Constants;
 
 
 
@@ -119,7 +120,7 @@ public class ResampleNodeModel extends NodeModel {
 					rc.getBooleanValue(), isZip);
 			
 			DataCell[] cells = new DataCell[outSpec.getNumColumns()];
-			int rankIndex = inTable.getSpec().findColumnIndex(Utility.RANK);
+			int rankIndex = inTable.getSpec().findColumnIndex(Constants.RANK);
 			int locIndex = inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN);
 			//System.out.println("My Rank.........................." + rankIndex);
 			if (rankIndex != -1)
@@ -250,7 +251,7 @@ public class ResampleNodeModel extends NodeModel {
 		List<DataColumnSpec> columns = new ArrayList<>();
 
 		for (DataColumnSpec column : inSpec) {
-			if((column.getName().compareTo(Utility.LOC_COLUMN)==0) || (column.getName().compareTo(Utility.RANK)==0))
+			if((column.getName().compareTo(Utility.LOC_COLUMN)==0) || (column.getName().compareTo(Constants.RANK)==0))
 				columns.add(column);			
 		}
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));

@@ -28,6 +28,7 @@ import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.gdalutils.Utility;
+import org.knime.geoutils.Constants;
 
 /**
  * This is the model implementation of RankFiles.
@@ -159,7 +160,7 @@ public class RankFilesNodeModel extends NodeModel {
 		
 		List<DataColumnSpec> columns = new ArrayList<>();
 		
-		columns.add(new DataColumnSpecCreator(Utility.RANK, IntCell.TYPE).createSpec());
+		columns.add(new DataColumnSpecCreator(Constants.RANK, IntCell.TYPE).createSpec());
 		columns.add(new DataColumnSpecCreator(Utility.LOC_COLUMN, StringCell.TYPE).createSpec());
 
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));

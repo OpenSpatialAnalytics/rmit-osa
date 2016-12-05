@@ -28,6 +28,7 @@ import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.gdalutils.Utility;
+import org.knime.geoutils.Constants;
 import org.knime.geoutils.ShapeFileFeatureExtractor;
 import org.knime.geoutils.WriteShapefile;
 import org.opengis.feature.simple.SimpleFeature;
@@ -88,7 +89,7 @@ public class ShapeMergeNodeModel extends NodeModel {
 		SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
 		typeBuilder.init(type);		
 		typeBuilder.setName("newfeatureType");		
-		typeBuilder.add("Index", Integer.class);
+		typeBuilder.add(Constants.INDEX, Integer.class);
 		SimpleFeatureType newFeatureType = typeBuilder.buildFeatureType();				
 		SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(newFeatureType);
 						
@@ -102,7 +103,7 @@ public class ShapeMergeNodeModel extends NodeModel {
 			PrecisionModel pm = new PrecisionModel(1.0);
 			geo = GeometryPrecisionReducer.reduce(geo, pm);
 			featureBuilder.add(geo);
-			featureBuilder.add(feature.getAttribute(Utility.RANK));
+			featureBuilder.add(feature.getAttribute(Constants.RANK));
 			featureBuilder.add(i+1);		
 			feature = featureBuilder.buildFeature(null);
 			feats.add(feature);
