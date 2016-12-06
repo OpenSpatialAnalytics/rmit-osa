@@ -60,36 +60,40 @@ public class GdalCalcNodeModel extends NodeModel {
     	
     	DataTableSpec outSpec = createSpec();
 		BufferedDataContainer container = exec.createDataContainer(outSpec);
+		int numColumns = inTable.getSpec().getNumColumns();
 		
     	
 		int i = 0;	
-		String rank = "";
-		List<String> sourceFiles = new ArrayList<String>(); 
-		List<String> varNames = new ArrayList<String>();
-		
+	
 		for (DataRow r : inTable){
-			StringCell inPathCell = (StringCell)r.getCell(inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN));
-	    	String srcTifFile = inPathCell.getStringValue();
-	    	sourceFiles.add(srcTifFile);
-	    	if (i==0) {
-	    		srcTifFile = srcTifFile.replace("\\", "/");
-	    		String [] ss = srcTifFile.split("/");
-	    		String fname = ss[ss.length-1];
-	    		rank = fname.replaceAll("\\D+","");	    		
-	    	}
-	    	char c = (char) (65+i);
-	    	varNames.add(Character.toString (c));
-	    	i++;
+			List<String> sourceFiles = new ArrayList<String>(); 
+			List<String> varNames = new ArrayList<String>();
+			String rank = "";
+			
+			for ( int col = 0; col < numColumns; col++ ) {
+				StringCell inPathCell = (StringCell) r.getCell(col);
+				String srcTifFile = inPathCell.getStringValue();
+		    	sourceFiles.add(srcTifFile);
+		    	if (col==0){
+		    		srcTifFile = srcTifFile.replace("\\", "/");
+		    		String [] ss = srcTifFile.split("/");
+		    		String fname = ss[ss.length-1];
+		    		rank = fname.replaceAll("\\D+","");	  
+		    	}
+		    	char c = (char) (65+col);
+		    	varNames.add(Character.toString (c));
+			}
+			String outFile = outPath.getStringValue().replace("\\", "/") + "/" + rank + ".tif";
+			Utility.GetGdalCalc(sourceFiles, varNames, outFile ,null, expr.getStringValue());
+			
+			DataCell[] cells = new DataCell[outSpec.getNumColumns()];
+			cells[0] = new StringCell(outFile);
+			container.addRowToTable(new DefaultRow("Row"+i, cells));	
+			exec.checkCanceled();
+			exec.setProgress((double) i / (double) inTable.size());  
+			i++;
 		}
 		
-		String outFile = outPath.getStringValue().replace("\\", "/") + "/" + rank + ".tif";
-				
-		Utility.GetGdalCalc(sourceFiles, varNames, outFile ,null, expr.getStringValue());
-					
-		DataCell[] cells = new DataCell[outSpec.getNumColumns()];
-		cells[0] = new StringCell(outFile);
-		container.addRowToTable(new DefaultRow("Row0", cells));		    	
-    	
 		container.close();
 		return new BufferedDataTable[] { container.getTable() };
     }

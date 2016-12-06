@@ -489,12 +489,12 @@ public class Utility {
 		//commandList.add("--NoDataValue="+noDataVlue);
 		commandList.add("--overwrite");	
 		
+		String folderLoc = destFile.substring(0, destFile.lastIndexOf("/"));
 		
-	
 		String outputStr = executeCommand(commandList);
 				
-		String outputCommandFile = destFile +"/calc.txt";
-		String outputLogFile = destFile +"/calc_log.txt";
+		String outputCommandFile = folderLoc +"/calc.txt";
+		String outputLogFile = folderLoc +"/calc_log.txt";
 		
 		
 		String command = toCommand(commandList);
@@ -617,18 +617,17 @@ public class Utility {
 		commandList.add("-cwhere");
 		String[] cutlineFeatures = cWhere.split("=");
 		String name = cutlineFeatures[0].trim();
-		String value = cutlineFeatures[1].trim();
-		commandList.add("'"+name+"="+pathBuilder(value)+"'");
+		int value = Integer.parseInt(cutlineFeatures[1].trim());
+		commandList.add("\""+name+" = "+value+"\"");
 		commandList.add("-crop_to_cutline");
 		commandList.add(pathBuilder(srcTifFile));
 		commandList.add(pathBuilder(destTifFile));
 		
-		System.out.println(toCommand(commandList));
-			
 		String command = toCommand(commandList);		
 		String outputStr = executeCommand(commandList);
 		    	    	
-    	String folderLoc = srcClipFile.substring(0, srcClipFile.lastIndexOf("/"));
+    	String folderLoc = destTifFile.substring(0, destTifFile.lastIndexOf("/"));
+    	
     	String outputCommandFile = folderLoc +"/ClipRaster.txt";
     	String outputLogFile = folderLoc +"/ClipRaster_log.txt";
     	    	
