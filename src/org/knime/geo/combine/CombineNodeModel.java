@@ -15,10 +15,13 @@ import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.IntValue;
 import org.knime.core.data.RowIterator;
 import org.knime.core.data.StringValue;
 import org.knime.core.data.def.DefaultRow;
 import org.knime.core.data.def.DoubleCell;
+import org.knime.core.data.def.IntCell;
+import org.knime.core.data.def.LongCell;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
@@ -145,7 +148,10 @@ public class CombineNodeModel extends NodeModel {
     			for (int i = 0; i < numOfGroups; i++ ){
     				groups[i] = new ArrayList<Geometry>();
     				groupValuesStr[i] = groupValues[i].toString();
+    				for ( int j = 0; j < strColSize; j++ )
+    					columnAppendList[i][j]="";
     			}
+    			
     			
     			for (DataRow r : inTable) {
     				
@@ -158,6 +164,7 @@ public class CombineNodeModel extends NodeModel {
 		    			Geometry g = new GeometryJSON().read(geoJsonString);
 		    			groups[grpIndex].add(g);	  				    
 		    		}
+    				
     				
     				int k = 0;
 		    		for ( int col = 0; col < inTable.getSpec().getNumColumns(); col++ ) {
@@ -175,7 +182,15 @@ public class CombineNodeModel extends NodeModel {
     				String str = json.toString(geo);
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     				cells[geomIndex] = new StringCell(str);
-    				cells[combineIndex] = new StringCell(groupValuesStr[i]);
+    				
+    				DataColumnSpec sp = inTable.getSpec().getColumnSpec(combineIndex);
+    				if (sp.getType() == IntCell.TYPE)
+    					cells[combineIndex] = new IntCell(Integer.parseInt(groupValuesStr[i]));
+    				else if (sp.getType() == LongCell.TYPE)
+    					cells[combineIndex] = new LongCell(Long.parseLong(groupValuesStr[i]));
+    				else
+    					cells[combineIndex] = new StringCell(groupValuesStr[i]);
+    				
     				
     				int k = 0;
     				for ( int col = 0; col < inTable.getSpec().getNumColumns(); col++ ) {
@@ -185,6 +200,7 @@ public class CombineNodeModel extends NodeModel {
     	    				k++;
     	    			}
     				}
+    				
     				container.addRowToTable(new DefaultRow("Row"+i, cells));
     	    		exec.checkCanceled();
     				
@@ -235,7 +251,7 @@ public class CombineNodeModel extends NodeModel {
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-         // TODO: generated method stub
+        this.columnNames.saveSettingsTo(settings);
     }
 
     /**
@@ -244,7 +260,7 @@ public class CombineNodeModel extends NodeModel {
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
+        this.columnNames.loadSettingsFrom(settings);
     }
 
     /**
@@ -253,7 +269,7 @@ public class CombineNodeModel extends NodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
+        this.columnNames.validateSettings(settings);
     }
     
     /**

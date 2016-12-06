@@ -43,7 +43,7 @@ public class SplitNodeModel extends NodeModel {
     protected SplitNodeModel() {
     
         // TODO: Specify the amount of input and output ports needed.
-        super(2, 1);
+        super(1, 1);
     }
 
     /**
@@ -53,28 +53,36 @@ public class SplitNodeModel extends NodeModel {
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws Exception {
 
-    	BufferedDataTable inTable1 = inData[0];
-    	BufferedDataTable inTable2 = inData[1];
-    	int geomIndex = inTable1.getSpec().findColumnIndex(Constants.GEOM);	
+    	BufferedDataTable inTable = inData[0];
+    	String columNames[] = inTable.getSpec().getColumnNames();
+    	int numColumns = inTable.getSpec().getNumColumns();
+    	int geomIndexs[] = new int[2];
     	
-    	DataTableSpec outSpec = createSpec(inTable1.getSpec(),inTable2.getDataTableSpec(),geomIndex);
+    	int j = 0;
+    	for (int i = 0; i < numColumns; i++) {
+    		if (columNames[i].contains(Constants.GEOM) ){
+    			geomIndexs[j] = i;
+    			j++;
+    			if (j==2)
+    				break;
+    		}
+    	}
+    	
+    	DataTableSpec outSpec = createSpec(inTable.getSpec(), geomIndexs);
     	BufferedDataContainer container = exec.createDataContainer(outSpec);
     	
     
-    	RowIterator ri1 = inTable1.iterator();
-    	RowIterator ri2 = inTable2.iterator();
-    	
+    	RowIterator ri = inTable.iterator();
+  
     	int index = 0;
     	    	    	    	    	
     	try{    	
-	    	for (int i = 0; i < inTable1.size(); i++ ) {
+	    	for (int i = 0; i < inTable.size(); i++ ) {
 	    		
-	    		DataRow r1 = ri1.next();
-	    		DataRow r2 = ri2.next();	    		
-	    			    			    		
-	    		DataCell geometryCell1 = r1.getCell(geomIndex);
-	    		DataCell geometryCell2 = r2.getCell(geomIndex);
+	    		DataRow r = ri.next();		
 	    		
+	    		DataCell geometryCell1 = r.getCell(geomIndexs[0]);
+	    		DataCell geometryCell2 = r.getCell(geomIndexs[1]);
 	    		
 	    		if ( (geometryCell1 instanceof StringValue) && (geometryCell2 instanceof StringValue) ){
 	    			String geoJsonString1 = ((StringValue) geometryCell1).getStringValue();	    			
@@ -87,24 +95,24 @@ public class SplitNodeModel extends NodeModel {
 					
 					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 					
-					cells[geomIndex] = new StringCell(str);
+					cells[geomIndexs[0]] = new StringCell(str);
 					
-					for ( int col = 0; col < inTable1.getSpec().getNumColumns(); col++ ) {	
-						if (col != geomIndex ) {
-		    				cells[col] = r1.getCell(col);
-						}
-		    		}
-					
-					for ( int col = 0; col < inTable2.getSpec().getNumColumns(); col++ ) {	
-						if (col != geomIndex ) {
-		    				cells[inTable1.getSpec().getNumColumns()-1+col] = r2.getCell(col);
+					int k = 0;
+					for ( int col = 0; col < numColumns; col++ ) {	
+						if (col == geomIndexs[0]) {
+		    				k++;
+						}else if(col == geomIndexs[1]){
+							
+						}else{
+							cells[k] = r.getCell(col);
+		    				k++;
 						}
 		    		}
 					//cells[outSpec.getNumColumns()-1] = new IntCell(index+1);
 					
 					container.addRowToTable(new DefaultRow("Row"+index, cells));
 		    		exec.checkCanceled();
-					exec.setProgress((double) i / (double) inTable1.size());
+					exec.setProgress((double) i / (double) inTable.size());
 					index++;    					
 	    		}
 	    	}
@@ -184,34 +192,20 @@ public class SplitNodeModel extends NodeModel {
         // TODO: generated method stub
     }
     
-	private static DataTableSpec createSpec(DataTableSpec inSpec1, DataTableSpec inSpec2, int geomIndex) throws InvalidSettingsException {
+    private static DataTableSpec createSpec(DataTableSpec inSpec, int geomIndexs[]) throws InvalidSettingsException {
 		
 		List<DataColumnSpec> columns = new ArrayList<>();
 
 		int k = 0;
-		for (DataColumnSpec column : inSpec1) {
-			if (k == geomIndex){
+		for (DataColumnSpec column : inSpec) {
+			if (k != geomIndexs[1]){
 				columns.add(column);
-			}
-			else{
-				String name = column.getName();
-				name = name + "_1";
-				columns.add(new DataColumnSpecCreator(name, column.getType()).createSpec());
-			}
-			k++;
-		}
-		
-		k = 0;
-		for (DataColumnSpec column : inSpec2) {
-			if ( k != geomIndex ) {				
-				String name = column.getName();
-				name = name + "_2";
-				columns.add(new DataColumnSpecCreator(name, column.getType()).createSpec());
 			}
 			k++;
 		}
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}
+
 
 }
 
