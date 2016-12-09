@@ -53,8 +53,12 @@ import com.vividsolutions.jts.geom.Geometry;
 public class ShapeFileWriterNodeModel extends NodeModel {
 	
 	  static final String CFG_LOC = "FilePath";
+	  static final String PROJ = "projection";
 	    public final SettingsModelString shpFileLoc =
 		        new SettingsModelString(CFG_LOC,"");
+	  public final SettingsModelString projection =
+		        new SettingsModelString(PROJ,"");
+
 
     
     /**
@@ -83,7 +87,7 @@ public class ShapeFileWriterNodeModel extends NodeModel {
     	int geomIndex = inTable.getSpec().findColumnIndex(Constants.GEOM);
     	int numberOfColumns = inTable.getSpec().getNumColumns();
     	
-    	String schema = "the_geom:"+geomType+":srid=4326,";
+    	String schema = "the_geom:"+geomType+":srid="+projection.getStringValue()+",";
     	
     	for ( int col = 0; col < numberOfColumns; col++ ) {	
 			if (col != geomIndex ) {
@@ -183,6 +187,10 @@ public class ShapeFileWriterNodeModel extends NodeModel {
     	if (shpFileLoc.getStringValue() == null) {
 			throw new InvalidSettingsException("No shape file name specified");
 		}
+    	
+    	if (projection.getStringValue() == null) {
+			throw new InvalidSettingsException("You must have a srid number for projection");
+		}
 
     	
         return new DataTableSpec[]{null};
@@ -194,6 +202,7 @@ public class ShapeFileWriterNodeModel extends NodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
     	shpFileLoc.saveSettingsTo(settings);
+    	projection.saveSettingsTo(settings);
     }
 
     /**
@@ -203,6 +212,7 @@ public class ShapeFileWriterNodeModel extends NodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
     	shpFileLoc.loadSettingsFrom(settings);
+    	projection.loadSettingsFrom(settings);
     }
 
     /**
@@ -212,6 +222,7 @@ public class ShapeFileWriterNodeModel extends NodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         shpFileLoc.validateSettings(settings);
+        projection.validateSettings(settings);
     }
     
     /**

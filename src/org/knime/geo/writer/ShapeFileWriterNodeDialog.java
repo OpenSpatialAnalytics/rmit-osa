@@ -4,8 +4,10 @@ import javax.swing.JFileChooser;
 
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
+import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.geo.reader.ShapeFileReaderNodeModel;
+import org.knime.geo.resample.ResampleNodeModel;
 
 /**
  * <code>NodeDialog</code> for the "ShapeFileWriter" Node.
@@ -24,6 +26,11 @@ public class ShapeFileWriterNodeDialog extends DefaultNodeSettingsPane {
      * New pane for configuring the ShapeFileWriter node.
      */
     protected ShapeFileWriterNodeDialog() {
+    	
+    	DialogComponentString projDialog = new DialogComponentString(
+    			new SettingsModelString(ShapeFileWriterNodeModel.PROJ,""), "Projection srid value");
+    	
+    	addDialogComponent(projDialog);
     	
     	addDialogComponent(new DialogComponentFileChooser(
     		      new SettingsModelString(ShapeFileWriterNodeModel.CFG_LOC,""),

@@ -76,10 +76,7 @@ public class ShapeMergeNodeModel extends NodeModel {
 		}
 		
 		String shpFile = Utility.MergeShapeFiles(shapeFiles);
-    	DataCell[] cells = new DataCell[outSpec.getNumColumns()];
-		cells[0] = new StringCell(shpFile);
-		container.addRowToTable(new DefaultRow("Row0", cells));	
-		
+    	
 		
 		SimpleFeatureCollection collection = 
 	        		ShapeFileFeatureExtractor.getShapeFeature(shpFile);
@@ -115,6 +112,10 @@ public class ShapeMergeNodeModel extends NodeModel {
 		File file = new File(fname);
 		WriteShapefile writer = new WriteShapefile(file);
 		writer.writeFeatures(features);
+		
+		DataCell[] cells = new DataCell[outSpec.getNumColumns()];
+		cells[0] = new StringCell(fname);
+		container.addRowToTable(new DefaultRow("Row0", cells));	
 		
 		
 		//exec.checkCanceled();
