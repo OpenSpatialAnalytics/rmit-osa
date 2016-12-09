@@ -54,7 +54,7 @@ public class ShapeFileWriterNodeModel extends NodeModel {
 	
 	  static final String CFG_LOC = "FilePath";
 	  static final String PROJ = "projection";
-	    public final SettingsModelString shpFileLoc =
+	  public final SettingsModelString shpFileLoc =
 		        new SettingsModelString(CFG_LOC,"");
 	  public final SettingsModelString projection =
 		        new SettingsModelString(PROJ,"");

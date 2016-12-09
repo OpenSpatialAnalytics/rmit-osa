@@ -6,8 +6,6 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.geo.reader.ShapeFileReaderNodeModel;
-import org.knime.geo.resample.ResampleNodeModel;
 
 /**
  * <code>NodeDialog</code> for the "ShapeFileWriter" Node.

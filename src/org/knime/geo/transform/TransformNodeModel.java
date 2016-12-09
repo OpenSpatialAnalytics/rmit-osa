@@ -25,6 +25,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.geoutils.Constants;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -39,6 +40,15 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class TransformNodeModel extends NodeModel {
     
+	 static final String SRC_SRS = "src_srid";
+	 static final String DEST_SRS = "dest_srid";
+	 
+	 public final SettingsModelString srcSRID =
+		        new SettingsModelString(SRC_SRS,"");
+	 public final SettingsModelString destSRID =
+		        new SettingsModelString(DEST_SRS,"");
+	
+	
     /**
      * Constructor for the node model.
      */
@@ -63,8 +73,8 @@ public class TransformNodeModel extends NodeModel {
     	
     	RowIterator ri = inTable.iterator();
     	
-    	CoordinateReferenceSystem srcCRS = CRS.decode("EPSG:3111");
-    	CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:4326");
+    	CoordinateReferenceSystem srcCRS = CRS.decode("EPSG:"+srcSRID.toString());
+    	CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:"+destSRID.toString());
     	MathTransform transform = CRS.findMathTransform(srcCRS, targetCRS, true);
     	
         	    	    	    	    	
@@ -123,7 +133,14 @@ public class TransformNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
 
-        // TODO: generated method stub
+    	if (srcSRID.getStringValue() == null) {
+			throw new InvalidSettingsException("You must have a source srid number for projection");
+		}
+    	
+    	if (destSRID.getStringValue() == null) {
+			throw new InvalidSettingsException("You must have a destination srid number for projection");
+		}
+
         return new DataTableSpec[]{null};
     }
 
@@ -133,6 +150,8 @@ public class TransformNodeModel extends NodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
          // TODO: generated method stub
+    	srcSRID.saveSettingsTo(settings);
+    	destSRID.saveSettingsTo(settings);
     }
 
     /**
@@ -142,6 +161,8 @@ public class TransformNodeModel extends NodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         // TODO: generated method stub
+    	srcSRID.loadSettingsFrom(settings);
+    	destSRID.loadSettingsFrom(settings);
     }
 
     /**
@@ -151,6 +172,8 @@ public class TransformNodeModel extends NodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         // TODO: generated method stub
+    	srcSRID.validateSettings(settings);
+    	destSRID.validateSettings(settings);
     }
     
     /**
