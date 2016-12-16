@@ -240,7 +240,7 @@ public class Split {
     } 
  
     /**
-     * Splits a Polygon using a LineString. 
+     * Splits a Polygon using a LineString.  
      * 
      * @param polygon 
      * @param lineString 
