@@ -1,6 +1,9 @@
 package org.knime.geo.snapper;
 
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
+import org.knime.core.node.defaultnodesettings.DialogComponentString;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.geo.buffer.BufferNodeModel;
 
 /**
  * <code>NodeDialog</code> for the "SnapToGrid" Node.
@@ -19,6 +22,11 @@ public class SnapToGridNodeDialog extends DefaultNodeSettingsPane {
      * New pane for configuring the SnapToGrid node.
      */
     protected SnapToGridNodeDialog() {
+    	
+    	DialogComponentString snapSizeDialog = new DialogComponentString(
+    			new SettingsModelString(SnapToGridNodeModel.SNAP_SIZE,"1"), "Snap scale size");
+    	
+    	addDialogComponent(snapSizeDialog);
 
     }
 }

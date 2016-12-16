@@ -28,7 +28,12 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelDouble;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.database.DatabaseConnectionPortObject;
+import org.knime.core.node.port.flowvariable.FlowVariablePortObject;
 import org.knime.geoutils.Constants;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -45,19 +50,16 @@ public class BufferNodeModel extends NodeModel {
 	
 	 private static final NodeLogger logger = NodeLogger
 	            .getLogger(BufferNodeModel.class);
+		
+	static final String DISTANCE = "distance";
+	public final SettingsModelString bufferDistance = new SettingsModelString(DISTANCE, "0.0");
 	
-	protected static final String CFG_GEOMETRY_COLUMN = "the_geom";
-	private static final int GEOMETRY_COLUMN_INDEX = 0;
-	
-	
-	private SettingsModelString geomColumn;
-    
+		
     /**
      * Constructor for the node model.
      */
     protected BufferNodeModel() {
-        super(2, 1);
-        geomColumn = new SettingsModelString(CFG_GEOMETRY_COLUMN, null);
+        super(1,1);        
     }
 
     /**
@@ -67,28 +69,35 @@ public class BufferNodeModel extends NodeModel {
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws Exception {
 
-    	BufferedDataTable geometryTable = inData[0];
-    	BufferedDataTable bufferValueTable = inData[1];
+    	BufferedDataTable geometryTable = (BufferedDataTable)inData[0];
+    	//BufferedDataTable bufferValueTable = inData[1];
     	DataTableSpec outSpec = createSpec(geometryTable.getSpec());
-    	BufferedDataContainer container = exec.createDataContainer(outSpec);
+    	BufferedDataContainer container = exec.createDataContainer(outSpec); 
+    	int geomIndex = geometryTable.getSpec().findColumnIndex(Constants.GEOM);    	    	    	    	
+    	double distance = 0.0;
     	
+    	try{
+    		distance = Double.parseDouble(bufferDistance.getStringValue());    		
+    	}
+    	catch (NumberFormatException e)
+    	{
+    		throw new NumberFormatException("Buffer distance must be a double value");
+    	}
     	
-    	RowIterator ri = bufferValueTable.iterator();
-    	DoubleCell d = (DoubleCell) ri.next().getCell(0);
-    	double distance = d.getDoubleValue();
+    	//RowIterator ri = bufferValueTable.iterator();
+    	//DoubleCell d = (DoubleCell) ri.next().getCell(0);
+    	//double distance = d.getDoubleValue();
     	
     	//logger.info("Read distance value for buffer: " + distance);
     	
     	
-    	int index = 0;
-    	//ri = geometryTable.iterator();
-    	
+    	int index = 0;    	
     	try{
     		
 	    	for (DataRow row : geometryTable) {
 	    		
 	    		DataCell[] cells = new DataCell[outSpec.getNumColumns()];
-	    		DataCell geometryCell = row.getCell(GEOMETRY_COLUMN_INDEX);
+	    		DataCell geometryCell = row.getCell(geomIndex);
 	    		
 	    		//logger.info("geometryCell:" + geometryCell.toString());
 	    		
@@ -106,18 +115,7 @@ public class BufferNodeModel extends NodeModel {
 	    			cells[col] = row.getCell(col);
 	    			
 	    		}
-	    		
-	    		
-	    		/*
-	    		for (String column : geometryTable.getSpec().getColumnNames()) {
-	    			
-	    			if ( column.compareTo(geomColumn.getStringValue()) != 0 )
-	    			{
-	    				cells[outSpec.findColumnIndex(column)] = row
-							.getCell(geometryTable.getSpec().findColumnIndex(column));
-	    			}
-				}*/
-	    		
+	    			    			    		
 	    		container.addRowToTable(new DefaultRow("Row"+index, cells));
 	    		exec.checkCanceled();
 				exec.setProgress((double) index / (double) geometryTable.size());
@@ -149,18 +147,25 @@ public class BufferNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
     	
+    	if (bufferDistance.getStringValue() == null )
+    		throw new InvalidSettingsException( "Must provide a buffer distance value");
+    	
+    	
+    	try{
+    		double d = Double.parseDouble(bufferDistance.getStringValue());
+    		
+    	}
+    	catch (NumberFormatException e)
+    	{
+    		throw new NumberFormatException("Buffer distance must be a double value");
+    	}
+    	
     	String columNames[] = inSpecs[0].getColumnNames();
     	if (!Arrays.asList(columNames).contains(Constants.GEOM)){
-			throw new InvalidSettingsException( "Input table 1 must contain 1 geometry column (the_geom)");
+			throw new InvalidSettingsException( "Input table must contains a geometry column (the_geom)");
 		}
     	
-    	DataColumnSpec columnSpec = inSpecs[1].getColumnSpec(0);
-    	DataType t = columnSpec.getType();
-    	
-    	if (!t.isCompatible(DoubleValue.class))
-    		throw new InvalidSettingsException( "Input table 2 must contain a Dobule value");
-
-
+    
     	return new DataTableSpec[] { createSpec(inSpecs[0]) };
     }
 
@@ -169,7 +174,7 @@ public class BufferNodeModel extends NodeModel {
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-    	geomColumn.saveSettingsTo(settings);
+    	bufferDistance.saveSettingsTo(settings);
     }
 
     /**
@@ -178,7 +183,7 @@ public class BufferNodeModel extends NodeModel {
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-    	geomColumn.loadSettingsFrom(settings);
+    	bufferDistance.loadSettingsFrom(settings);
     }
 
     /**
@@ -187,7 +192,7 @@ public class BufferNodeModel extends NodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        geomColumn.validateSettings(settings);
+    	bufferDistance.validateSettings(settings);
     }
     
     /**

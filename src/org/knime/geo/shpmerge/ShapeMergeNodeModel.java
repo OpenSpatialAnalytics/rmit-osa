@@ -27,6 +27,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.gdalutils.Utility;
 import org.knime.geoutils.Constants;
 import org.knime.geoutils.ShapeFileFeatureExtractor;
@@ -47,12 +48,16 @@ import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
  */
 public class ShapeMergeNodeModel extends NodeModel {
     
+	 static final String FILE_LOC = "filepath";
+	 public final SettingsModelString shpFileLoc =
+		        new SettingsModelString(FILE_LOC,"");
+	
+	
     /**
      * Constructor for the node model.
      */
     protected ShapeMergeNodeModel() {
-    
-        // TODO: Specify the amount of input and output ports needed.
+    	
         super(1, 1);
     }
 
@@ -107,7 +112,9 @@ public class ShapeMergeNodeModel extends NodeModel {
 			i++;
 		}
 		
-		String fname = shpFile.substring(0,shpFile.lastIndexOf("/")) + "/mergedsurveys.shp";
+		String fname = shpFileLoc.getStringValue();
+		if (!fname.endsWith(".shp"))
+			fname = fname + ".shp";
 		FeatureCollection<SimpleFeatureType, SimpleFeature> features = new ListFeatureCollection(newFeatureType, feats);
 		File file = new File(fname);
 		WriteShapefile writer = new WriteShapefile(file);
@@ -117,10 +124,23 @@ public class ShapeMergeNodeModel extends NodeModel {
 		cells[0] = new StringCell(fname);
 		container.addRowToTable(new DefaultRow("Row0", cells));	
 		
+		String inSourcePath = shapeFiles.get(0);
+		inSourcePath = inSourcePath.replace("\\", "/");
+		String inPath = inSourcePath.substring(0,inSourcePath.lastIndexOf("/"));
 		
-		//exec.checkCanceled();
-		//exec.setProgress((double) index / (double) inTable.size());				
-					
+		try{
+			System.out.println(inPath);
+			File directory = new File (inPath);
+			for(File f: directory.listFiles()) {
+			    if(f.getName().startsWith(Utility.mergedFileName)){
+			        f.delete();
+			    }
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+							
 		container.close();
 		return new BufferedDataTable[] { container.getTable() };
     }
@@ -153,7 +173,7 @@ public class ShapeMergeNodeModel extends NodeModel {
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-         // TODO: generated method stub
+         shpFileLoc.saveSettingsTo(settings);
     }
 
     /**
@@ -162,7 +182,7 @@ public class ShapeMergeNodeModel extends NodeModel {
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
+        shpFileLoc.loadSettingsFrom(settings);
     }
 
     /**
@@ -171,7 +191,7 @@ public class ShapeMergeNodeModel extends NodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        // TODO: generated method stub
+        shpFileLoc.validateSettings(settings);
     }
     
     /**

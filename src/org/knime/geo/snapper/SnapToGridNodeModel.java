@@ -27,6 +27,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.gdalutils.Utility;
 import org.knime.geoutils.Constants;
 
@@ -45,10 +46,13 @@ public class SnapToGridNodeModel extends NodeModel {
     /**
      * Constructor for the node model.
      */
+	
+	static final String SNAP_SIZE = "size";
+	public final SettingsModelString snapSize = new SettingsModelString(SNAP_SIZE, "1");
+	
     protected SnapToGridNodeModel() {
-    
-        // TODO: Specify the amount of input and output ports needed.
-        super(2, 1);
+            
+        super(1, 1);
     }
 
     /**
@@ -58,17 +62,22 @@ public class SnapToGridNodeModel extends NodeModel {
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws Exception {
 
-    	BufferedDataTable dataTable = inData[0];
-    	BufferedDataTable scaleValueTable = inData[1];
+    	BufferedDataTable dataTable = inData[0];    	
     	int geomIndex = dataTable.getSpec().findColumnIndex(Constants.GEOM);	 
     	int numberOfColumns = dataTable.getSpec().getNumColumns();
     	
     	DataTableSpec outSpec = createSpec(dataTable.getSpec());
     	BufferedDataContainer container = exec.createDataContainer(outSpec);
+    	    	
+    	double scaleFactor = 0.0;
+    	try{
+    		scaleFactor = Double.parseDouble(snapSize.getStringValue());    		
+    	}
+    	catch (NumberFormatException e)
+    	{
+    		throw new NumberFormatException("Span scale size must be a double value");
+    	}
     	
-    	RowIterator ri = scaleValueTable.iterator();
-    	DoubleCell d = (DoubleCell) ri.next().getCell(0);
-    	double scaleFactor = d.getDoubleValue();
     	PrecisionModel pm = new PrecisionModel(scaleFactor);
     	
     	int index = 0;
@@ -123,18 +132,23 @@ public class SnapToGridNodeModel extends NodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
     	
+    	if (snapSize.getStringValue() == null )
+    		throw new InvalidSettingsException( "Must provide a snap scale size");
+    	    	
+    	try{
+    		double d = Double.parseDouble(snapSize.getStringValue());
+    		
+    	}
+    	catch (NumberFormatException e)
+    	{
+    		throw new NumberFormatException("Snap scale size must be a double value");
+    	}
+    	
     	String columNames[] = inSpecs[0].getColumnNames();
     	if (!Arrays.asList(columNames).contains(Constants.GEOM)){
-			throw new InvalidSettingsException( "Input table 1 must contain 1 geometry column (the_geom)");
+			throw new InvalidSettingsException( "Input table must contains a geometry column (the_geom)");
 		}
-    	
-    	DataColumnSpec columnSpec = inSpecs[1].getColumnSpec(0);
-    	DataType t = columnSpec.getType();
-    	
-    	if (!t.isCompatible(DoubleValue.class))
-    		throw new InvalidSettingsException( "Input table 2 must contain a Dobule value");
-
-    	
+    	    	
         return new DataTableSpec[]{null};
     }
 
@@ -143,6 +157,7 @@ public class SnapToGridNodeModel extends NodeModel {
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
+    	snapSize.saveSettingsTo(settings);
          // TODO: generated method stub
     }
 
@@ -152,6 +167,7 @@ public class SnapToGridNodeModel extends NodeModel {
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
+    	snapSize.loadSettingsFrom(settings);
         // TODO: generated method stub
     }
 
@@ -161,6 +177,7 @@ public class SnapToGridNodeModel extends NodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
+    	snapSize.validateSettings(settings);
         // TODO: generated method stub
     }
     

@@ -36,6 +36,7 @@ public class Utility {
 	public static String LOC_COLUMN = "Location";
 	public static String outputFormat = ".tif";
 	public static String shapeFormat = ".shp";
+	public static String mergedFileName = "merged.shp";
 	
 	/***
 	 * return a list of zip files in directory
@@ -886,7 +887,7 @@ public class Utility {
 		inSourcePath = inSourcePath.replace("\\", "/");
 		String inPath = inSourcePath.substring(0,inSourcePath.lastIndexOf("/"));	
 		String os = System.getProperty("os.name");
-		String mergedFileName = "merged.shp";
+		
 					
 		if ( os.startsWith("Windows") ){						 						
 			for (int i = 0; i < shapeFiles.size(); i++ ) {

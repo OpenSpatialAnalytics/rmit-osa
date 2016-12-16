@@ -1,6 +1,10 @@
 package org.knime.geo.shpmerge;
 
+import javax.swing.JFileChooser;
+
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
+import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
  * <code>NodeDialog</code> for the "ShapeMerge" Node.
@@ -19,7 +23,12 @@ public class ShapeMergeNodeDialog extends DefaultNodeSettingsPane {
      * New pane for configuring the ShapeMerge node.
      */
     protected ShapeMergeNodeDialog() {
-
+    	
+    	addDialogComponent(new DialogComponentFileChooser(
+  		      new SettingsModelString(ShapeMergeNodeModel.FILE_LOC,""),
+  		    ShapeMergeNodeModel.FILE_LOC,
+  		      JFileChooser.SAVE_DIALOG,
+  		     	".shp"));
     }
 }
 
