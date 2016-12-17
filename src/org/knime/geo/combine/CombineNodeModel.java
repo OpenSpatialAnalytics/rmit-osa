@@ -18,6 +18,8 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.IntValue;
 import org.knime.core.data.RowIterator;
 import org.knime.core.data.StringValue;
+import org.knime.core.data.collection.CollectionCellFactory;
+import org.knime.core.data.collection.ListCell;
 import org.knime.core.data.def.DefaultRow;
 import org.knime.core.data.def.DoubleCell;
 import org.knime.core.data.def.IntCell;
@@ -32,9 +34,13 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.geoutils.Constants;
 
+import com.ibm.icu.impl.Utility;
+import com.sun.scenario.Settings;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.util.GeometryCombiner;
 
@@ -47,9 +53,7 @@ import com.vividsolutions.jts.geom.util.GeometryCombiner;
 public class CombineNodeModel extends NodeModel {
 	
 	static final String CN = "column_name";
-	public final SettingsModelString columnNames = new SettingsModelString(CN,"All");
-	public static List <String> columnNameList = new ArrayList<String>();
-	public static int numColumns = 1;
+	public final SettingsModelString columnNames = new SettingsModelString(CN,"");
     
     /**
      * Constructor for the node model.
@@ -69,22 +73,27 @@ public class CombineNodeModel extends NodeModel {
     	BufferedDataTable inTable = inData[0];
     	int geomIndex = inTable.getSpec().findColumnIndex(Constants.GEOM);
     	int combineIndex = -1;
-    	boolean combinedByAll = true;
-    	int strColSize = 0;
+    	boolean combinedByAll = false;
+    	int strColSize = inTable.getSpec().getNumColumns()-1;
+    	DataTableSpec outSpec;
     	
-    	if (columnNames.getStringValue().compareTo("All")==0) {
+    	if(columnNames.getStringValue() == null)
     		combinedByAll = true;
-    		strColSize = inTable.getSpec().getNumColumns()-1;
-    	}
-    	else {
-    		combinedByAll = false;
+    	
+    	if (!combinedByAll)  {
     		combineIndex = inTable.getSpec().findColumnIndex(columnNames.getStringValue());
     		strColSize = inTable.getSpec().getNumColumns()-2;
+    		outSpec = createSpec(inTable.getSpec(),columnNames.getStringValue());
+    	}
+    	else{
+    		outSpec = createSpec(inTable.getSpec(),"All");
     	}
     	
-    	String[] attrValues = new String[strColSize];
-    	
-    	DataTableSpec outSpec = createSpec(inTable.getSpec(),columnNames.getStringValue());
+    	//String[] attrValues = new String[strColSize];
+    	List<List<StringCell>> attrValues = new ArrayList<List<StringCell>>(strColSize);
+    	for(int i = 0; i < strColSize; i++)  {
+    		attrValues.add(new ArrayList<StringCell>());
+        }
     	
     	BufferedDataContainer container = exec.createDataContainer(outSpec);
     	List <Geometry> geometries = new ArrayList <Geometry>();
@@ -107,7 +116,7 @@ public class CombineNodeModel extends NodeModel {
 		    		for ( int col = 0; col < inTable.getSpec().getNumColumns(); col++ ) {
 		    			if (col != geomIndex ){
 		    				DataCell c = r.getCell(col);
-		    				attrValues[k] = attrValues[k] + c.toString() + ",";
+		    				attrValues.get(k).add(new StringCell(c.toString()));
 		    				k++;
 		    			}
 		    			
@@ -121,8 +130,7 @@ public class CombineNodeModel extends NodeModel {
 				int k = 0;
 				for ( int col = 0; col < inTable.getSpec().getNumColumns(); col++ ) {
 	    			if (col != geomIndex ){
-	    				attrValues[k] = attrValues[k].substring(0,  attrValues[k].length()-1);
-	    				cells[col] = new StringCell(attrValues[k]);
+	    				cells[col] =  CollectionCellFactory.createListCell(attrValues.get(k));
 	    				k++;
 	    			}
 				}
@@ -139,17 +147,18 @@ public class CombineNodeModel extends NodeModel {
     			Set uniqueValues = new HashSet(colValues); 
     			int numOfGroups = uniqueValues.size();
     			Object[] groupValues = uniqueValues.toArray();
-    			String[] groupValuesStr = new String[numOfGroups];
     			
-    			//List<List<Geometry>> combinedGeometries = new ArrayList<List<Geometry>>(numOfGroups);
-    			List<Geometry>[] groups = new ArrayList[numOfGroups];
-    			String[][] columnAppendList = new String[numOfGroups][strColSize];
+    			List<String> groupValuesStr = new ArrayList<String>(numOfGroups);
+    			List<List<Geometry>> combinedGeometries = new ArrayList<List<Geometry>>(numOfGroups);
+    			
+    			List<List<List<StringCell>>> columnAppendList = new ArrayList<List<List<StringCell>>>(numOfGroups);
+    			
     					
     			for (int i = 0; i < numOfGroups; i++ ){
-    				groups[i] = new ArrayList<Geometry>();
-    				groupValuesStr[i] = groupValues[i].toString();
-    				for ( int j = 0; j < strColSize; j++ )
-    					columnAppendList[i][j]="";
+    				combinedGeometries.add(new ArrayList<Geometry>());
+    				groupValuesStr.add(groupValues[i].toString());
+    				columnAppendList.add(new ArrayList<List<StringCell>>(strColSize));
+    				columnAppendList.get(i).add(new ArrayList<StringCell>());
     			}
     			
     			
@@ -157,12 +166,12 @@ public class CombineNodeModel extends NodeModel {
     				
     				DataCell geometryCell = r.getCell(geomIndex);
     				DataCell combineCell = r.getCell(combineIndex);
-    				int grpIndex = Arrays.asList(groupValuesStr).indexOf(combineCell.toString());
+    				int grpIndex = groupValuesStr.indexOf(combineCell.toString());
     				
     				if ( (geometryCell instanceof StringValue) ){
 		    			String geoJsonString = ((StringValue) geometryCell).getStringValue();	    			
 		    			Geometry g = new GeometryJSON().read(geoJsonString);
-		    			groups[grpIndex].add(g);	  				    
+		    			combinedGeometries.get(grpIndex).add(g);	  				    
 		    		}
     				
     				
@@ -170,14 +179,14 @@ public class CombineNodeModel extends NodeModel {
 		    		for ( int col = 0; col < inTable.getSpec().getNumColumns(); col++ ) {
 		    			if ( (col != geomIndex) && (col != combineIndex) ){
 		    				DataCell c = r.getCell(col);
-		    				columnAppendList[grpIndex][k] = columnAppendList[grpIndex][k] + c.toString() + ",";
+		    				columnAppendList.get(grpIndex).get(k).add(new StringCell( c.toString()));
 		    				k++;
 		    			}
 		    		}
     			}
     			
     			for (int i = 0; i < numOfGroups; i++ ){
-    				Geometry geo = GeometryCombiner.combine(groups[i]);
+    				Geometry geo = GeometryCombiner.combine(combinedGeometries.get(i));
     				GeometryJSON json = new GeometryJSON();
     				String str = json.toString(geo);
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
@@ -185,18 +194,17 @@ public class CombineNodeModel extends NodeModel {
     				
     				DataColumnSpec sp = inTable.getSpec().getColumnSpec(combineIndex);
     				if (sp.getType() == IntCell.TYPE)
-    					cells[combineIndex] = new IntCell(Integer.parseInt(groupValuesStr[i]));
+    					cells[combineIndex] = new IntCell(Integer.parseInt(groupValuesStr.get(i)));
     				else if (sp.getType() == LongCell.TYPE)
-    					cells[combineIndex] = new LongCell(Long.parseLong(groupValuesStr[i]));
+    					cells[combineIndex] = new LongCell(Long.parseLong(groupValuesStr.get(i)));
     				else
-    					cells[combineIndex] = new StringCell(groupValuesStr[i]);
+    					cells[combineIndex] = new StringCell(groupValuesStr.get(i));
     				
     				
     				int k = 0;
     				for ( int col = 0; col < inTable.getSpec().getNumColumns(); col++ ) {
     	    			if ( col != geomIndex && col != combineIndex ){
-    	    				columnAppendList[i][k] = columnAppendList[i][k].substring(0, columnAppendList[i][k].length()-1);
-    	    				cells[col] = new StringCell(columnAppendList[i][k]);
+    	    				cells[col] = CollectionCellFactory.createListCell(columnAppendList.get(i).get(k));
     	    				k++;
     	    			}
     				}
@@ -232,16 +240,6 @@ public class CombineNodeModel extends NodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
-    	
-    	int geomIndex = inSpecs[0].findColumnIndex(Constants.GEOM);
-    	numColumns = inSpecs[0].getNumColumns();
-    	columnNameList.add("All");
-    	
-		for (int i = 0; i < inSpecs[0].getNumColumns(); i++) {
-			 if ( i != geomIndex) {
-				 columnNameList.add(inSpecs[0].getColumnSpec(i).getName());
-			 }
-		}
     	 
         return new DataTableSpec[]{null};
     }
@@ -302,7 +300,11 @@ public class CombineNodeModel extends NodeModel {
 				columns.add(column);
 			}
 			else{
-				columns.add(new DataColumnSpecCreator(column.getName(), StringCell.TYPE).createSpec());
+				if (column.getName().compareTo(Constants.GEOM)==0)
+					columns.add(column);
+				else
+					columns.add(new DataColumnSpecCreator(column.getName(), ListCell.getCollectionType(StringCell.TYPE)).createSpec());
+					//columns.add(new DataColumnSpecCreator(column.getName(), StringCell.TYPE).createSpec());
 			}
 			
 		}
