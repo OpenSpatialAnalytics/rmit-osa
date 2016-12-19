@@ -73,8 +73,8 @@ public class TransformNodeModel extends NodeModel {
     	
     	RowIterator ri = inTable.iterator();
     	
-    	CoordinateReferenceSystem srcCRS = CRS.decode("EPSG:"+srcSRID.toString());
-    	CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:"+destSRID.toString());
+    	CoordinateReferenceSystem srcCRS = CRS.decode("EPSG:"+srcSRID.getStringValue());
+    	CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:"+destSRID.getStringValue());
     	MathTransform transform = CRS.findMathTransform(srcCRS, targetCRS, true);
     	
         	    	    	    	    	
