@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geotools.factory.Hints;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.ReferencingFactoryFinder;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataRow;
@@ -27,6 +29,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.geoutils.Constants;
+import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
@@ -74,9 +77,14 @@ public class TransformNodeModel extends NodeModel {
     	RowIterator ri = inTable.iterator();
     	
     	CoordinateReferenceSystem srcCRS = CRS.decode("EPSG:"+srcSRID.getStringValue());
-    	CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:"+destSRID.getStringValue());
-    	MathTransform transform = CRS.findMathTransform(srcCRS, targetCRS, true);
+    	//CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:"+destSRID.getStringValue());
     	
+    	Hints hints = new Hints(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE);
+    	CRSAuthorityFactory factory = ReferencingFactoryFinder.getCRSAuthorityFactory("EPSG", hints);
+    	CoordinateReferenceSystem targetCRS = factory.createCoordinateReferenceSystem("EPSG:"+destSRID.getStringValue());
+    	
+    	//CoordinateReferenceSystem targetCRS = factory.createCoordinateReferenceSystem("urn:y-ogc:def:crs:EPSG:"+destSRID.getStringValue());    	
+    	MathTransform transform = CRS.findMathTransform(srcCRS, targetCRS, true);
         	    	    	    	    	
     	try{    	
 	    	for (int i = 0; i < inTable.size(); i++ ) {
