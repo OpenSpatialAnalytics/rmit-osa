@@ -151,7 +151,7 @@ public class MosaicNodeModel extends NodeModel {
 			inPath1File = inPath1File.replace("\\", "/");
 			String inPaths[] = inPath1File.split("/");
 			String parentFolder = inPaths[inPaths.length-2];
-			mergedFile  = outPath.getStringValue() + parentFolder + Utility.outputFormat;
+			mergedFile  = outPath.getStringValue() + "/" + parentFolder + Utility.outputFormat;
 			
 			RowIterator ri = inTable.iterator();
     		int k = 0;
@@ -167,6 +167,13 @@ public class MosaicNodeModel extends NodeModel {
         	    	parentFolder = inPathsList[inPathsList.length-2];
         	    	r = ri.next();        	    	        	    	
         		}
+        		
+        		if (inPathList.size() == inTable.size()-1){
+        			StringCell inPathCell = (StringCell)r.getCell(locIndex);
+        	    	inPath = inPathCell.getStringValue();
+        	    	inPathList.add(inPath);
+        		}
+        		
         		currentFolder = parentFolder;
         		String outFile = Utility.MergeRasters(inPathList, mergedFile, outputType.getStringValue(), 
         				NODATA, outputFormat.getStringValue(), rc.getBooleanValue());
