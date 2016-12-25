@@ -60,6 +60,7 @@ public class ResampleNodeModel extends NodeModel {
 		static final String T_SRS = "t_srs";
 		static final String RC = "run_command";
 		static final String DF = "directory_format";
+		static final String CN = "column_name";
 	 	
 	    public final SettingsModelString resampleMethod = new SettingsModelString(RM,"average");
 	    public final SettingsModelString workingMemory = new SettingsModelString(WM,"500");
@@ -75,6 +76,7 @@ public class ResampleNodeModel extends NodeModel {
 	    public final SettingsModelString s_srs = new SettingsModelString(S_SRS,"");
 	    public final SettingsModelString t_srs = new SettingsModelString(T_SRS,"");
 	    public final SettingsModelBoolean rc = new SettingsModelBoolean(RC,false);
+	    public final SettingsModelString columnNames = new SettingsModelString(CN,"");
 	
 	
 	/**
@@ -100,6 +102,15 @@ public class ResampleNodeModel extends NodeModel {
     	RowIterator ri = inTable.iterator();
     	long numFiles = inTable.size();
     	int index = 0;
+    	int iter = 0;
+    	
+    	String selectedColumn = "";
+    	String prevValue = "none";
+    	
+    	if(columnNames.getStringValue() == null)
+    		selectedColumn = "none";
+    	else
+    		selectedColumn = columnNames.getStringValue();
     	
     	while (ri.hasNext()){
     	
@@ -112,7 +123,25 @@ public class ResampleNodeModel extends NodeModel {
 	    	if (inPath.toLowerCase().contains(".zip"))
 	    		isZip = true;
 	    	
+			int locIndex = inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN);
+			int selectedIndex = -1;
+			String subDirectoryname = "none";
+			
+			if ( (selectedColumn.compareTo("none") != 0) && 
+					(df.getStringValue().compareTo(DirectoryFormat.SubDir.toString())==0) ){
+				selectedIndex = inTable.getSpec().findColumnIndex(selectedColumn);			
+				subDirectoryname = r.getCell(selectedIndex).toString();
+				if ( subDirectoryname.compareTo(prevValue) == 0 ){
+					iter++;
+				}
+				else{
+					iter = 1;
+					prevValue = subDirectoryname;
+				}			
+			}
+	    	
 			String outFile = Utility.ReSampleRaster(inPath, outPath.getStringValue(), df.getStringValue(),
+					selectedColumn, subDirectoryname, Integer.toString(iter),
 					overWrite.getBooleanValue(), tap.getBooleanValue(),
 					resampleMethod.getStringValue(), workingMemory.getStringValue(), 
 					outputFormat.getStringValue(),s_srs.getStringValue(),
@@ -120,9 +149,9 @@ public class ResampleNodeModel extends NodeModel {
 					rc.getBooleanValue(), isZip);
 			
 			DataCell[] cells = new DataCell[outSpec.getNumColumns()];
-			int rankIndex = inTable.getSpec().findColumnIndex(Constants.RANK);
-			int locIndex = inTable.getSpec().findColumnIndex(Utility.LOC_COLUMN);
+			
 			//System.out.println("My Rank.........................." + rankIndex);
+			int rankIndex = inTable.getSpec().findColumnIndex(Constants.RANK);
 			if (rankIndex != -1)
 				cells[rankIndex] = r.getCell(rankIndex);
 			cells[locIndex] = new StringCell(outFile);
@@ -181,6 +210,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.tap.saveSettingsTo(settings);
     	this.rc.saveSettingsTo(settings);
     	this.df.saveSettingsTo(settings);
+    	this.columnNames.saveSettingsTo(settings);
     }
 
     /**
@@ -202,6 +232,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.t_srs.loadSettingsFrom(settings);
     	this.rc.loadSettingsFrom(settings);
     	this.df.loadSettingsFrom(settings);
+    	this.columnNames.loadSettingsFrom(settings);
     }
 
     /**
@@ -223,6 +254,7 @@ public class ResampleNodeModel extends NodeModel {
     	this.t_srs.validateSettings(settings);
     	this.rc.validateSettings(settings);
     	this.df.validateSettings(settings);
+    	this.columnNames.validateSettings(settings);
     }
     
     /**
@@ -258,4 +290,3 @@ public class ResampleNodeModel extends NodeModel {
 	}
     
 }
-

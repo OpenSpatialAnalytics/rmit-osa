@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.geo.resample.DirectoryFormat;
 import org.knime.geoutils.Constants;
@@ -294,6 +296,7 @@ public class Utility {
 	*/
 	
 	public static String ReSampleRaster(String inPath, String outDir, String directoryFormat,
+			String selectedColumn, String columnValueName, String columnValueNo,
 			boolean overWrite, boolean tap,
 			String resample, String workingMemory, String oFormat, String s_srs, String t_srs,
 			String xRes, String yRes, boolean isRun, boolean isZip)
@@ -333,16 +336,25 @@ public class Utility {
 		if (directoryFormat.compareTo(DirectoryFormat.MainDir.toString())==0){
 			
 			outputSubFolder = outDir;
-			outFileName = inPaths[inPaths.length-1];
+			outFileName = inPaths[inPaths.length-1];  //take the source file name from input path
 		}
 		else if (directoryFormat.compareTo(DirectoryFormat.SubDir.toString())==0){
-			String folderName = inPaths[inPaths.length-2];
+			/*
+			String folderName = inPaths[inPaths.length-2];			
 			String parentFolder = inPaths[inPaths.length-3];
 			if ( parentFolder.contains(".zip") ){
 				parentFolder = parentFolder.substring(0, parentFolder.length()-5);			
 			}
 			outputSubFolder = outDir+"/"+parentFolder;
 			outFileName = folderName + outputFormat;
+			*/
+			String parentFolder  = outDir+"/"+selectedColumn;  //column name as subdirectory
+			File directory = new File(parentFolder);
+			if (! directory.exists()){
+				directory.mkdir();
+			}
+			outputSubFolder = parentFolder + "/" + columnValueName;
+			outFileName = columnValueNo + outputFormat;
 			
 		}
 	
@@ -373,8 +385,8 @@ public class Utility {
 	}
 	
 	
-	public static String MergeRasters(List<String> inList, String mergedFile, String outputType,
-			String noDataValue, String oFormat, boolean isRun)
+	public static String MergeRasters(List<String> inList, String inPath, String mergedFile, 
+			String outputType, String noDataValue, String oFormat, boolean isRun)
 	{
 		mergedFile = mergedFile.replace("\\", "/");
 		String gdalPath = getGdalPath();
@@ -385,8 +397,8 @@ public class Utility {
 		commandList.add(pathBuilder(gdalPath+"gdal_merge.py"));
 		commandList.add("-ot");
 		commandList.add(outputType);
-		//commandList.add("-n");
-		//commandList.add(noDataValue);
+		commandList.add("-n");
+		commandList.add(noDataValue);
 		commandList.add("-a_nodata");
 		commandList.add(noDataValue);
 		commandList.add("-o");
@@ -401,9 +413,11 @@ public class Utility {
 		commandList.add("SPARSE_OK=TRUE");
 		
 		
+		/*
 		String inSourcePath = inList.get(0);
 		inSourcePath = inSourcePath.replace("\\", "/");
 		String inPath = inSourcePath.substring(0,inSourcePath.lastIndexOf("/"));
+		*/
 		
 		boolean isLargeResamples = false;
 		
@@ -412,10 +426,11 @@ public class Utility {
 		
 		if(!isLargeResamples){
 			for (int i = 0; i < inList.size(); i++ ){
-				String inFile = inList.get(i).replace("\\", "/");
-				String[] inPaths = inFile.split("/");
-				String inSourceFile = inPaths[inPaths.length-1];
-				commandList.add(inSourceFile);
+				//String inFile = inList.get(i).replace("\\", "/");
+				//String[] inPaths = inFile.split("/");
+				//String inSourceFile = inPaths[inPaths.length-1];
+				//commandList.add(inSourceFile);
+				commandList.add(inList.get(i));
 			}
 		}
 		else{
@@ -425,9 +440,10 @@ public class Utility {
 			}
 			
 			for (int i = 0; i < inList.size(); i++ ){
-				String inFile = inList.get(i).replace("\\", "/");
-				File oldFile = new File(inFile);
-				File newfile =new File(folder+"/"+i);
+				//String inFile = inList.get(i).replace("\\", "/");
+				String inFile = inList.get(i);
+				File oldFile = new File(inPath+"/"+inFile);
+				File newfile =new File(folder+"/"+inFile.substring(0,inFile.indexOf(outputFormat)));
 				try{
 					oldFile.renameTo(newfile);
 					commandList.add(Integer.toString(i));
@@ -454,6 +470,14 @@ public class Utility {
 		String command = toCommand(commandList);
 		writeOutputCommand(outputCommandFile,command);
 		writeOutputLog(outputStringFile, command, outputStr);
+		
+		try{
+			FileUtils.cleanDirectory(new File(inPath+"temp")); 
+		}
+		catch (Exception e)
+		{
+			
+		}
 		
 		return mergedFile;		
 	}

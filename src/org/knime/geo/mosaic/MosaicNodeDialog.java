@@ -42,10 +42,10 @@ public class MosaicNodeDialog extends DefaultNodeSettingsPane {
     			new DialogComponentFileChooser(new SettingsModelString(MosaicNodeModel.OUTPATH,""), 
     					MosaicNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
     	
-    	/*
-    	DialogComponentString splitDialog = new DialogComponentString(
-    			new SettingsModelString(MosaicNodeModel.SPILT,"0"), "Split size");
-    	*/
+    	
+    	DialogComponentString mergeFileNameDialog = new DialogComponentString(
+    			new SettingsModelString(MosaicNodeModel.MF,""), "Merged File Name");
+ 
     	
     	DialogComponentBoolean runCommandDialog = 
     			new DialogComponentBoolean ( new SettingsModelBoolean(MosaicNodeModel.RC,false), "Run commands");
@@ -53,8 +53,9 @@ public class MosaicNodeDialog extends DefaultNodeSettingsPane {
     	addDialogComponent(outputTypeSelectDialog);
     	addDialogComponent(outputFormatSelectDialog);
     	addDialogComponent(outputPath);
+    	addDialogComponent(mergeFileNameDialog);
     	addDialogComponent(runCommandDialog);
-    	//addDialogComponent(splitDialog);
+    	
     }
     
     private String[] OutputTypes()

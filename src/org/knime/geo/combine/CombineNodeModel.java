@@ -42,6 +42,8 @@ import org.knime.geoutils.Constants;
 import com.ibm.icu.impl.Utility;
 import com.sun.scenario.Settings;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.util.GeometryCombiner;
 
 /**
@@ -76,6 +78,7 @@ public class CombineNodeModel extends NodeModel {
     	boolean combinedByAll = false;
     	int strColSize = inTable.getSpec().getNumColumns()-1;
     	DataTableSpec outSpec;
+    	GeometryFactory geometryFactory = new GeometryFactory();
     	
     	if(columnNames.getStringValue() == null)
     		combinedByAll = true;
@@ -122,9 +125,10 @@ public class CombineNodeModel extends NodeModel {
 		    			
 		    		}
 		    	}
-	    		Geometry geo = GeometryCombiner.combine(geometries);
+	    		//Geometry geo = GeometryCombiner.combine(geometries);
+		    	GeometryCollection collect = new GeometryCollection((Geometry[]) geometries.toArray(new Geometry[0]),geometryFactory);
     			GeometryJSON json = new GeometryJSON();
-				String str = json.toString(geo);
+				String str = json.toString(collect);
 				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 				cells[geomIndex] = new StringCell(str);
 				int k = 0;
@@ -186,9 +190,10 @@ public class CombineNodeModel extends NodeModel {
     			}
     			
     			for (int i = 0; i < numOfGroups; i++ ){
-    				Geometry geo = GeometryCombiner.combine(combinedGeometries.get(i));
+    				//Geometry geo = GeometryCombiner.combine(combinedGeometries.get(i));
+    				GeometryCollection collect = new GeometryCollection((Geometry[]) combinedGeometries.get(i).toArray(new Geometry[0]),geometryFactory);
     				GeometryJSON json = new GeometryJSON();
-    				String str = json.toString(geo);
+    				String str = json.toString(collect);
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     				cells[geomIndex] = new StringCell(str);
     				

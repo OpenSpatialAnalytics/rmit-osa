@@ -9,7 +9,7 @@ public enum DirectoryFormat {
 	  },
 	SubDir {
 	      public String toString() {
-	          return "Create files in sub-directory";
+	          return "Sub-directory based on column";
 	      }
 	  }
 

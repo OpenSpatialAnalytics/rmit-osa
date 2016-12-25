@@ -2,16 +2,22 @@ package org.knime.geo.resample;
 
 import javax.swing.JFileChooser;
 
+import org.knime.core.data.DataColumnSpec;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
+import org.knime.core.node.defaultnodesettings.DialogComponentColumnNameSelection;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 import org.knime.core.node.defaultnodesettings.DialogComponentLabel;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.util.ColumnFilter;
+import org.knime.gdalutils.Utility;
+import org.knime.geo.combine.CombineNodeModel;
 import org.knime.geo.operators.GeometryOperationNodeModel;
 import org.knime.geo.writer.ShapeFileWriterNodeModel;
+import org.knime.geoutils.Constants;
 
 /**
  * <code>NodeDialog</code> for the "Resample" Node.
@@ -80,10 +86,12 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     			new SettingsModelString(ResampleNodeModel.DF,DirectoryFormat.MainDir.toString()),
     			"File Naming",DirectoryFOrmats());
     	
-
+    	DialogComponentColumnNameSelection columnSelect = 
+    			new DialogComponentColumnNameSelection(new SettingsModelString(ResampleNodeModel.CN,""),
+    					"Select Column",0,true,true, filterColumn);
+    	
     	DialogComponentBoolean runCommandDialog = 
     			new DialogComponentBoolean ( new SettingsModelBoolean(ResampleNodeModel.RC,false), "Run commands");
-    	
     	
     	addDialogComponent(resampleMethodSelectDialog);
     	addDialogComponent(workingMemory);
@@ -97,6 +105,7 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     	addDialogComponent(overWriteSelection);
     	addDialogComponent(outputPath);
     	addDialogComponent(directoryFormatSelectDialog);
+    	addDialogComponent(columnSelect);
     	addDialogComponent(runCommandDialog);
 
     }
@@ -136,6 +145,19 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
 		
 		return names;
     }
+    
+    ColumnFilter filterColumn = new ColumnFilter() {
+        @Override
+        public boolean includeColumn(DataColumnSpec dataColumnSpec) {
+            return !(dataColumnSpec.getName().compareTo(Utility.LOC_COLUMN) == 0);
+        }
+
+		@Override
+		public String allFilteredMsg() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	};
     
 }
 
