@@ -125,11 +125,11 @@ public class CombineNodeModel extends NodeModel {
 		    			
 		    		}
 		    	}
-		    	Geometry geo = geometryFactory.buildGeometry(geometries);
+		    	//Geometry geo = geometryFactory.buildGeometry(geometries);
 	    		//Geometry geo = GeometryCombiner.combine(geometries);
-		    	//GeometryCollection collect = new GeometryCollection((Geometry[]) geometries.toArray(new Geometry[0]),geometryFactory);
+		    	GeometryCollection collect = new GeometryCollection((Geometry[]) geometries.toArray(new Geometry[0]),geometryFactory);
     			GeometryJSON json = new GeometryJSON();
-				String str = json.toString(geo);
+				String str = json.toString(collect);
 				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 				cells[geomIndex] = new StringCell(str);
 				int k = 0;
@@ -192,10 +192,10 @@ public class CombineNodeModel extends NodeModel {
     			
     			for (int i = 0; i < numOfGroups; i++ ){
     				//Geometry geo = GeometryCombiner.combine(combinedGeometries.get(i));
-    				//GeometryCollection collect = new GeometryCollection((Geometry[]) combinedGeometries.get(i).toArray(new Geometry[0]),geometryFactory);
-    				Geometry geo = geometryFactory.buildGeometry(combinedGeometries.get(i));
+    				GeometryCollection collect = new GeometryCollection((Geometry[]) combinedGeometries.get(i).toArray(new Geometry[0]),geometryFactory);
+    				//Geometry geo = geometryFactory.buildGeometry(combinedGeometries.get(i));
     				GeometryJSON json = new GeometryJSON();
-    				String str = json.toString(geo);
+    				String str = json.toString(collect);
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     				cells[geomIndex] = new StringCell(str);
     				

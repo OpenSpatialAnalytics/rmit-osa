@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.geotools.geojson.geom.GeometryJSON;
+import org.geotools.geometry.jts.FactoryFinder;
+import org.geotools.geometry.jts.Geometries;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataRow;
@@ -27,6 +30,11 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.geoutils.Constants;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.operation.union.UnaryUnionOp;
 
 /**
  * This is the model implementation of UnaryUnion.
@@ -59,7 +67,7 @@ public class UnaryUnionNodeModel extends NodeModel {
     	BufferedDataContainer container = exec.createDataContainer(outSpec);
     	
     	RowIterator ri = inTable.iterator();
-        	    	    	    	    	
+    	    	        	    	    	    	    	
     	try{    	
 	    	for (int i = 0; i < inTable.size(); i++ ) {
 	    		
@@ -70,8 +78,44 @@ public class UnaryUnionNodeModel extends NodeModel {
 	    		if ( (geometryCell instanceof StringValue) ){
 	    			String geoJsonString = ((StringValue) geometryCell).getStringValue();	    			
 	    			Geometry g = new GeometryJSON().read(geoJsonString);
-	    			  				    			
-	    			Geometry geo = g.union();
+	    			Geometries geomType = Geometries.get(g);
+	    				    			
+	    			Geometry geo = null;
+	    			if (geomType == Geometries.GEOMETRYCOLLECTION){
+	    				List <Geometry> geometries = new LinkedList<Geometry>();
+	    				for (int j = 0; j < g.getNumGeometries(); j++ ){	
+	    					Geometry g1 = g.getGeometryN(j);
+	    					geometries.add(g1);
+	    				}
+	    				UnaryUnionOp uOp = new UnaryUnionOp(geometries); 
+	    			    geo = uOp.union(); 	    					    				
+	    			}
+	    			else {
+	    				List <Geometry> geometries = new ArrayList<Geometry>();
+	    				for (int j = 0; j < g.getNumGeometries(); j++ ){	
+	    					Geometry g1 = g.getGeometryN(j);
+	    					geometries.add(g1);
+	    				}
+	    				geo = UnaryUnionOp.union(geometries);
+	    			}
+	    				    			
+	    			geomType = Geometries.get(geo);
+	    			if (geomType == Geometries.MULTIPOLYGON){
+	    				Polygon[] polygons = new Polygon[geo.getNumGeometries()];
+	    				for (int j = 0; j < geo.getNumGeometries(); j++ ){
+	    					polygons[j] = (Polygon) geo.getGeometryN(j);	    					
+	    				}	    				
+	    				GeometryFactory factory = FactoryFinder.getGeometryFactory( null );
+	    				geo = new MultiPolygon(polygons, factory);
+	    			}
+	    					    				    			    				    			  				    			
+	    			//Geometry geo = g.union();
+	    			//Geometry geo = UnaryUnionOp.union(geometries);
+	    			//GeometryFactory factory = FactoryFinder.getGeometryFactory( null );	
+	    			//GeometryCollection geometryCollection =
+	    			          //(GeometryCollection) factory.buildGeometry( geometries );	    			
+	    			//Geometry geo = geometryCollection.union();
+	    			
 	    			GeometryJSON json = new GeometryJSON();
     				String str = json.toString(geo);
     					
