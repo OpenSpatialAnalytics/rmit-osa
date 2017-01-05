@@ -82,6 +82,8 @@ public class GeoMapViewerNodeModel extends NodeModel {
     	DataCell firstCell = firstRow.getCell(0);
     	String jsonStr = ((StringValue) firstCell).getStringValue();
     	String geomType = getGeomType(jsonStr);
+    	if (geomType.compareTo("Polygon") == 0)
+    		geomType = "MultiPolygon";
     	
     	SimpleFeatureType schemaDef = 
 				DataUtilities.createType(geomType, "the_geom:"+geomType+":srid=4326,name:String,timestamp:java.util.Date");

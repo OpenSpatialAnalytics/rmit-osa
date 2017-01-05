@@ -6,6 +6,7 @@ import java.util.List;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
+import org.geotools.geometry.jts.Geometries;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
@@ -22,6 +23,8 @@ import org.opengis.feature.type.AttributeType;
 
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
 
 public class ShapeToKnime {
 	
@@ -76,12 +79,27 @@ public class ShapeToKnime {
 			for (Property p : feature.getProperties()) {
 				
 				Object value = p.getValue();
+				String str = "";
+				GeometryJSON json = new GeometryJSON();
 
 				if (value == null) {
 					cells[column] = DataType.getMissingCell();
 				} else if (value instanceof Geometry) {
-					GeometryJSON json = new GeometryJSON();
-					String str = json.toString((Geometry)value);
+					Geometry geo = (Geometry)value;
+					Geometries geomType = Geometries.get(geo);	    			
+	    			if (geomType == Geometries.MULTIPOLYGON){	
+	    				MultiPolygon  mp = (MultiPolygon)geo;
+	    				if (mp.getNumGeometries() == 1){
+	    					Polygon poly = (Polygon) mp.getGeometryN(0);
+	    					str = json.toString(poly);
+	    				}
+	    				else{
+	    					str = json.toString(mp);
+	    				}
+	    			}
+	    			else{						    				
+	    				str = json.toString((Geometry)value);
+	    			}	    				
 					cells[column] = new StringCell(str);
 				} else if (value instanceof Integer) {
 					cells[column] = new IntCell((Integer) p.getValue());

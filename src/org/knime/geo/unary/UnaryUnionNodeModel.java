@@ -98,7 +98,8 @@ public class UnaryUnionNodeModel extends NodeModel {
 	    				}
 	    				geo = UnaryUnionOp.union(geometries);
 	    			}
-	    				    			
+	    			
+	    			/*
 	    			geomType = Geometries.get(geo);
 	    			if (geomType == Geometries.MULTIPOLYGON){
 	    				Polygon[] polygons = new Polygon[geo.getNumGeometries()];
@@ -108,6 +109,7 @@ public class UnaryUnionNodeModel extends NodeModel {
 	    				GeometryFactory factory = FactoryFinder.getGeometryFactory( null );
 	    				geo = new MultiPolygon(polygons, factory);
 	    			}
+	    			*/
 	    					    				    			    				    			  				    			
 	    			//Geometry geo = g.union();
 	    			//Geometry geo = UnaryUnionOp.union(geometries);

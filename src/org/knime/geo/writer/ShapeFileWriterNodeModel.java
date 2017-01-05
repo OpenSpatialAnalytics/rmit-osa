@@ -83,11 +83,16 @@ public class ShapeFileWriterNodeModel extends NodeModel {
     	DataCell firstCell = firstRow.getCell(0);
     	String jsonStr = ((StringValue) firstCell).getStringValue();
     	String geomType = getGeomType(jsonStr);
+    	if (geomType.compareTo("Polygon") == 0)
+    		geomType = "MultiPolygon";
+    	if (geomType.compareTo("LineString") == 0)
+    		geomType = "MultiLineString";    	
     	
     	int geomIndex = inTable.getSpec().findColumnIndex(Constants.GEOM);
     	int numberOfColumns = inTable.getSpec().getNumColumns();
     	
     	String schema = "the_geom:"+geomType+":srid="+projection.getStringValue()+",";
+    	//String schema = "the_geom:MultiPolygon:srid="+projection.getStringValue()+",";
     	
     	for ( int col = 0; col < numberOfColumns; col++ ) {	
 			if (col != geomIndex ) {
