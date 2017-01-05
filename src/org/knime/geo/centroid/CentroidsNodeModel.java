@@ -70,7 +70,7 @@ public class CentroidsNodeModel extends NodeModel {
     			Geometry geo = new GeometryJSON().read(geoJsonString);
     			//UnaryUnionOp.union(geoms)
     			Point p = geo.getCentroid();    			
-				GeometryJSON json = new GeometryJSON();
+				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 				String str = json.toString(p);
 				cells[geomIndex] = new StringCell(str);
 				for ( int col = 0; col < numberOfColumns; col++ ) {	

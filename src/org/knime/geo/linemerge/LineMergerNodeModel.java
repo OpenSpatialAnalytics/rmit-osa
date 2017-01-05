@@ -72,7 +72,7 @@ public class LineMergerNodeModel extends NodeModel {
 				merger.add(geo);
 				Collection lines = merger.getMergedLineStrings();
 				Geometry g =  geo.getFactory().buildGeometry(lines);	
-				GeometryJSON json = new GeometryJSON();
+				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 				String str = json.toString(g);
 				cells[geomIndex] = new StringCell(str);
 				for ( int col = 0; col < numberOfColumns; col++ ) {	

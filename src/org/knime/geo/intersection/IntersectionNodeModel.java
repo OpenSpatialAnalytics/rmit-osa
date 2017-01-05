@@ -98,7 +98,7 @@ public class IntersectionNodeModel extends NodeModel {
 	    			Geometry geo2 = new GeometryJSON().read(geoJsonString2);	    				    			
 	    		
 	    			Geometry geo = geo1.intersection(geo2);
-	    			GeometryJSON json = new GeometryJSON();
+	    			GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     				String str = json.toString(geo);
     					
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];

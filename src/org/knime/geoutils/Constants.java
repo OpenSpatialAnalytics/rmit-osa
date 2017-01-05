@@ -10,6 +10,7 @@ public class Constants {
 	public static String RANK = "rank";
 	public static String INDEX = "index";
 	public static String OVID = "ovid";
+	public static int JsonPrecision = 16;
 	
 	public static boolean isGeometry(String str)
 	{

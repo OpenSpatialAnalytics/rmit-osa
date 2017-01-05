@@ -22,6 +22,7 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.geoutils.Constants;
 import org.knime.geoutils.ShapeFileOperations;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -121,7 +122,7 @@ public class OverlayNodeModel extends NodeModel {
     	
     		DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     		
-    		GeometryJSON json = new GeometryJSON();
+    		GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 			String str = json.toString(results[i]);
 			cells[0] = new StringCell(str);
 			String key = "Row"+(i+1);

@@ -32,6 +32,8 @@ import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
+import jdk.nashorn.internal.runtime.regexp.joni.ast.ConsAltNode;
+
 /**
  * This is the model implementation of FilterGeom.
  * 
@@ -75,7 +77,7 @@ public class FilterGeomNodeModel extends NodeModel {
     			Geometry geo = new GeometryJSON().read(geoJsonString);
     			Geometries gType = Geometries.get(geo);
     			if (gType.toString().equals(geomType.getStringValue())){
-    				GeometryJSON json = new GeometryJSON();
+    				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 					String str = json.toString(geo);
 					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	  
 					cells[geomIndex] = new StringCell(str);
@@ -95,7 +97,7 @@ public class FilterGeomNodeModel extends NodeModel {
     						GeometryCollection  gc = (GeometryCollection)geo;
     	    				for (int i = 0; i < gc.getNumGeometries(); i++ ){
     	    					Geometry g = (Geometry) gc.getGeometryN(i);	    					
-    	    					GeometryJSON json = new GeometryJSON();
+    	    					GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     	    					String str = json.toString(g);
     	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
     	    					cells[geomIndex] = new StringCell(str);
@@ -118,7 +120,7 @@ public class FilterGeomNodeModel extends NodeModel {
 	    					Geometries gTypeChild = Geometries.get(g);
 	    					
 	    					if (gTypeChild.toString().equals(geomType.getStringValue())){
-	    						GeometryJSON json = new GeometryJSON();
+	    						GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 		    					String str = json.toString(g);
 		    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
 		    					cells[geomIndex] = new StringCell(str);

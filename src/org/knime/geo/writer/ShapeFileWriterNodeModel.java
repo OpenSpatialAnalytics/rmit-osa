@@ -83,6 +83,7 @@ public class ShapeFileWriterNodeModel extends NodeModel {
     	DataCell firstCell = firstRow.getCell(0);
     	String jsonStr = ((StringValue) firstCell).getStringValue();
     	String geomType = getGeomType(jsonStr);
+    	
     	if (geomType.compareTo("Polygon") == 0)
     		geomType = "MultiPolygon";
     	if (geomType.compareTo("LineString") == 0)

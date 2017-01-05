@@ -79,7 +79,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    				MultiPolygon  mp = (MultiPolygon)geo;
 	    				for (int i = 0; i < mp.getNumGeometries(); i++ ){
 	    					Polygon poly = (Polygon) mp.getGeometryN(i);	    					
-	    					GeometryJSON json = new GeometryJSON();
+	    					GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 	    					String str = json.toString(poly);
 	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
 	    					cells[geomIndex] = new StringCell(str);
@@ -96,7 +96,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    			}
 	    			else if(geomType == Geometries.POLYGON) {
 	    				Polygon poly = (Polygon)geo;	    				
-	    				GeometryJSON json = new GeometryJSON();
+	    				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     					String str = json.toString(poly);
     					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     					cells[geomIndex] = new StringCell(str);
@@ -114,7 +114,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    				MultiLineString  ml = (MultiLineString)geo;
 	    				for (int i = 0; i < ml.getNumGeometries(); i++ ){
 	    					LineString line = (LineString) ml.getGeometryN(i);	    					
-	    					GeometryJSON json = new GeometryJSON();
+	    					GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 	    					String str = json.toString(line);
 	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];	
 	    					cells[geomIndex] = new StringCell(str);
@@ -131,7 +131,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    			}
 	    			else if(geomType == Geometries.LINESTRING) {
 	    				LineString line = (LineString)geo;	    				
-	    				GeometryJSON json = new GeometryJSON();
+	    				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     					String str = json.toString(line);
     					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     					cells[geomIndex] = new StringCell(str);
@@ -149,7 +149,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    				MultiPoint  mp = (MultiPoint)geo;
 	    				for (int i = 0; i < mp.getNumGeometries(); i++ ){
 	    					Point point = (Point) mp.getGeometryN(i);	    					
-	    					GeometryJSON json = new GeometryJSON();
+	    					GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 	    					String str = json.toString(point);
 	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 	    					cells[geomIndex] = new StringCell(str);
@@ -166,7 +166,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    			}
 	    			else if(geomType == Geometries.POINT) {
 	    				Point point = (Point)geo;	    				
-	    				GeometryJSON json = new GeometryJSON();
+	    				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     					String str = json.toString(point);
     					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     					cells[geomIndex] = new StringCell(str);
@@ -187,7 +187,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    					Geometries gtype = Geometries.get(g);
 	    					if(gtype==Geometries.MULTIPOLYGON ||gtype==Geometries.MULTILINESTRING || gtype==Geometries.MULTIPOINT){
 	    						for (int j = 0; j < geo.getNumGeometries(); j++ ){
-	    							GeometryJSON json = new GeometryJSON();
+	    							GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 	    	    					String str = json.toString(g.getGeometryN(i));
 	    	    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 	    	    					cells[geomIndex] = new StringCell(str);
@@ -203,7 +203,7 @@ public class MultiPolygonToPolygonNodeModel extends NodeModel {
 	    						}
 	    					}
 	    					else{
-	    						GeometryJSON json = new GeometryJSON();
+	    						GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 		    					String str = json.toString(g);
 		    					DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 		    					cells[geomIndex] = new StringCell(str);

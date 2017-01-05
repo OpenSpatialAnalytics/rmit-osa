@@ -80,7 +80,7 @@ public class ShapeToKnime {
 				
 				Object value = p.getValue();
 				String str = "";
-				GeometryJSON json = new GeometryJSON();
+				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 
 				if (value == null) {
 					cells[column] = DataType.getMissingCell();

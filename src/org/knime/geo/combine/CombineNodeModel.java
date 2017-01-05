@@ -128,7 +128,7 @@ public class CombineNodeModel extends NodeModel {
 		    	//Geometry geo = geometryFactory.buildGeometry(geometries);
 	    		//Geometry geo = GeometryCombiner.combine(geometries);
 		    	GeometryCollection collect = new GeometryCollection((Geometry[]) geometries.toArray(new Geometry[0]),geometryFactory);
-    			GeometryJSON json = new GeometryJSON();
+    			GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 				String str = json.toString(collect);
 				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 				cells[geomIndex] = new StringCell(str);
@@ -194,7 +194,7 @@ public class CombineNodeModel extends NodeModel {
     				//Geometry geo = GeometryCombiner.combine(combinedGeometries.get(i));
     				GeometryCollection collect = new GeometryCollection((Geometry[]) combinedGeometries.get(i).toArray(new Geometry[0]),geometryFactory);
     				//Geometry geo = geometryFactory.buildGeometry(combinedGeometries.get(i));
-    				GeometryJSON json = new GeometryJSON();
+    				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     				String str = json.toString(collect);
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];
     				cells[geomIndex] = new StringCell(str);

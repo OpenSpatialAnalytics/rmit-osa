@@ -34,6 +34,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 /**
  * This is the model implementation of Transform.
@@ -95,10 +97,10 @@ public class TransformNodeModel extends NodeModel {
 	    		
 	    		if ( (geometryCell instanceof StringValue) ){
 	    			String geoJsonString = ((StringValue) geometryCell).getStringValue();	    			
-	    			Geometry g = new GeometryJSON().read(geoJsonString);
-	    			  				    			
+	    			Geometry g = new GeometryJSON().read(geoJsonString);		  				    			
 	    			Geometry geo = JTS.transform(g, transform);
-	    			GeometryJSON json = new GeometryJSON();
+	    				    				    			
+	    			GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     				String str = json.toString(geo);
     					
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];

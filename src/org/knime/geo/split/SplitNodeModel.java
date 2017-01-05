@@ -90,7 +90,7 @@ public class SplitNodeModel extends NodeModel {
 	    			String geoJsonString2 = ((StringValue) geometryCell2).getStringValue();	    			
 	    			Geometry geo2 = new GeometryJSON().read(geoJsonString2);	    				    			
     				Geometry geo = Split.split(geo1, geo2);
-    				GeometryJSON json = new GeometryJSON();
+    				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 					String str = json.toString(geo);
 					
 					DataCell[] cells = new DataCell[outSpec.getNumColumns()];

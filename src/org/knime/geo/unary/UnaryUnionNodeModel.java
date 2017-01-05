@@ -118,7 +118,7 @@ public class UnaryUnionNodeModel extends NodeModel {
 	    			          //(GeometryCollection) factory.buildGeometry( geometries );	    			
 	    			//Geometry geo = geometryCollection.union();
 	    			
-	    			GeometryJSON json = new GeometryJSON();
+	    			GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     				String str = json.toString(geo);
     					
     				DataCell[] cells = new DataCell[outSpec.getNumColumns()];

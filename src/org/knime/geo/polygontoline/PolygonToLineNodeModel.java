@@ -85,7 +85,7 @@ public class PolygonToLineNodeModel extends NodeModel {
 	    				for (int i = 0; i < mp.getNumGeometries(); i++ ){
 	    					Polygon poly = (Polygon) mp.getGeometryN(i);
 	    					LineString linestring = poly.getExteriorRing();
-	    					GeometryJSON json = new GeometryJSON();
+	    					GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 	    					String str = json.toString(linestring);
 	    					cells[geomIndex] = new StringCell(str);
 	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
@@ -98,7 +98,7 @@ public class PolygonToLineNodeModel extends NodeModel {
 	    			else if(geomType == Geometries.POLYGON) {
 	    				Polygon poly = (Polygon)geo;
 	    				LineString linestring = poly.getExteriorRing();	
-	    				GeometryJSON json = new GeometryJSON();
+	    				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
     					String str = json.toString(linestring);
     					cells[geomIndex] = new StringCell(str);
     					for ( int col = 0; col < numberOfColumns; col++ ) {	

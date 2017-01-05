@@ -105,7 +105,7 @@ public class BufferNodeModel extends NodeModel {
 	    			String geoJsonString = ((StringValue) geometryCell).getStringValue();
 	    			Geometry geo = new GeometryJSON().read(geoJsonString);
 	    			Geometry gf = geo.buffer(distance);
-	    			GeometryJSON json = new GeometryJSON();
+	    			GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
 					String str = json.toString(gf);
 	    			cells[0] = new StringCell(str);
 	    		}
