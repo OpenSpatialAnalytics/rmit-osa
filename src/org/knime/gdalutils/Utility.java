@@ -397,8 +397,8 @@ public class Utility {
 		commandList.add(pathBuilder(gdalPath+"gdal_merge.py"));
 		commandList.add("-ot");
 		commandList.add(outputType);
-		commandList.add("-n");
-		commandList.add(noDataValue);
+		//commandList.add("-n");
+		//commandList.add(noDataValue);
 		commandList.add("-a_nodata");
 		commandList.add(noDataValue);
 		commandList.add("-o");
