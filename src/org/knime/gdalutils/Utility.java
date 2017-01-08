@@ -663,6 +663,106 @@ public class Utility {
 		
 	}
 	
+	public static String Rasterize(String srcShpFile, String outFileLoc,  String xRes, String yRes,
+			String attr, String noDataValue, String outputType, String oFormat,  
+			boolean tap, boolean isRun)
+	{
+		
+		srcShpFile = srcShpFile.replace("\\", "/");
+		outFileLoc = outFileLoc.replace("\\", "/");
+		String[] inPaths = srcShpFile.split("/");
+		String inFileName = inPaths[inPaths.length-1];
+		//String[] file = inFileName.split(".");
+		String fileName = inFileName.substring(0, inFileName.length()-4) + "_rasterized" + outputFormat;
+		String outFile = outFileLoc + "/" + fileName;
+		
+		List<String> commandList = new ArrayList<String>();
+		commandList.add("gdal_rasterize");
+		commandList.add("-a");
+		commandList.add(attr);
+		commandList.add("-of");
+		commandList.add(oFormat);
+		commandList.add("-a_nodata");
+		commandList.add(noDataValue);
+		commandList.add("-tr");
+		commandList.add(xRes);
+		commandList.add(yRes);
+		if (tap)
+			commandList.add("-tap");
+		commandList.add("-ot");
+		commandList.add(outputType);
+		commandList.add(pathBuilder(srcShpFile));
+		commandList.add(pathBuilder(outFile));
+		
+		String outputStr = "";
+		
+		if (isRun)
+			outputStr = executeCommand(commandList);
+		else
+			outputStr = "commands";
+				
+		String outputStringFile = outFileLoc +"/rasterize_log.txt";
+    	String outputCommandFile = outFileLoc +"/commands.txt";
+    	
+    	String command = toCommand(commandList); 
+    	writeOutputCommand(outputCommandFile, command);
+    	writeOutputLog(outputStringFile, command, outputStr);
+    	
+		return outFile;	
+		
+	}
+	
+	
+	public static String Proximity(String srcRaster, String outFileLoc, 
+			String noDataValue, String outputType, String oFormat, String distUnit, 
+			boolean tap, boolean isRun)
+	{
+		srcRaster = srcRaster.replace("\\", "/");
+		outFileLoc = outFileLoc.replace("\\", "/");
+		String[] inPaths = srcRaster.split("/");
+		String inFileName = inPaths[inPaths.length-1];
+		//String[] file = inFileName.split(".");
+		String fileName = inFileName.substring(0, inFileName.length()-4) + "_proximity" + outputFormat;
+		String outFile = outFileLoc + "/" + fileName;
+		String gdalPath = getGdalPath();
+		
+		List<String> commandList = new ArrayList<String>();
+		if (gdalPath.length() != 0)
+			commandList.add("python");
+		commandList.add(pathBuilder(gdalPath+"gdal_proximity.py"));	
+		commandList.add(pathBuilder(srcRaster));
+		commandList.add(pathBuilder(outFile));
+		commandList.add("-of");
+		commandList.add(oFormat);
+		commandList.add("-ot");
+		commandList.add(outputType);
+		commandList.add("-distunits");
+		commandList.add(distUnit);
+		commandList.add("-nodata");
+		commandList.add(noDataValue);
+		
+		if (tap)
+			commandList.add("-tap");
+		
+		String outputStr = "";
+		
+		if (isRun)
+			outputStr = executeCommand(commandList);
+		else
+			outputStr = "commands";
+				
+		String outputStringFile = outFileLoc +"/proximity_log.txt";
+    	String outputCommandFile = outFileLoc +"/commands.txt";
+    	
+    	String command = toCommand(commandList); 
+    	writeOutputCommand(outputCommandFile, command);
+    	writeOutputLog(outputStringFile, command, outputStr);
+    	
+		return outFile;	
+		
+	}
+	
+	
 	public static String GetGdalInfo(String sourceFile)
 	{
 		sourceFile = sourceFile.replace("\\", "/");
