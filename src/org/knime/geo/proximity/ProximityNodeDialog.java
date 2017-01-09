@@ -50,10 +50,7 @@ public class ProximityNodeDialog extends DefaultNodeSettingsPane {
 		
     	DialogComponentString nodata = new DialogComponentString(
     			new SettingsModelString(ProximityNodeModel.ND,""), "No Data Value");
-    	
-      	DialogComponentBoolean tapSelection = 
-    			new DialogComponentBoolean ( new SettingsModelBoolean(ProximityNodeModel.TAP,false), "Target Aligned Pixels");
-      	
+    	      	
     	DialogComponentFileChooser outputPath = 
     			new DialogComponentFileChooser(new SettingsModelString(ProximityNodeModel.OUTPATH,""), 
     					ProximityNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
@@ -66,8 +63,7 @@ public class ProximityNodeDialog extends DefaultNodeSettingsPane {
     	addDialogComponent(outputTypeSelectDialog);
     	addDialogComponent(outputFormatSelectDialog);
     	addDialogComponent(distanceUnitSelectDialog);
-    	addDialogComponent(nodata);
-    	addDialogComponent(tapSelection);
+    	addDialogComponent(nodata);    	
     	addDialogComponent(outputPath);
     	addDialogComponent(runCommandDialog);  
        

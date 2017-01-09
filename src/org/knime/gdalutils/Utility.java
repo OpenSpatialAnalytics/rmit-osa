@@ -733,7 +733,7 @@ public class Utility {
 	
 	public static String Proximity(String srcRaster, String outFileLoc, 
 			String noDataValue, String outputType, String oFormat, String distUnit, 
-			boolean tap, boolean isRun)
+			boolean isRun)
 	{
 		srcRaster = srcRaster.replace("\\", "/");
 		outFileLoc = outFileLoc.replace("\\", "/");
@@ -758,10 +758,7 @@ public class Utility {
 		commandList.add(distUnit);
 		commandList.add("-nodata");
 		commandList.add(noDataValue);
-		
-		if (tap)
-			commandList.add("-tap");
-		
+	
 		String outputStr = "";
 		
 		if (isRun)

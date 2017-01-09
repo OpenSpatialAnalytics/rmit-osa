@@ -42,8 +42,9 @@
 	<node category-path="/geo/gdal" factory-class="org.knime.geo.mask.MaskRasterNodeFactory" id="org.knime.geo.mask.MaskRasterNodeFactory"/>
 	<node category-path="/geo/gdal" factory-class="org.knime.geo.calc.GdalCalcNodeFactory" id="org.knime.geo.calc.GdalCalcNodeFactory"/>
 	<node category-path="/geo/gdal" factory-class="org.knime.geo.clip.ClipPolygonToRasterNodeFactory" id="org.knime.geo.clip.ClipPolygonToRasterNodeFactory"/>
+	<node category-path="/geo/gdal" factory-class="org.knime.geo.clipsingle.ClipARasterNodeFactory" id="org.knime.geo.clipsingle.ClipARasterNodeFactory"/>
 	<node category-path="/geo/gdal" factory-class="org.knime.geo.rasterize.RasterizeNodeFactory" id="org.knime.geo.rasterize.RasterizeNodeFactory"/>
-	<node category-path="/geo/gdal" factory-class="org.knime.geo.proximity.ProximityNodeFactory" id="org.knime.geo.proximity.ProximityNodeFactory"/>			
+	<node category-path="/geo/gdal" factory-class="org.knime.geo.proximity.ProximityNodeFactory" id="org.knime.geo.proximity.ProximityNodeFactory"/>				
 	<node category-path="/geo/raster" factory-class="org.knime.geo.shpmerge.ShapeMergeNodeFactory" id="org.knime.geo.shpmerge.ShapeMergeNodeFactory"/>
 	<node category-path="/geo/raster" factory-class="org.knime.geo.listhdr.ListHdrNodeFactory" id="org.knime.geo.listhdr.ListHdrNodeFactory"/>
 	<node category-path="/geo/raster" factory-class="org.knime.geo.rank.RankFilesNodeFactory" id="org.knime.geo.rank.RankFilesNodeFactory"/>
@@ -67,7 +68,7 @@
 	<node category-path="/geo/bool" factory-class="org.knime.geo.bool.overlap.OverlapNodeFactory" id="org.knime.geo.bool.overlap.OverlapNodeFactory"/>
 	<node category-path="/geo/bool" factory-class="org.knime.geo.bool.within.WithinNodeFactory" id="org.knime.geo.bool.within.WithinNodeFactory"/>
 	<node category-path="/geo/bool" factory-class="org.knime.geo.bool.equals.EqualsNodeFactory" id="org.knime.geo.bool.equals.EqualsNodeFactory"/>
-	<node category-path="/geo/conv" factory-class="org.knime.geo.transform.TransformNodeFactory" id="org.knime.geo.transform.TransformNodeFactory"/>
+	<node category-path="/geo/conv" factory-class="org.knime.geo.transform.TransformNodeFactory" id="org.knime.geo.transform.TransformNodeFactory"/>	
 </extension>
    
 </plugin>

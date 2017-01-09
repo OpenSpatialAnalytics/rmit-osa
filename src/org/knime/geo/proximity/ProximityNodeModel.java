@@ -42,8 +42,7 @@ import org.knime.geoutils.Constants;
 public class ProximityNodeModel extends NodeModel {
     
 	
-	static final String OUTPATH = "output_file_path";
-	static final String TAP = "tap";
+	static final String OUTPATH = "output_file_path";	
 	static final String ND = "nodata_value";
 	static final String OT = "output_type"; 
 	static final String OF = "output_format";
@@ -51,8 +50,7 @@ public class ProximityNodeModel extends NodeModel {
 	static final String RC = "run_command";
 	
    
-    public final SettingsModelString outPath = new SettingsModelString(OUTPATH,"");
-    public final SettingsModelBoolean tap = new SettingsModelBoolean(TAP,false);
+    public final SettingsModelString outPath = new SettingsModelString(OUTPATH,"");    
     public final SettingsModelString noDataValue = new SettingsModelString(ND,"");
     public final SettingsModelString outputType = new SettingsModelString(OT,"Byte");
     public final SettingsModelString outputFormat = new SettingsModelString(OF,"GTiff");
@@ -91,7 +89,7 @@ public class ProximityNodeModel extends NodeModel {
 	    	String outFile = Utility.Proximity(inFile, outPath.getStringValue(), 
 	    			noDataValue.getStringValue(), outputType.getStringValue(), 
 	    			outputFormat.getStringValue(), distanceUnit.getStringValue(), 
-	    			tap.getBooleanValue(), rc.getBooleanValue());
+	    			rc.getBooleanValue());
 	    	
 	    	DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 	    	cells[locIndex] = new StringCell(outFile);
@@ -157,8 +155,7 @@ public class ProximityNodeModel extends NodeModel {
     	this.outputFormat.saveSettingsTo(settings);
     	this.outputType.saveSettingsTo(settings);
     	this.distanceUnit.saveSettingsTo(settings);
-    	this.noDataValue.saveSettingsTo(settings);
-    	this.tap.saveSettingsTo(settings);
+    	this.noDataValue.saveSettingsTo(settings);    	
     	this.rc.saveSettingsTo(settings);
 
     }
@@ -174,8 +171,7 @@ public class ProximityNodeModel extends NodeModel {
     	this.outputFormat.loadSettingsFrom(settings);
     	this.outputType.loadSettingsFrom(settings);
     	this.distanceUnit.loadSettingsFrom(settings);
-    	this.noDataValue.loadSettingsFrom(settings);
-    	this.tap.loadSettingsFrom(settings);
+    	this.noDataValue.loadSettingsFrom(settings);    	
     	this.rc.loadSettingsFrom(settings);
 
     }
@@ -191,8 +187,7 @@ public class ProximityNodeModel extends NodeModel {
     	this.outputFormat.validateSettings(settings);
     	this.outputType.validateSettings(settings);
     	this.distanceUnit.validateSettings(settings);
-    	this.noDataValue.validateSettings(settings);
-    	this.tap.validateSettings(settings);
+    	this.noDataValue.validateSettings(settings);    	
     	this.rc.validateSettings(settings);
     }
     
