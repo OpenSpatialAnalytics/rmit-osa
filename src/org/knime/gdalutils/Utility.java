@@ -392,6 +392,8 @@ public class Utility {
 		String gdalPath = getGdalPath();
 		
 		List<String> commandList = new ArrayList<String>();
+		List<String> commandList1 = new ArrayList<String>();
+
 		if (gdalPath.length() != 0)
 			commandList.add("python");
 		commandList.add(pathBuilder(gdalPath+"gdal_merge.py"));
@@ -434,6 +436,8 @@ public class Utility {
 			}
 		}
 		else{
+			commandList1.addAll(commandList.subList(0, commandList.size()));
+			
 			File folder = new File(inPath+"temp");
 			if (! folder.exists()){
 				folder.mkdir();
@@ -443,10 +447,13 @@ public class Utility {
 				//String inFile = inList.get(i).replace("\\", "/");
 				String inFile = inList.get(i);
 				File oldFile = new File(inPath+"/"+inFile);
-				File newfile =new File(folder+"/"+inFile.substring(0,inFile.indexOf(outputFormat)));
+				String fName = inFile.substring(0,inFile.indexOf(outputFormat));
+				File newFile = new File(folder+"/"+fName);
 				try{
-					oldFile.renameTo(newfile);
-					commandList.add(Integer.toString(i));
+					//oldFile.renameTo(newfile);					
+					FileUtils.copyFile(oldFile, newFile); 
+					commandList.add(fName);
+					commandList1.add(inFile);
 				}
 				catch (Exception e)
 				{
@@ -456,9 +463,12 @@ public class Utility {
 		}
 		
 		String outputStr = "";
+		String executionPath = inPath;
+		if (isLargeResamples)
+			executionPath = inPath+"temp";
 		
 		if (isRun)
-			outputStr = executeMergeCommand(commandList,inPath);
+			outputStr = executeMergeCommand(commandList,executionPath);
 		else
 			outputStr = "commands";
 				
@@ -467,17 +477,25 @@ public class Utility {
 		String outputCommandFile = folderLoc +"/merge.txt";
 		String outputStringFile = folderLoc +"/merge_log.txt";
 				
+		
 		String command = toCommand(commandList);
+		if(isLargeResamples)
+			command = toCommand(commandList1);
+		
 		writeOutputCommand(outputCommandFile,command);
 		writeOutputLog(outputStringFile, command, outputStr);
 		
-		try{
-			FileUtils.cleanDirectory(new File(inPath+"temp")); 
-		}
-		catch (Exception e)
-		{
+		if(isLargeResamples){
+			try{
+				FileUtils.cleanDirectory(new File(inPath+"temp"));
+				FileUtils.deleteDirectory(new File(inPath+"temp"));
+			}
+			catch (Exception e)
+			{
+				
+			}
 			
-		}
+		}		
 		
 		return mergedFile;		
 	}
@@ -1058,6 +1076,29 @@ public class Utility {
 		return inPath+"/"+mergedFileName;
 					
 	}	
+	
+	/*
+	public static void main (String args[]) throws IOException
+	{
+		//File folder = new File("C:/Scratch/gadata/Resample/BrisbaneCityCouncil2009");
+		//String newPath = "C:/Scratch/gadata/Resample/6";
+		//File[] listOfFiles = folder.listFiles();
+		File folder = new File("C:/Scratch/gadata/Resample/6");
+		File[] listOfFiles = folder.listFiles();
+		List <String> fList = new ArrayList<String>();
+		
+		for (int i = 0; i < listOfFiles.length; i++) {
+		      if (listOfFiles[i].isFile()) {
+		    	  //File oldFile = new File("C:/Scratch/gadata/Resample/BrisbaneCityCouncil2009/" + listOfFiles[i].getName());
+		    	  //File newFille = new File(newPath+"/"+i+".tif");
+		    	  fList.add(listOfFiles[i].getName());
+		    	  //FileUtils.copyFile(oldFile, newFille);
+		      }
+		}
+		
+		MergeRasters(fList, "C:/Scratch/gadata/Resample/6", "C:/Scratch/gadata/temp/a.tif" , "Float32", "-340282346638529993179660072199368212480.000", "GTiff", true);
+	}
+	*/
 	
 	/*
 	public static void main (String args[])
