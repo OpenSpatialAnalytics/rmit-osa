@@ -1,24 +1,24 @@
-package org.knime.geo.clipsingle;
+package org.knime.geo.reomovehole;
 
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 
 /**
- * <code>NodeFactory</code> for the "ClipARaster" Node.
+ * <code>NodeFactory</code> for the "RemoveHoles" Node.
  * 
  *
- * @author Forkan
+ * @author 
  */
-public class ClipARasterNodeFactory 
-        extends NodeFactory<ClipARasterNodeModel> {
+public class RemoveHolesNodeFactory 
+        extends NodeFactory<RemoveHolesNodeModel> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ClipARasterNodeModel createNodeModel() {
-        return new ClipARasterNodeModel();
+    public RemoveHolesNodeModel createNodeModel() {
+        return new RemoveHolesNodeModel();
     }
 
     /**
@@ -33,9 +33,9 @@ public class ClipARasterNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<ClipARasterNodeModel> createNodeView(final int viewIndex,
-            final ClipARasterNodeModel nodeModel) {
-        return new ClipARasterNodeView(nodeModel);
+    public NodeView<RemoveHolesNodeModel> createNodeView(final int viewIndex,
+            final RemoveHolesNodeModel nodeModel) {
+        return new RemoveHolesNodeView(nodeModel);
     }
 
     /**
@@ -51,7 +51,7 @@ public class ClipARasterNodeFactory
      */
     @Override
     public NodeDialogPane createNodeDialogPane() {
-        return new ClipARasterNodeDialog();
+        return new RemoveHolesNodeDialog();
     }
 
 }

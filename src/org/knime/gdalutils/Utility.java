@@ -657,11 +657,13 @@ public class Utility {
 		}
 		commandList.add("-cutline");
 		commandList.add(pathBuilder(srcClipFile));
-		commandList.add("-cwhere");
-		String[] cutlineFeatures = cWhere.split("=");
-		String name = cutlineFeatures[0].trim();
-		int value = Integer.parseInt(cutlineFeatures[1].trim());
-		commandList.add("\""+name+" = "+value+"\"");
+		if (!cWhere.isEmpty()) {
+			commandList.add("-cwhere");
+			String[] cutlineFeatures = cWhere.split("=");
+			String name = cutlineFeatures[0].trim();
+			int value = Integer.parseInt(cutlineFeatures[1].trim());
+			commandList.add("\""+name+" = "+value+"\"");
+		}
 		commandList.add("-crop_to_cutline");
 		commandList.add(pathBuilder(srcTifFile));
 		commandList.add(pathBuilder(destTifFile));

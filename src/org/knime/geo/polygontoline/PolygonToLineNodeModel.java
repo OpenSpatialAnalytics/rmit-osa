@@ -26,7 +26,9 @@ import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -82,18 +84,22 @@ public class PolygonToLineNodeModel extends NodeModel {
 	    			Geometries geomType = Geometries.get(geo);	    			
 	    			if (geomType == Geometries.MULTIPOLYGON){	
 	    				MultiPolygon  mp = (MultiPolygon)geo;
+	    				LineString[] lineStrings = new LineString[mp.getNumGeometries()];
 	    				for (int i = 0; i < mp.getNumGeometries(); i++ ){
 	    					Polygon poly = (Polygon) mp.getGeometryN(i);
 	    					LineString linestring = poly.getExteriorRing();
-	    					GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
-	    					String str = json.toString(linestring);
-	    					cells[geomIndex] = new StringCell(str);
-	    					for ( int col = 0; col < numberOfColumns; col++ ) {	
-	    						if (col != geomIndex ) {
-	    		    				cells[col] = row.getCell(col);
-	    						}
-	    		    		}
+	    					lineStrings[i] = linestring;
 	    				}		
+	    				
+	    				MultiLineString ms = new GeometryFactory().createMultiLineString(lineStrings);
+	    				GeometryJSON json = new GeometryJSON(Constants.JsonPrecision);
+    					String str = json.toString(ms);
+    					cells[geomIndex] = new StringCell(str);
+    					for ( int col = 0; col < numberOfColumns; col++ ) {	
+    						if (col != geomIndex ) {
+    		    				cells[col] = row.getCell(col);
+    						}
+    		    		}
 	    			}
 	    			else if(geomType == Geometries.POLYGON) {
 	    				Polygon poly = (Polygon)geo;
