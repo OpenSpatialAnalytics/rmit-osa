@@ -47,6 +47,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 	 static final String WO_VALUE = "wo_value";
 	 static final String XRES = "xres";
 	 static final String YRES = "yres";
+	 static final String ND = "nodata_value";
 	 static final String CWHERE = "cwhere";
 	 static final String INPATH = "inpath";
 	 static final String OUTPATH = "outpath";
@@ -59,6 +60,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 	 public final SettingsModelString yRes = new SettingsModelString(YRES,"");
 	 public final SettingsModelString woName = new SettingsModelString(WO_NAME,"");
 	 public final SettingsModelString woValue = new SettingsModelString(WO_VALUE,"");
+	 public final SettingsModelString noDataValue = new SettingsModelString(ND,"");
 	 public final SettingsModelString cwhere = new SettingsModelString(CWHERE,"");
 	 public final SettingsModelString inputShpFile = new SettingsModelString(INPATH,"");
 	 public final SettingsModelString outpath = new SettingsModelString(OUTPATH,"");
@@ -148,11 +150,13 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 	    		Utility.ClipRaster(overlapShapeFile, srcTifFile1, destFile1, 
 		    			overWrite.getBooleanValue(), tap.getBooleanValue(), 
 		    			xRes.getStringValue(), yRes.getStringValue(),
+		    			noDataValue.getStringValue(),
 		    			woName.getStringValue(),woValue.getStringValue(),expr);
 	    		
 	    		Utility.ClipRaster(overlapShapeFile, srcTifFile2, destFile2, 
 		    			overWrite.getBooleanValue(), tap.getBooleanValue(), 
 		    			xRes.getStringValue(), yRes.getStringValue(),
+		    			noDataValue.getStringValue(),
 		    			woName.getStringValue(),woValue.getStringValue(),expr);
 	    		
 	    		
@@ -179,6 +183,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 	        	Utility.ClipRaster(overlapShapeFile, srcTifFile, destFile, 
 		    			overWrite.getBooleanValue(), tap.getBooleanValue(), 
 		    			xRes.getStringValue(), yRes.getStringValue(),
+		    			noDataValue.getStringValue(),
 		    			woName.getStringValue(),woValue.getStringValue(),expr);
 	        	
 	        	DataCell[] cells = new DataCell[outSpec.getNumColumns()];
@@ -198,6 +203,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 		    	Utility.ClipRaster(overlapShapeFile, srcTifFile, destFile, 
 		    			overWrite.getBooleanValue(), tap.getBooleanValue(), 
 		    			xRes.getStringValue(), yRes.getStringValue(),
+		    			noDataValue.getStringValue(),
 		    			woName.getStringValue(),woValue.getStringValue(),cwhere.getStringValue());
 		    	
 		    	DataCell[] cells = new DataCell[outSpec.getNumColumns()];
@@ -253,6 +259,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
     	this.yRes.saveSettingsTo(settings);
     	this.woName.saveSettingsTo(settings);
     	this.woValue.saveSettingsTo(settings);
+    	this.noDataValue.saveSettingsTo(settings);
     	this.cwhere.saveSettingsTo(settings);
     	this.inputShpFile.saveSettingsTo(settings);
     	this.srcPath.saveSettingsTo(settings);
@@ -272,6 +279,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
     	this.yRes.loadSettingsFrom(settings);
     	this.woName.loadSettingsFrom(settings);
     	this.woValue.loadSettingsFrom(settings);
+    	this.noDataValue.loadSettingsFrom(settings);
     	this.cwhere.loadSettingsFrom(settings);
     	this.inputShpFile.loadSettingsFrom(settings);
     	this.srcPath.loadSettingsFrom(settings);
@@ -291,6 +299,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
     	this.yRes.validateSettings(settings);
     	this.woName.validateSettings(settings);
     	this.woValue.validateSettings(settings);
+    	this.noDataValue.validateSettings(settings);
     	this.cwhere.validateSettings(settings);
     	this.inputShpFile.validateSettings(settings);
     	this.srcPath.validateSettings(settings);

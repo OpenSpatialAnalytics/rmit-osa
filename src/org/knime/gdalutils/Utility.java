@@ -632,7 +632,7 @@ public class Utility {
 	}
 	
 	public static String ClipRaster(String srcClipFile, String srcTifFile, String destTifFile, 
-			boolean overWrite, boolean tap, String xRes, String yRes, String woName, String woValue,
+			boolean overWrite, boolean tap, String xRes, String yRes, String nData, String woName, String woValue,
 			String cWhere)
 	{
 		
@@ -654,6 +654,10 @@ public class Utility {
 			commandList.add("-tr");
 			commandList.add(xRes);
 			commandList.add(yRes);
+		}
+		if (!nData.isEmpty()) {
+			commandList.add("-dstnodata");
+			commandList.add(nData);
 		}
 		commandList.add("-cutline");
 		commandList.add(pathBuilder(srcClipFile));

@@ -10,6 +10,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.geo.mosaic.MosaicNodeModel;
+import org.knime.geo.proximity.ProximityNodeModel;
 import org.knime.geo.reader.ShapeFileReaderNodeModel;
 import org.knime.geo.resample.ResampleNodeModel;
 
@@ -51,6 +52,9 @@ public class ClipPolygonToRasterNodeDialog extends DefaultNodeSettingsPane {
     	DialogComponentString yres = new DialogComponentString(
     			new SettingsModelString(ClipPolygonToRasterNodeModel.YRES,""), "Y resolution");
     	
+    	DialogComponentString nodata = new DialogComponentString(
+    			new SettingsModelString(ClipPolygonToRasterNodeModel.ND,""), "No Data Value");
+    	
     	DialogComponentString cwhereText = new DialogComponentString(
     			new SettingsModelString(ClipPolygonToRasterNodeModel.CWHERE,""), "Attribute query for cutline");
     	
@@ -86,6 +90,7 @@ public class ClipPolygonToRasterNodeDialog extends DefaultNodeSettingsPane {
     	//addDialogComponent(resoluation);
     	addDialogComponent(xres);
     	addDialogComponent(yres);
+    	addDialogComponent(nodata);
     	addDialogComponent(cwhereText);
     	addDialogComponent(overWriteSelection);
     	addDialogComponent(shpFileSelect);
