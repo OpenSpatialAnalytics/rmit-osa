@@ -190,6 +190,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 	    	else{
 	    		StringCell inPathCell = (StringCell)r.getCell(loc);
 		    	String srcTifFile = inPathCell.getStringValue();
+		    	srcTifFile = srcTifFile.replace("\\", "/");
 	    		String filenames[] = srcTifFile.split("/");
 	    		String outFolder = outpath.getStringValue().replace("\\", "/");
 	        	String destFile = outFolder+"/"+filenames[filenames.length-1];
