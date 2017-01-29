@@ -50,7 +50,7 @@ import org.knime.core.node.NodeSettingsWO;
 public class GeoMapViewerNodeModel extends NodeModel {
     
 	 static final String CFG_SHP_FILE = "ShpFile";
-	    public final SettingsModelString shpFile =
+	 public final SettingsModelString shpFile =
 		        new SettingsModelString(CFG_SHP_FILE,"temp"+((int)Math.random()*1000)+".shp");
 
 	

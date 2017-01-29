@@ -61,7 +61,6 @@ Bundle-ClassPath: shapefilereader.jar,
  lib/gt-render-14.4.jar,
  lib/gt-shapefile-14.4.jar,
  lib/gt-swing-14.4.jar,
- lib/gt-swt-14.4.jar,
  lib/gt-transform-14.4.jar,
  lib/gt-validation-14.4.jar,
  lib/gt-xml-14.4.jar,
@@ -137,7 +136,8 @@ Bundle-ClassPath: shapefilereader.jar,
  lib/xml-commons-resolver-1.2.jar,
  lib/xmlunit-1.3.jar,
  lib/xpp3_min-1.1.4c.jar,
- lib/xsd-2.6.0.jar
+ lib/xsd-2.6.0.jar,
+ lib/gt-swt-14.4.jar
 Bundle-Activator: org.knime.geo.reader.ShapeFileReaderNodePlugin
 Bundle-Vendor: Forkan
 Require-Bundle: org.eclipse.core.runtime,

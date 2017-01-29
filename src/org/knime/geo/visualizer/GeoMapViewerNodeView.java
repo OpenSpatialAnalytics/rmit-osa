@@ -1,5 +1,6 @@
 package org.knime.geo.visualizer;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import org.geotools.data.FeatureSource;
@@ -36,6 +38,8 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.geometry.Envelope;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+
+import net.miginfocom.swing.MigLayout;
 
 /**
  * <code>NodeView</code> for the "GeoMapViewer" Node.
@@ -82,9 +86,20 @@ public class GeoMapViewerNodeView extends NodeView<GeoMapViewerNodeModel> {
 	        Layer layer = new FeatureLayer(featureSource, style);
 	        map.addLayer(layer);
 	        
+	        JMapPane mapPane = new JMapPane(map);
+	        mapPane.setBackground(Color.WHITE);
+	        StringBuilder sb = new StringBuilder();
+	        sb.append("[grow]");
+	        JPanel panel = new JPanel(new MigLayout("wrap 1, insets 0", "[grow]",  sb.toString()));
+	        panel.add(mapPane,"grow");
+	        panel.setPreferredSize(new Dimension(640, 480));
+	        panel.setMaximumSize(panel.getPreferredSize()); 
+	        panel.setMinimumSize(panel.getPreferredSize());
+	        setComponent(panel);
+	        
 	        //JMapFrame.showMap(map);
 	        
-	        
+	        /*
 	        JMapFrame jf = new JMapFrame(map);
 	        jf.setTitle("Map View");
 	        //jf.enableToolBar(true);
@@ -95,6 +110,7 @@ public class GeoMapViewerNodeView extends NodeView<GeoMapViewerNodeModel> {
 	        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	        jf.setVisible(true);
 	        jf.setAlwaysOnTop(true);
+	        */
 	        
 	    
 	        
