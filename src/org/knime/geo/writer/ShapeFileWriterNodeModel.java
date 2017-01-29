@@ -25,6 +25,7 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
 import org.knime.core.data.DoubleValue;
 import org.knime.core.data.IntValue;
+import org.knime.core.data.LongValue;
 import org.knime.core.data.StringValue;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -102,6 +103,8 @@ public class ShapeFileWriterNodeModel extends NodeModel {
 				DataType t = columnSpec.getType();
 				if (t.isCompatible(IntValue.class) )
 					schema += "Integer";
+				else if (t.isCompatible(LongValue.class) )
+					schema += "Integer";
 				else if (t.isCompatible(DoubleValue.class) )
 					schema += "Double";
 				else if (t.isCompatible(BooleanValue.class) )
@@ -143,6 +146,8 @@ public class ShapeFileWriterNodeModel extends NodeModel {
 							DataCell cell = row.getCell(col);
 							if ( cell instanceof IntValue )
 								featureBuilder.add(((IntValue) cell).getIntValue());
+							else if ( cell instanceof LongValue )
+								featureBuilder.add(((LongValue) cell).getLongValue());
 							else if ( cell instanceof DoubleValue )
 								featureBuilder.add(((DoubleValue) cell).getDoubleValue());
 							else if (cell instanceof BooleanValue)

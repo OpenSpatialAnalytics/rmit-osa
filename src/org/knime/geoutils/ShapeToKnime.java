@@ -44,7 +44,7 @@ public class ShapeToKnime {
 			
 			else{
 			
-			String name = t.getName().toString();
+				String name = t.getName().toString();
 		
 				if (t.getBinding() == Integer.class) {
 					columns.add(new DataColumnSpecCreator(name, IntCell.TYPE).createSpec());
@@ -59,6 +59,7 @@ public class ShapeToKnime {
 				}
 			}
 		}
+		
 		
 		return new DataTableSpec[] { new DataTableSpec(columns.toArray(new DataColumnSpec[0])) };
 	}
