@@ -204,7 +204,7 @@ public class ShapeFileWriterNodeModel extends NodeModel {
 		}
 
     	
-        return new DataTableSpec[]{null};
+        return null;
     }
 
     /**
