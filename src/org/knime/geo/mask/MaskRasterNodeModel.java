@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.def.DefaultRow;
@@ -159,14 +160,10 @@ public class MaskRasterNodeModel extends NodeModel {
     }
     
     
-    private static DataTableSpec createSpec(DataTableSpec inSpec) throws InvalidSettingsException {
-		
+    private static DataTableSpec createSpec(DataTableSpec inSpec) throws InvalidSettingsException {				
 		List<DataColumnSpec> columns = new ArrayList<>();
-
-		for (DataColumnSpec column : inSpec) {
-			columns.add(column);
-		}
-		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
+		columns.add(new DataColumnSpecCreator(Utility.LOC_COLUMN, StringCell.TYPE).createSpec());
+		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));		
 	}
     
 
