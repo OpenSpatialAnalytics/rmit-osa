@@ -3,15 +3,19 @@
     <name>Shape File Writer</name>
     
     <shortDescription>
-        
+        Write a Shape file
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>This node writes out the input data table into a shape file denoted by an destination location. 
+        A projection SRID value also need required to write the shape file.
+        The first table must contain a geometry column in GeoJSON format. 
+        </intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="a single coordinate system  value such as WGS84 (SRID 4326)">SRID value</option>
+        <option name="Output location">Enter a valid file name or URL. You can select a local file from the "Browse..." dialog. 
+</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +29,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table">Description of first input port...</inPort>
+        <inPort index="0" name="Geometry Table">Input table with a Geomerty column</inPort>
         <!-- possibly more input ports here-->
         <!-- outPort index="0" name="Out-Port name">Description of first output port...</outPort> -->
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="View Map">Description of first view...</view>
+        <view index="0" name="View Map">Map View of shape file</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>
