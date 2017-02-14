@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="./default.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+<knimeNode icon="./contains.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
     <name>Contains</name>
     
     <shortDescription>
-        
+        Whether Geometry-1 contains Geometry-2 or not
     </shortDescription>
     
     <fullDescription>
-        <intro>This node tests whether a geometry in first geometry column contains the geometry of second geometry column.</intro>
+        <intro>This node tests whether a geometry in first geometry column
+        <a href="http://javadox.com/com.vividsolutions/jts/1.13/com/vividsolutions/jts/geom/Geometry.html#contains(com.vividsolutions.jts.geom.Geometry)">contains</a> 
+         the geometry in second geometry column.</intro>
         <!--option name="short name of first option (like in the dialog)">description of first option</option-->
       
         <!-- possibly more options that can also be grouped by tabs -->
@@ -23,13 +25,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Table with Geometries">Table containing 2 geometry list in GeoJSON format with non-spatial attributes. The geometry column name should be prefixed with name the_geom</inPort>
+        <inPort index="0" name="Table with Geometries">Table containing 2 geometry list in GeoJSON format with non-spatial attributes. The geometry column name should be prefixed with name "the_geom"</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Contains Table">Table containing true/false values of contains with all columns in input table.</outPort>
+        <outPort index="0" name="Contains Table">Table containing true/false values of contains of all columns in input table.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="No view available">No view available</view>
+        <view index="0" name="No view">No view is available for this node</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>
