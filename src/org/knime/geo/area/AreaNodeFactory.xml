@@ -7,9 +7,9 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>This node returns the area of geometries listed in input table and add an area column in output table. The geometry column name is the_geom and geometries are in GeoJSON format</intro>
-        
-        
+        <intro>This node returns the <a href="http://docs.geotools.org/latest/javadocs/org/geotools/filter/AreaFunction.html#getArea-com.vividsolutions.jts.geom.Geometry-">area of geometries</a> 
+        listed in input table and add an area column in output table. The input table must contain a geometry column with the name "the_geom"" and geometries must be in GeoJSON format</intro>
+                
         <!--option name="the_geom">description of first option</option-->
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
@@ -30,6 +30,6 @@
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="No view available">No view available</view>
+        <view index="0" name="No view">No view is available for this node</view>
     </views>
 </knimeNode>
