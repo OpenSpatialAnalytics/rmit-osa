@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <knimeNode icon="./calc.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
-    <name>Calculate</name>
+    <name>Raster Calculator</name>
     
     <shortDescription>
-        
+        Raster calculator node
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>
+        This node takes multiple raster columns as input and perform a row-wise <a href="http://www.gdal.org/gdal_calc.html">raster calculation</a>
+        with provided logical expression. You also need to provide output directory location. The output table contains the generated raster file locations after calculation.
+        </intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="Locatin of calculated raster">Location of the output folder where your calculated raster files will be generated. 
+        It will also generate a text file "commands.txt" in this location that contains all the commands use for generating raster.
+        The commands in this file can be run separately as a batch file.</option>
+        <option name="Logical expression">The logical expression for calculating raster in gdalnumeric syntax. 
+        In the expression your can use the number of variables equal to the number of columns. The variable names should be 
+        in capital alphabet in order (A,B,C,..) </option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,9 +32,9 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="List of Rasters">Description of first input port...</inPort>
+        <inPort index="0" name="List of input rasters">The locations of source raster files. The table must contain raster location with column name prefixed with "Location"</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="List of Rasters">Description of first output port...</outPort>
+        <outPort index="0" name="Location of calculated Rasters">The locations of calculated raster files. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>

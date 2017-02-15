@@ -46,7 +46,7 @@ public class ProximityNodeDialog extends DefaultNodeSettingsPane {
 		
 		DialogComponentStringSelection distanceUnitSelectDialog = new DialogComponentStringSelection(
 				new SettingsModelString(ProximityNodeModel.DT,DistanceUnit.GEO.toString()),
-				"Output Format",DistanceUnits());
+				"Distance Unit",DistanceUnits());
 		
     	DialogComponentString nodata = new DialogComponentString(
     			new SettingsModelString(ProximityNodeModel.ND,""), "No Data Value");

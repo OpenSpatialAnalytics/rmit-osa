@@ -3,15 +3,28 @@
     <name>Clip Raster</name>
     
     <shortDescription>
-        
+        Clip raster node
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>
+		This node takes a list geometries and rank in the input table, perform the clipping 
+		over list of raster files supplied by an input location, provided shapefile as cutline
+		and using <a href="http://www.gdal.org/gdalwarp.html">gdalwarp</a>
+        command. It generates the list of clipped rasters in the supplied output folder location using corresponding rank value as name.  
+        The output table contains the generated raster file locations and rank.
+		</intro>
         
-        
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="Target Aligned Pixels">Target aligned pixels. Check this box if you want to align the coordinates of the extent of the output file to the values of the -output file resolution, such that the aligned extent includes the minimum extent.</option>
+        <option name="Name">Set a warp option name (e.g. CUTLINE_ALL_TOUCHED)</option>
+        <option name="Value">Set a warp option value for given name (e.g. TRUE for CUTLINE_ALL_TOUCHED)</option>
+        <option name="Output File Resolution (X and Y)">Set output file resolution (X and Y) (in target georeferenced units)</option>
+        <option name="No Data Value">Set nodata values for output bands (different values can be supplied for each band). If more than one value is supplied all values should be quoted to keep them together as a single operating system argument. New files will be initialized to this value and if possible the nodata value will be recorded in the output file. Use a value of None to ensure that nodata is not defined. If this argument is not used then nodata values will be copied from the source dataset </option>
+        <option name="Attriute query for cutline">Restrict desired cutline features based on given attribute query (e.g. rank)</option>
+        <option name="Overwrite">Check this box if you want to overwrite the target dataset if it already exists.</option>
+        <option name="Clip Shape file location">Location of shapefile which is used for cutline</option>
+        <option name="Input files location">Directory location of input raster files to be clipped</option>
+        <option name="Output files location">Directory location of clipped raster files</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +38,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
+        <inPort index="0" name="Input list">Input table of raster locations, rank or overalp ids</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
+        <outPort index="0" name="Output raster file List">The locations of clipped raster files. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
+        <view index="0" name="No view">No view option is available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

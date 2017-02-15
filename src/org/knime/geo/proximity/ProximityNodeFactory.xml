@@ -3,15 +3,23 @@
     <name>Proximity</name>
     
     <shortDescription>
-        
+        This node generates a raster proximity
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>
+        This node takes a list of raster file location in the input table and generates <a href="http://www.gdal.org/gdal_proximity.html">a raster proximity </a>
+        map indicating the distance from the center of each pixel to the center of the nearest pixel identified as a target pixel. 
+        Target pixels are those in the source raster for which the raster pixel value is in the set of target pixel values.
+        The output table contains the generated raster file locations.
+		</intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="Output Type">Force the output image bands to have a specific type. Use type names (i.e. Byte, Int16,...)</option>
+        <option name="Output Format">Select the output format. The default is GeoTIFF (GTiff).</option>
+        <option name="Distance Unit">Indicate whether distances generated should be in pixel or georeferenced coordinates</option>
+        <option name="No Data Value">Specify a nodata value to use for the destination proximity raster.</option>
+        <option name="Output Folder location">Location of the output folder where your new raster files will be generated.</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +33,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
+        <inPort index="0" name="Input raster file list">The locations of source raster files. The table must contain a "Location" column.</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
+        <outPort index="0" name="Output raster file List">The locations of generated raster file. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
+        <view index="0" name="No View">No view option available for this node</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

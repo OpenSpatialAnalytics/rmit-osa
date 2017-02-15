@@ -3,15 +3,25 @@
     <name>Rasterize</name>
     
     <shortDescription>
-        
+        This node burns vector geometries into a raster
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
-        
-        
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <intro>
+        This node takes a list of raster file location in the input table, perform the raterize using <a href="http://www.gdal.org/gdal_rasterize.html">gdal_rasterize </a>
+        command and generate a list of output rasters in the desired location. The output table contains the generated raster file locations.
+        </intro>
+        <option name="Output File Resolution (X and Y)">Set output file resolution (X and Y) (in target georeferenced units). Both must be positive values.</option>
+        <option name="Attribute Name">Identifies an attribute field on the features to be used for a burn-in value. The value will be burned into all output bands.</option>
+        <option name="No Data Value">Assign a specified nodata value to output bands.</option>
+        <option name="Target Aligned Pixels">Target aligned pixels. Check this box if you want to align the coordinates of the extent of the output file to the values of the -output file resolution, such that the aligned extent includes the minimum extent.</option>
+        <option name="Output Type">For the output bands to be of the indicated data type. Defaults to Float64</option>
+        <option name="Output Format">Select the output format. The default is GeoTIFF (GTiff)</option>
+        <option name="Output Folder Location">Location of the output folder where your new raster files will be generated. 
+        It will also generate a text file "commands.txt" in this location that contains all the commands use for generating raster.
+        The commands in this file can be run separately as a batch file.</option>
+        <option name="Run commands">Check this option if you actually want to run the gdal commands. You have option
+         to run it from the generated "commands.txt" file as a batch script if you decide not to run it. By default it is checked.</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +35,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
+        <inPort index="0" name="Input raster file list">The locations of source raster files. The table must contain a "Location" column.</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
+        <outPort index="0" name="Output raster file List">The locations of generated raster file. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
+         <view index="0" name="No View">No view option available for this node</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

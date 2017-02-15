@@ -7,7 +7,7 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>This node takes a list of raster file location in the input table, perform the warping using <a href="http://www.gdal.org/gdalwarp.html">gdal_wrap </a>
+        <intro>This node takes a list of raster file location in the input table, perform the warping using <a href="http://www.gdal.org/gdalwarp.html">gdalwarp </a>
         command and generate a list of output rasters in the desired location. The output table contains the generated raster file locations.  
         </intro>
         
@@ -22,9 +22,9 @@
         Target spatial reference set. The coordinate systems that can be passed are anything supported by the OGRSpatialReference.SetFromUserInput() call, which includes EPSG PCS and GCSes (i.e. EPSG:4296), PROJ.4 declarations (as above), or the name of a .prj file containing well known text.
         It is optional and can be empty.
         </option>
-        <option name="Output File Resolution (X and Y)">Set output file resolution (X and Y) (in target georeferenced units)</option>
+        <option name="Output File Resolution (X and Y)">Set output file resolution (X and Y) (in target georeferenced units).  Both must be positive values.</option>
         <option name="Output format">Select the output format. The default is GeoTIFF (GTiff)</option>
-        <option name="Target Aligned Pixels">Target aligned pixels. Check this box if you want to align the coordinates of the extent of the output file to the values of the -tr, such that the aligned extent includes the minimum extent.</option>
+        <option name="Target Aligned Pixels">Target aligned pixels. Check this box if you want to align the coordinates of the extent of the output file to the values of the output file resolution, such that the aligned extent includes the minimum extent.</option>
         <option name="Overwrite">Check this box if you want to overwrite the target dataset if it already exists.</option>
         <option name="Output Folder Location">Location of the output folder where your new raster files will be generated. 
         It will also generate a text file "commands.txt" in this location that contains all the commands use for generating raster.
