@@ -29,11 +29,15 @@ public class ShapeFileReaderNodeDialog extends DefaultNodeSettingsPane {
     protected ShapeFileReaderNodeDialog() {
         super();
         
-        addDialogComponent(new DialogComponentFileChooser(
-  		      new SettingsModelString(ShapeFileReaderNodeModel.CFG_SHP_FILE,""),
-  		      ShapeFileReaderNodeModel.CFG_SHP_FILE,
-  		      JFileChooser.OPEN_DIALOG,
-  		     	".shp"));
+        DialogComponentFileChooser inputPath = new DialogComponentFileChooser(
+    		      new SettingsModelString(ShapeFileReaderNodeModel.CFG_SHP_FILE,""),
+      		      ShapeFileReaderNodeModel.CFG_SHP_FILE,
+      		      JFileChooser.OPEN_DIALOG,
+      		     	".shp");
+        
+        inputPath.setBorderTitle("Source Shapefile");
+        
+        addDialogComponent(inputPath);
                     
     }
 }

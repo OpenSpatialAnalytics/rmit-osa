@@ -38,6 +38,8 @@ public class MaskRasterNodeDialog extends DefaultNodeSettingsPane {
     			new DialogComponentFileChooser(new SettingsModelString(MaskRasterNodeModel.OUTPATH,""), 
     					MaskRasterNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
     	
+    	outputPathDialog.setBorderTitle("Destination Directory");
+    	
     	/*
     	DialogComponentString expreDialog = new DialogComponentString(
     			new SettingsModelString(MaskRasterNodeModel.EXPR,"A"), "Calculation Expression");

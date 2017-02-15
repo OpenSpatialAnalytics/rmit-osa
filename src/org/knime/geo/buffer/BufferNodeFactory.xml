@@ -7,7 +7,7 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>This node returns a <a href="http://javadox.com/com.vividsolutions/jts/1.13/com/vividsolutions/jts/geom/Geometry.html#buffer(com.vividsolutions.jts.geom.Geometry)">buffer</a> area around geometries listed in input table having the given distance.</intro>               
+        <intro>This node returns a <a href="http://javadox.com/com.vividsolutions/jts/1.13/com/vividsolutions/jts/geom/Geometry.html#buffer(double)">buffer</a> area around geometries listed in input table having the given distance.</intro>               
         <option name="Distance">The width of the buffer (may be positive, negative or 0)</option>
         <!--option name="short name of second option (like in the dialog)">description of second option</option-->
         <!-- possibly more options that can also be grouped by tabs -->

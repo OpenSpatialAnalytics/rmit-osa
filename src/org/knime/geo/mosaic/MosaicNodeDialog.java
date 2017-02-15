@@ -42,6 +42,8 @@ public class MosaicNodeDialog extends DefaultNodeSettingsPane {
     			new DialogComponentFileChooser(new SettingsModelString(MosaicNodeModel.OUTPATH,""), 
     					MosaicNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
     	
+    	outputPath.setBorderTitle("Distination Directory");
+    	
     	
     	DialogComponentString mergeFileNameDialog = new DialogComponentString(
     			new SettingsModelString(MosaicNodeModel.MF,""), "Merged File Name");

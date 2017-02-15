@@ -79,7 +79,7 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     			new DialogComponentFileChooser(new SettingsModelString("output_path",""), 
     					ResampleNodeModel.OUTPATH, JFileChooser.SAVE_DIALOG, true);
     	
-    	outputPath.setBorderTitle("Output Folder location");
+    	outputPath.setBorderTitle("Output Folder Location");
     	
 
     	DialogComponentStringSelection directoryFormatSelectDialog = new DialogComponentStringSelection(

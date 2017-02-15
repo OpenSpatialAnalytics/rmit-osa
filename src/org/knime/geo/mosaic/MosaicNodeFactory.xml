@@ -3,15 +3,26 @@
     <name>Mosaic Raster</name>
     
     <shortDescription>
-        
+        This node mosaics a list of rasters
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
-        
-        
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <intro>
+        This node takes a list of raster file location in the input table, perform mosaicing using <a href="http://www.gdal.org/gdalwarp.html">gdal_merge.py </a>
+        command and generate corresponding list of output rasters in the desired location. The output table contains the generated raster file locations. 
+        </intro>
+                
+        <option name="Output Type">Force the output image bands to have a specific type (i.e. Byte, Int16,...)</option>
+        <option name="Output Format">Output format, defaults to GeoTIFF (GTiff)</option>
+        <option name="Distination Directory">
+        Location of the destination directory where your mosaic raster files will be generated. 
+        It will also generate a text file "commands.txt" in this location that contains all the commands use for generating raster.
+        The commands in this file can be run separately as a batch file.
+        </option>
+        <option name="Merged file name">Use this option if you are generating a single mosaic raster from a list of rasters
+        in the input table. You have option to give a name of your mosaic raster using this option.</option>
+        <option name="Run commands">Check this option if you actually want to run the gdal commands. You have option
+         to run it from the generated "commands.txt" file as a batch script if you decide not to run it. By default it is checked.</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +36,14 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
+        <inPort index="0" name="Input raster file list">The locations of source raster files. The table must contain a "Location" column.
+        This node generate a mosaic raster of source raster files that same source directory.</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
+        <outPort index="0" name="Mosaic raster file list">The locations of generated raster files. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="No View available">Description of first view...</view>
+        <view index="0" name="No View">No view option available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

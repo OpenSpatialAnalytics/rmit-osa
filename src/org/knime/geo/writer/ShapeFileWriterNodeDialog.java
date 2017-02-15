@@ -30,11 +30,15 @@ public class ShapeFileWriterNodeDialog extends DefaultNodeSettingsPane {
     	
     	addDialogComponent(projDialog);
     	
-    	addDialogComponent(new DialogComponentFileChooser(
-    		      new SettingsModelString(ShapeFileWriterNodeModel.CFG_LOC,""),
-    		      ShapeFileWriterNodeModel.CFG_LOC,
-    		      JFileChooser.SAVE_DIALOG,
-    		     	".shp"));
+    	DialogComponentFileChooser outPath = new DialogComponentFileChooser(
+  		      new SettingsModelString(ShapeFileWriterNodeModel.CFG_LOC,""),
+  		      ShapeFileWriterNodeModel.CFG_LOC,
+  		      JFileChooser.SAVE_DIALOG,
+  		     	".shp");
+    	
+    	outPath.setBorderTitle("Output Shapefile");
+    	
+    	addDialogComponent(outPath);
                       
 
     }

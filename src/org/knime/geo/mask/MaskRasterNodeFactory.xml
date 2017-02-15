@@ -3,15 +3,23 @@
     <name>Mask Raster</name>
     
     <shortDescription>
-        
+        This node creates a mask raster
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>
+        This node takes a list of raster file location in the input table and perform masking using
+         a two stage operation where first all of the nodata pixels are set to a rank using the <a href="http://www.gdal.org/gdal_calc.html">gdal_calc</a>, 
+         then polygons are generated using the <a href="http://www.gdal.org/gdal_calc.html">gdal_polygonize</a>. The input raster files should have numeric name.
+         This process generate output shape files in the desired location. The output table contains the generated shape file locations. It also includes rank as fieldname          
+         fieldname in the output shape file.     
+        </intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="Type">Output datatype. For this node it is set as "Byte" by default</option>
+        <option name="Destination Directory">Location of the output folder where your polygonized shape files will be generated. 
+        It will also generate a text file "commands.txt" in this location that contains all the commands use for generating shapefiles.
+        </option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +33,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Input File</inPort>
+        <inPort index="0" name="Input raster file list">The locations of source raster file. The table must contain a "Location" column.</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Masked File</outPort>
+        <outPort index="0" name="Output shapefile list">The locations of generated shapefile. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
+        <view index="0" name="No view">No view option available for this node</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

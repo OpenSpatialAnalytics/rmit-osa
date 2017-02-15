@@ -24,11 +24,16 @@ public class ShapeMergeNodeDialog extends DefaultNodeSettingsPane {
      */
     protected ShapeMergeNodeDialog() {
     	
-    	addDialogComponent(new DialogComponentFileChooser(
-  		      new SettingsModelString(ShapeMergeNodeModel.FILE_LOC,""),
-  		    ShapeMergeNodeModel.FILE_LOC,
-  		      JFileChooser.SAVE_DIALOG,
-  		     	".shp"));
+    	
+    	DialogComponentFileChooser outPath = new DialogComponentFileChooser(
+    		      new SettingsModelString(ShapeMergeNodeModel.FILE_LOC,""),
+    	  		    ShapeMergeNodeModel.FILE_LOC,
+    	  		      JFileChooser.SAVE_DIALOG,
+    	  		     	".shp");
+    	
+    	outPath.setBorderTitle("Output Shapefile");
+    	
+    	addDialogComponent(outPath);
     }
 }
 

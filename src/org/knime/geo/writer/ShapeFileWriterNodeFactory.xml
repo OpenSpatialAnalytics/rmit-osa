@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="export.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+<knimeNode icon="filewrite.png" type="Manipulator" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
     <name>Shapefile Writer</name>
     
     <shortDescription>
-        Write a Shape file
+        Write a Shapefile
     </shortDescription>
     
     <fullDescription>
-        <intro>This node writes out the input data table into a shape file denoted by an destination location. 
-        A projection SRID value also need required to write the shape file.
-        The first table must contain a geometry column in GeoJSON format. 
+        <intro>This node writes out the input data table into an ESRI <a href="https://www.esri.com/library/whitepapers/pdfs/shapefile.pdf">shapefile</a> denoted by a destination location. 
+        A projection A spatial reference identifier <a href="http://desktop.arcgis.com/en/arcmap/10.3/manage-data/using-sql-with-gdbs/what-is-an-srid.htm">(SRID) value</a> is also required to write the shape file.
+        The input table must contain a geometry column ("the_geom") in GeoJSON format. A map view option of the shapefile is also available for this node.
         </intro>
-        
-        
-        <option name="a single coordinate system  value such as WGS84 (SRID 4326)">SRID value</option>
-        <option name="Output location">Enter a valid file name or URL. You can select a local file from the "Browse..." dialog. 
-</option>
+                
+        <option name="SRID value">a single coordinate system value (e.g. SRID 4326) for WGS84</option>
+        <option name="Output Shapefile">Enter a valid file name with or without ".shp" extension. 
+        You can select a location from the "Browse..." dialog and then type your desired filename after the location 
+		</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -35,7 +35,7 @@
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="View Map">Map View of shape file</view>
+        <view index="0" name="View Map">Map View of shapefile</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

@@ -3,15 +3,19 @@
     <name>Shapefile Merge</name>
     
     <shortDescription>
-        
+        Merge a list of shapefiles into a single shapefile
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>
+        This node takes a list of shapefile location in the input table and perform merging operation using <a href="http://www.gdal.org/ogr2ogr.html">ogr2ogr</a>
+        command. It generates a single shape file in the desired location. The output table contains the location of generated shapefile.
+        </intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="Output Shapefile">Enter a valid file name with or without ".shp" extension. 
+        You can select a location from the "Browse..." dialog and then type your desired filename after the location 
+		</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +29,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
+        <inPort index="0" name="Input shapefile list">The locations of source shapefiles. The table must contain a "Location" column.</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
+        <outPort index="0" name="Output shapefile location">The location of the generated shapefile. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
+        <view index="0" name="No view">No view option available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>
