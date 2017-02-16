@@ -7,8 +7,8 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>This node returns the <a href="http://docs.geotools.org/latest/javadocs/org/geotools/filter/AreaFunction.html#getArea-com.vividsolutions.jts.geom.Geometry-">area of geometries</a> 
-        listed in input table and add an area column in output table. The input table must contain a geometry column with the name "the_geom"" and geometries must be in GeoJSON format</intro>
+        <intro>This node returns the <a href="http://docs.geotools.org/latest/javadocs/org/geotools/filter/AreaFunction.html#getArea-com.vividsolutions.jts.geom.Geometry-">area</a> 
+        of geometries listed in input table and add an area column in output table. The input table must contain a geometry column with the name "the_geom"" and geometries must be in GeoJSON format.</intro>
                 
         <!--option name="the_geom">description of first option</option-->
         <!-- possibly more options that can also be grouped by tabs -->
@@ -24,12 +24,10 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table">Table containing a single geometry list in GeoJSON format with non-spatial attributes. The geometry column name should be prefixed with name the_geom.</inPort>
-        <!-- possibly more input ports here-->
-        <outPort index="0" name="Geometry Area Table">Table containing list of area along with all columns in input table.</outPort>
-        <!-- possibly more output ports here-->
+        <inPort index="0" name="Geometry Table">Table containing a geometry column in GeoJSON format with other attributes. The geometry column name should be prefixed with "the_geom"".</inPort>        
+        <outPort index="0" name="Geometry Area Table">Table containing an area column along with all columns in input table.</outPort>
     </ports>    
     <views>
-        <view index="0" name="No view">No view is available for this node</view>
+        <view index="0" name="No view">No view is available for this node.</view>
     </views>
 </knimeNode>

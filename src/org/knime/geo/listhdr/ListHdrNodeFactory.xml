@@ -7,7 +7,7 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>This nodes return a list of .hrd raster files for a given list of .zip file in the input table.</intro>
         
         
 <!--         <option name="short name of first option (like in the dialog)">description of first option</option> -->
@@ -25,13 +25,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Location of Zip files">List of zip file or directory location containing .hdr raster files</inPort>
+        <inPort index="0" name="Location of Zip files">List of zip file or directory location containing .hdr raster files.</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="List of hdr files">List of .hdr raster files (full location) inside the .zip files or directory listed in inout table</outPort>
+        <outPort index="0" name="List of hdr files">List of .hdr raster files (full location) inside the .zip files or directory listed in input table</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="No View">No view is available for this node</view>
+        <view index="0" name="No View">No view is available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

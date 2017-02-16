@@ -38,9 +38,9 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Input list">Input table of raster locations, rank or overalp ids</inPort>
+        <inPort index="0" name="Raster Location Table">Input table of raster locations, rank or overalp ids</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Output raster file List">The locations of clipped raster files. It uses "Location" as column header.</outPort>
+        <outPort index="0" name="Clipped Raster Location Table">The locations of clipped raster files. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>

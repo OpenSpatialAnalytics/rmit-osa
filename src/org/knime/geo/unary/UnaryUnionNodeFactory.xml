@@ -3,11 +3,11 @@
     <name>UnaryUnion</name>
     
     <shortDescription>
-        
+        This node find unary union of geometries
     </shortDescription>
     
     <fullDescription>
-        <intro></intro>
+        <intro>Computes the union of all the elements of this geometry.</intro>
         
         
 <!--         <option name="short name of first option (like in the dialog)">description of first option</option> -->
@@ -25,9 +25,9 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table"></inPort>
+        <inPort index="0" name="Geometry Table">Table containing a single geometry list in GeoJSON format with other attributes. The geometry column name should be prefixed with name "the_geom"".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="UnaryUnion Geometry Table"></outPort>
+        <outPort index="0" name="UnaryUnion Geometry Table">Table containing geometries after finding unaryunion.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>

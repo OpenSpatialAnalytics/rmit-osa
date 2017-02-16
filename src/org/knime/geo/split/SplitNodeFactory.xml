@@ -3,15 +3,16 @@
     <name>Split</name>
     
     <shortDescription>
-        
+        This node splits a geometry using line geometry
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>This node splits a geometry in first geometry column using line geometry in second geometry column and produces 
+        2 geometries after splitting.</intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+<!--         <option name="short name of first option (like in the dialog)">description of first option</option> -->
+<!--         <option name="short name of second option (like in the dialog)">description of second option</option> -->
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +26,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table">Description of first input port...</inPort>
+        <inPort index="0" name="Geometry Table">Table containing two geometry columns in GeoJSON format with other attributes. The geometry column name should be prefixed with "the_geom".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
+        <outPort index="0" name="Union Geometry Table">Table containing two splitted geometry columns in GeoJSON format after performing row-wise splitting. The geometry column name is prefixed with "the_geom".</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
+         <view index="0" name="No View">No view option available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

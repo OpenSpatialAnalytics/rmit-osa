@@ -3,11 +3,11 @@
     <name>Convex hull</name>
     
     <shortDescription>
-        Computes the smallest convex Polygon that contains all the points in the given Geometry
+        This node computes convex hull of geometries
     </shortDescription>
     
     <fullDescription>
-        <intro> Description is available <a href="http://javadox.com/com.vividsolutions/jts/1.13/com/vividsolutions/jts/geom/Geometry.html#convexHull()"></a></intro>
+        <intro>Computes the smallest convex Polygon that contains all the points in the given Geometry. Description is available <a href="http://javadox.com/com.vividsolutions/jts/1.13/com/vividsolutions/jts/geom/Geometry.html#convexHull()">here</a></intro>
         
         
 <!--         <option name="short name of first option (like in the dialog)">description of first option</option> -->
@@ -25,12 +25,12 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table">Table containing a single geometry list in GeoJSON format with non-spatial attributes. The geometry column name should be prefixed with name the_geom.</inPort>
+        <inPort index="0" name="Geometry Table">Table containing a single geometry list in GeoJSON format with other attributes. The geometry column name should be prefixed with name "the_geom"".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Table containing geometries after computing convex hull.</outPort>
+        <outPort index="0" name="ConvexHull Geometry Table">Table containing geometries after computing convex hull.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="No view">No view is available for this node</view>
+        <view index="0" name="No view">No view is available for this node.</view>
     </views>
 </knimeNode>

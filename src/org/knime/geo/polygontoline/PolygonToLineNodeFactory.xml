@@ -3,15 +3,15 @@
     <name>Polygon To Line</name>
     
     <shortDescription>
-        
+        This nodes finds lines of a polygon geometry
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>This nodes finds lines of a polygon geometry</intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+       <!--  <option name="short name of first option (like in the dialog)">description of first option</option>
+        <option name="short name of second option (like in the dialog)">description of second option</option> -->
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +25,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">List of Multipolygons and Polygons</inPort>
+        <inPort index="0" name="Geometry Table">Table containing a single geometry column in GeoJSON format with other attributes. The geometry column name should be prefixed with "the_geom".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">List of Lines</outPort>
+        <outPort index="0" name="Out-Port name">Table containing line geometries in a single geometry column in GeoJSON formant. The geometry column name is prefixed with "the_geom".</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
+         <view index="0" name="No view">No view option available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

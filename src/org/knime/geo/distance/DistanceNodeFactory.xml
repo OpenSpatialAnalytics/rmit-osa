@@ -3,7 +3,7 @@
     <name>Distance</name>
     
     <shortDescription>
-        Returns the minimum distance between two geometries
+        This node returns the minimum distance between two geometries
     </shortDescription>
     
     <fullDescription>
@@ -28,9 +28,9 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table">Table containing two geometry list in GeoJSON format with non-spatial attributes. The geometry column headers should be prefixed with "the_geom".</inPort>
+        <inPort index="0" name="Geometry Table">Table containing two geometry columns in GeoJSON format with other attributes. The geometry column name should be prefixed with "the_geom".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Geometry Distance Table">Table containing list of distance along with all columns in input table.</outPort>
+        <outPort index="0" name="Geometry Distance Table">Table containing an distance column along with all columns in input table.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>

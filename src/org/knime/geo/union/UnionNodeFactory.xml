@@ -3,11 +3,15 @@
     <name>Union</name>
     
     <shortDescription>
-        
+        This node computes union of geometries
     </shortDescription>
     
     <fullDescription>
-        <intro></intro>
+        <intro>
+        Computes a Geometry representing the point-set which is contained in both Geometry columns.
+		The union of two geometries of different dimension produces a result geometry of dimension equal to the maximum dimension of the input geometries. The result geometry may be a heterogenous GeometryCollection. 
+		If the result is empty, it is an atomic geometry with the dimension of the highest input dimension. Details are available <a href="http://javadox.com/com.vividsolutions/jts/1.13/com/vividsolutions/jts/geom/Geometry.html#union(com.vividsolutions.jts.geom.Geometry)">here</a>
+        </intro>
         
         
 <!--         <option name="short name of first option (like in the dialog)">description of first option</option> -->
@@ -25,13 +29,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table"></inPort>
+        <inPort index="0" name="Geometry Table">Table containing two geometry columns in GeoJSON format with other attributes. The geometry column name should be prefixed with "the_geom".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Geometry Union Table"></outPort>
+        <outPort index="0" name="Union Geometry Table">Table containing a single geometry column after computing row-wise union of geometries. The geometry column name is prefixed with "the_geom".</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="No View">No view option available for this node</view>
+        <view index="0" name="No View">No view option available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

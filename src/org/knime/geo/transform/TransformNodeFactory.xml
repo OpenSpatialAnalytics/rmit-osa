@@ -3,15 +3,15 @@
     <name>Transform</name>
     
     <shortDescription>
-        
+        This node transforms geometry to a different coordinate reference system.
     </shortDescription>
     
     <fullDescription>
         <intro>Insert long description here...</intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="Source projection srid value">SRID of source geometry for performing transformation.</option>
+        <option name="Distination projection srid value">SRID of destination geometry for performing transformation.</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
@@ -25,13 +25,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
+        <inPort index="0" name="Geometry Table">Table containing a single geometry list in GeoJSON format with other attributes. The geometry column name should be prefixed with name "the_geom"".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
+        <outPort index="0" name="Transformed Geometry Table">Table containing geometries after trasformation.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
+        <view index="0" name="No View">No view option available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

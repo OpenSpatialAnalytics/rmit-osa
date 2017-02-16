@@ -9,7 +9,7 @@
     <fullDescription>
         <intro>This node tests whether a geometry in first geometry column
         <a href="http://javadox.com/com.vividsolutions/jts/1.13/com/vividsolutions/jts/geom/Geometry.html#intersects(com.vividsolutions.jts.geom.Geometry)">intersects</a> 
-         from the geometry in second geometry column.</intro>
+         with the geometry in second geometry column.</intro>
         
         
 <!--         <option name="short name of first option (like in the dialog)">description of first option</option> -->
@@ -27,13 +27,13 @@
     </fullDescription>
     
     <ports>
-       <inPort index="0" name="Table with Geometries">Table containing 2 geometry list in GeoJSON format with non-spatial attributes. The geometry column name should be prefixed with name "the_geom"</inPort>
+       <inPort index="0" name="Geometry Table">Table containing 2 geometry columns in GeoJSON format with other attributes. The geometry column name should be prefixed with "the_geom".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Intersects Table">Table containing true/false values of intersect of all columns in input table.</outPort>
+        <outPort index="0" name="Intersects Table">Table containing true/false values of intersect of all rows in input table.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-         <view index="0" name="No view">No view is available for this node</view>
+         <view index="0" name="No view">No view is available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

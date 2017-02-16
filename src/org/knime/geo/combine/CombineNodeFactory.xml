@@ -3,7 +3,7 @@
     <name>Combine</name>
     
     <shortDescription>
-        This node return an aggregated geometry from a collection of geometries.
+        This node returns an aggregated geometry from a collection of geometries.
     </shortDescription>
     
     <fullDescription>
@@ -12,7 +12,8 @@
         </intro>
         
         
-        <option name="Combined by">Select the column name to combine geometry based on same value for given column</option>
+        <option name="Combined by">Select the column name to combine geometry based on same value for given column. If no column is 
+        selected here then this operation combine all geometries in the input table.</option>
         
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
@@ -27,13 +28,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table">Table containing a single geometry list in GeoJSON format with non-spatial attributes. The geometry column name should be prefixed with name the_geom.</inPort>
+        <inPort index="0" name="Geometry Table">Table containing a single geometry list in GeoJSON format with other attributes. The geometry column name should be prefixed with "the_geom".</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Combined Table">Table containing list of geometries after combining them. Other non-spatial attributes are combined as comma separated list.</outPort>
+        <outPort index="0" name="Combined Table">Table containing list of geometries (or a single geometry) after combining them. Other non-spatial attributes are combined together as comma separated list.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="No view">No view is available for this node</view>
+        <view index="0" name="No view">No view is available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

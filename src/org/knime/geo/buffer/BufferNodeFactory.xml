@@ -23,13 +23,13 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Geometry Table">Table containing a single geometry list in GeoJSON format with non-spatial attributes. The geometry column name should be prefixed with name the_geom.</inPort>        
+        <inPort index="0" name="Geometry Table">Table containing a single geometry column in GeoJSON format with other attributes. The geometry column name should be prefixed with "the_geom".</inPort>        
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Buffered Geometry Table">Table containing a buffered geometry list in GeoJSON format with non-spatial attributes. The geometry column name is prefixed with name the_geom.</outPort>
+        <outPort index="0" name="Buffered Geometry Table">Table containing a buffered geometry column in GeoJSON format with other attributes. The geometry column name is prefixed with "the_geom".</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
-        <view index="0" name="No view">No view is available for this node</view>
+        <view index="0" name="No view">No view is available for this node.</view>
         <!--view index="1" name="name of second view">Description of second view...</view-->
     </views>
 </knimeNode>

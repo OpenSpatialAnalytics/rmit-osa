@@ -50,9 +50,9 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Input raster file list">The locations of source raster files. The table must contain a "Location" column.</inPort>
+        <inPort index="0" name="Raster Location Table">The locations of source raster files. The table must contain a "Location" column.</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Output raster file List">The locations of generated raster file. It uses "Location" as column header.</outPort>
+        <outPort index="0" name="Raster Location Table">The locations of generated raster file. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>

@@ -29,9 +29,9 @@
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="Input shapefile list">The locations of source shapefiles. The table must contain a "Location" column.</inPort>
+        <inPort index="0" name="Shapefile location Table">The locations of source shapefiles. The table must contain a "Location" column.</inPort>
         <!-- possibly more input ports here-->
-        <outPort index="0" name="Output shapefile location">The location of the generated shapefile. It uses "Location" as column header.</outPort>
+        <outPort index="0" name="Shapefile location Table">The location of the generated shapefile. It uses "Location" as column header.</outPort>
         <!-- possibly more output ports here-->
     </ports>    
     <views>
