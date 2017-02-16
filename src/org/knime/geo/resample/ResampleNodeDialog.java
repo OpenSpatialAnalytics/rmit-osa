@@ -88,7 +88,7 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
     	
     	DialogComponentColumnNameSelection columnSelect = 
     			new DialogComponentColumnNameSelection(new SettingsModelString(ResampleNodeModel.CN,""),
-    					"Select Column",0,true,true, filterColumn);
+    					"Select Column",0,false,true, filterColumn);
     	
     	DialogComponentBoolean runCommandDialog = 
     			new DialogComponentBoolean ( new SettingsModelBoolean(ResampleNodeModel.RC,false), "Run commands");
@@ -155,7 +155,7 @@ public class ResampleNodeDialog extends DefaultNodeSettingsPane {
 		@Override
 		public String allFilteredMsg() {
 			// TODO Auto-generated method stub
-			return null;
+			return "No column other than Location column is available";
 		}
 	};
     

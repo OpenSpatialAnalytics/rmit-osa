@@ -43,7 +43,7 @@ public class CombineNodeDialog extends DefaultNodeSettingsPane {
     	
     	DialogComponentColumnNameSelection columnSelect = 
     			new DialogComponentColumnNameSelection(new SettingsModelString(CombineNodeModel.CN,""),
-    					"Combine By",0,true,true, filterColumn);
+    					"Combine By",0,false,true, filterColumn);
     	addDialogComponent(columnSelect);
     	
     }
@@ -57,7 +57,7 @@ public class CombineNodeDialog extends DefaultNodeSettingsPane {
 		@Override
 		public String allFilteredMsg() {
 			// TODO Auto-generated method stub
-			return null;
+			return "No column other than Geometry column is available";
 		}
 	};
     
