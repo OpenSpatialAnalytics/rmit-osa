@@ -688,7 +688,7 @@ public class Utility {
 	}
 	
 	public static String Rasterize(String srcShpFile, String outFileLoc,  String xRes, String yRes,
-			String attr, String noDataValue, String outputType, String oFormat,  
+			String burn, String attr, String noDataValue, String outputType, String oFormat,  
 			boolean tap, boolean isRun)
 	{
 		
@@ -697,13 +697,19 @@ public class Utility {
 		String[] inPaths = srcShpFile.split("/");
 		String inFileName = inPaths[inPaths.length-1];
 		//String[] file = inFileName.split(".");
-		String fileName = inFileName.substring(0, inFileName.length()-4) + "_rasterized" + outputFormat;
+		String fileName = inFileName.substring(0, inFileName.length()-4) + outputFormat;
 		String outFile = outFileLoc + "/" + fileName;
 		
 		List<String> commandList = new ArrayList<String>();
 		commandList.add("gdal_rasterize");
-		commandList.add("-a");
-		commandList.add(attr);
+		if (!burn.isEmpty()) {
+			commandList.add("-a");
+			commandList.add(attr);
+		}
+		if (!attr.isEmpty()) {
+			commandList.add("-burn");
+			commandList.add(burn);
+		}
 		commandList.add("-of");
 		commandList.add(oFormat);
 		commandList.add("-a_nodata");

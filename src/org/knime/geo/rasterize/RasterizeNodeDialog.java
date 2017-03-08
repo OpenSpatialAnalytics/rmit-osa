@@ -43,6 +43,9 @@ public class RasterizeNodeDialog extends DefaultNodeSettingsPane {
     	DialogComponentString attr = new DialogComponentString(
     			new SettingsModelString(RasterizeNodeModel.ATTR,""), "Attribute Name");
     	
+    	DialogComponentString burn = new DialogComponentString(
+    			new SettingsModelString(RasterizeNodeModel.BURN,""), "Burn Value");
+    	
     	DialogComponentString nodata = new DialogComponentString(
     			new SettingsModelString(RasterizeNodeModel.ND,""), "No Data Value");
     	
@@ -68,6 +71,7 @@ public class RasterizeNodeDialog extends DefaultNodeSettingsPane {
     	addDialogComponent(xres);
     	addDialogComponent(yres);
     	addDialogComponent(attr);
+    	addDialogComponent(burn);
     	addDialogComponent(nodata);
     	addDialogComponent(tapSelection);
     	addDialogComponent(outputTypeSelectDialog);

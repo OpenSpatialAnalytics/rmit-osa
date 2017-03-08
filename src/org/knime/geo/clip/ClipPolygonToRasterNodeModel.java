@@ -95,6 +95,7 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 		boolean useOverlap = false;
 		boolean useRank = false;
 		boolean hasRank = false;
+		boolean useOverlapOnly = false;
 		int ovIndex = -1;
 		
 		for (int col = 0; col < numColumns; col++) {
@@ -107,14 +108,18 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 		if (Arrays.asList(columNames).contains(Constants.OVID) && hasRank  ){
 			useOverlap = true;
 			ovIndex = inTable.getSpec().findColumnIndex(Constants.OVID);
-			
 		}
 		
 		if (!Arrays.asList(columNames).contains(Constants.OVID) && hasRank ){
 			useRank = true;
 		}
 		
-		DataTableSpec outSpec = createSpec(inTable.getSpec(),useOverlap, useRank);
+		if (Arrays.asList(columNames).contains(Constants.OVID) && !hasRank ){
+			useOverlapOnly = true;
+			ovIndex = inTable.getSpec().findColumnIndex(Constants.OVID);
+		}
+		
+		DataTableSpec outSpec = createSpec(inTable.getSpec(),useOverlap, useRank, useOverlapOnly);
 		BufferedDataContainer container = exec.createDataContainer(outSpec);
 				
 		int i = 0;
@@ -189,6 +194,27 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
 	        	DataCell[] cells = new DataCell[outSpec.getNumColumns()];
 				cells[0] = new StringCell(destFile);
 				cells[1] = r.getCell(rnkIndex);
+				container.addRowToTable(new DefaultRow("Row"+i, cells));
+				i++;
+	    	}
+	    	else if (useOverlapOnly){
+	    		String ovidStr = r.getCell(ovIndex).toString();
+	        	String expr = Constants.OVID + "=" + ovidStr;
+	        	
+	        	String outFolder = outpath.getStringValue().replace("\\", "/");
+	        	String destFile = outFolder+"/"+ovidStr + ".tif";
+	        	StringCell inPathCell = (StringCell)r.getCell(loc);
+		    	String srcTifFile = inPathCell.getStringValue();
+	        	
+	        	Utility.ClipRaster(overlapShapeFile, srcTifFile, destFile, 
+		    			overWrite.getBooleanValue(), tap.getBooleanValue(), 
+		    			xRes.getStringValue(), yRes.getStringValue(),
+		    			noDataValue.getStringValue(),
+		    			woName.getStringValue(),woValue.getStringValue(),expr);
+	        	
+	        	DataCell[] cells = new DataCell[outSpec.getNumColumns()];
+				cells[0] = new StringCell(destFile);
+				cells[1] = r.getCell(ovIndex);
 				container.addRowToTable(new DefaultRow("Row"+i, cells));
 				i++;
 	    	}
@@ -326,7 +352,8 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
         // TODO: generated method stub
     }
     
- private static DataTableSpec createSpec(DataTableSpec inSpec, boolean useOverlap, boolean useRank) throws InvalidSettingsException {
+ private static DataTableSpec createSpec(DataTableSpec inSpec, boolean useOverlap, boolean useRank, boolean useOverlapOnly) 
+		 throws InvalidSettingsException {
 		
     	List<DataColumnSpec> columns = new ArrayList<>();
 		columns.add(new DataColumnSpecCreator(Utility.LOC_COLUMN, StringCell.TYPE).createSpec());
@@ -341,6 +368,10 @@ public class ClipPolygonToRasterNodeModel extends NodeModel {
     			rnkIndex = inSpec.findColumnIndex(Constants.RANK+"_1");
     		
 			columns.add(new DataColumnSpecCreator(Constants.RANK, inSpec.getColumnSpec(rnkIndex).getType()).createSpec());
+		}
+		else if (useOverlapOnly){
+			int ovIndex = inSpec.findColumnIndex(Constants.OVID);
+			columns.add(new DataColumnSpecCreator(Constants.OVID, inSpec.getColumnSpec(ovIndex).getType()).createSpec());
 		}
 		return new DataTableSpec(columns.toArray(new DataColumnSpec[0]));
 	}

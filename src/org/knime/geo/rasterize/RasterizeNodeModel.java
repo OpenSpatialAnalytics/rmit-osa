@@ -40,6 +40,7 @@ public class RasterizeNodeModel extends NodeModel {
 	static final String XRES = "xres";
 	static final String YRES = "yres";
 	static final String OUTPATH = "output_file_path";
+	static final String BURN = "burn_value";
 	static final String ATTR = "attribute_name";
 	static final String TAP = "tap";
 	static final String ND = "a_nodata";
@@ -50,6 +51,7 @@ public class RasterizeNodeModel extends NodeModel {
     public final SettingsModelString xRes = new SettingsModelString(XRES,"");
     public final SettingsModelString yRes = new SettingsModelString(YRES,"");
     public final SettingsModelString outPath = new SettingsModelString(OUTPATH,"");
+    public final SettingsModelString burn = new SettingsModelString(BURN,"");
     public final SettingsModelString attr = new SettingsModelString(ATTR,"");
     public final SettingsModelBoolean tap = new SettingsModelBoolean(TAP,false);
     public final SettingsModelString noDataValue = new SettingsModelString(ND,"");
@@ -89,7 +91,8 @@ public class RasterizeNodeModel extends NodeModel {
 	    	String inFile = inPathCell.getStringValue();
 	    	
 	    	String outFile = Utility.Rasterize(inFile, outPath.getStringValue(), 
-	    			xRes.getStringValue(), yRes.getStringValue(), attr.getStringValue(), 
+	    			xRes.getStringValue(), yRes.getStringValue(), 
+	    			burn.getStringValue(), attr.getStringValue(), 
 	    			noDataValue.getStringValue(), outputType.getStringValue(), 
 	    			outputFormat.getStringValue(), tap.getBooleanValue(), rc.getBooleanValue());
 	    	
@@ -164,6 +167,7 @@ public class RasterizeNodeModel extends NodeModel {
     	
          this.xRes.saveSettingsTo(settings);
          this.yRes.saveSettingsTo(settings);
+         this.burn.saveSettingsTo(settings);
          this.attr.saveSettingsTo(settings);
          this.noDataValue.saveSettingsTo(settings);
          this.outPath.saveSettingsTo(settings);
@@ -182,6 +186,7 @@ public class RasterizeNodeModel extends NodeModel {
     	
     	 this.xRes.loadSettingsFrom(settings);
          this.yRes.loadSettingsFrom(settings);
+         this.burn.loadSettingsFrom(settings);
          this.attr.loadSettingsFrom(settings);
          this.noDataValue.loadSettingsFrom(settings);
          this.outPath.loadSettingsFrom(settings);
@@ -200,6 +205,7 @@ public class RasterizeNodeModel extends NodeModel {
     	
     	 this.xRes.validateSettings(settings);
          this.yRes.validateSettings(settings);
+         this.burn.validateSettings(settings);
          this.attr.validateSettings(settings);
          this.noDataValue.validateSettings(settings);
          this.outPath.validateSettings(settings);
