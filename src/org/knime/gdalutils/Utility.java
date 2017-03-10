@@ -61,7 +61,7 @@ public class Utility {
 	/***
 	 * return all hdr.adf files inside a zip file or a folder
 	 * @param zipFileName
-	 * @return List of .hdr files with full path
+	 * @return List of .hdr files with full path 
 	 */
 	public static List<String> readHdrFiles(String location)
 	{
